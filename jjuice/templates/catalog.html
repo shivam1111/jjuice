@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+{% load static %}
+{% block site_header %} 
+<header id="header" class="awe-menubar-header">
+	<nav class="awemenu-nav headroom awemenu-default awemenu-standard headroom--top animation" data-responsive-width="1200">
+		<div class="container">
+			<div class="awemenu-container">
+				<div class="navbar-header">
+					<ul class="navbar-icons"> <!-- Navigation Bar Icons -->
+                        <li class="menubar-account">
+                            <a href="#" title="" class="awemenu-icon">
+                                <i class="icon icon-user-circle"></i>
+                                <span class="awe-hidden-text">Account</span>
+                            </a>
+                            <ul class="submenu megamenu">
+                                <li>
+                                    <div class="container-fluid">
+                                        <div class="header-account">
+                           	        		{% block account_info %}{% endblock %}
+<!--                                             <div class="header-account-avatar">
+                                                <a href="#" title="">
+                                                    <img src="./img/samples/avatars/customers/1.jpg" alt="" class="img-circle">
+                                                </a>
+                                            </div>
+                                            <div class="header-account-username">
+                                                <h4><a href="#">Jessica Alba</a></h4>
+                                            </div>
+                                            <ul>
+                                                <li><a href="#">Invite Friends</a></li>
+                                                <li><a href="#">Account Infomation</a></li>
+                                                <li><a href="#">Logout</a></li>
+                                            </ul> -->
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul> <!-- submenu megamenu -->
+                        </li>
+                        {% block wishlist %}{% endblock %}
+                        <li class="menubar-cart">
+	 	                    <a href="#" title="" class="awemenu-icon menu-shopping-cart">
+	                          <i class="icon icon-shopping-bag"></i>
+	                          <span class="awe-hidden-text">Cart</span>
+	                          <!-- <span class="cart-number">2</span> -->
+	                      	</a>
+                   			{% block cart_list %}{% endblock %}
+	                    </li>                        
+					</ul> <!-- Navigation Bar Icons End -->
+					
+					<ul class="navbar-search"> <!-- Navigation Bar Search -->
+						{% block search %}{% endblock %}
+					</ul>
+				</div>
+				<div class="awe-logo">
+					<a href="/" title=""><img src="{% static 'img/logo.jpg' %}" alt=""></a>
+				</div>
+				<!-- /.awe-logo -->
+				<div class="awemenu-bars"><span class="fa fa-bars"></span></div>
+				<ul class="awemenu awemenu-right">
+					{% block header_menus %}{% endblock %}
+				</ul>				
+			</div>
+		</div>
+	</nav>
+</header>
+{% endblock %}
+
+{% block footer %}
+<footer class="footer">
+	<div class="footer-wrapper">
+		<div class="footer-widgets">
+			<div class="container">
+				<div class="row">
+                	<!-- Aboutn Widget -->
+                	<div class="col-md-4">
+	                    <div class="row">
+	                        <div class="col-md-12 col-sm-6">
+	                            <div class="widget">
+	                                <h3 class="widget-title">ABOUT HOSOREN</h3>
+	
+	                                <div class="widget-content">
+	                                    <p>Lorem ipsum dolor sit amet isse potenti. Vesquam ante aliquet lacusemper elit. Cras neque nulla, convallis non commodo et, euismod nonsese.</p>
+	                                </div>
+	                            </div>
+	                        </div>
+	                        <div class="col-md-12 col-sm-6">
+	                            <div class="widget">
+	                                <h3 class="widget-title">WE CAN HELP YOU?</h3>
+	                                <div class="widget-content">
+	                                    <p>Phone 1: 8 (495) 989—20—11</p>
+	                                    <p>Phone 2: 8 (800) 875—05—26</p>
+	                                    <p>Open - Close: 09:00-21:00</p>
+	                                    <p>Mail: hosoren@gmail.com</p>
+	                                </div>
+	                            </div><!-- /.widget -->
+	                        </div>
+	                    </div>
+                	</div>
+                	<!-- Shopping Widget -->
+                	<div class="col-md-4">
+                		<div class="widget">
+                        	<h3 class="widget-title">Shopping</h3>
+                            <ul>
+                                <li><a href="#" title="">Your Cart</a></li>
+                                <li><a href="#" title="">Your Orders</a></li>
+                                <li><a href="#" title="">Compared Items</a></li>
+                                <li><a href="#" title="">Wishlist Items</a></li>
+                                <li><a href="#" title="">Shipping Detail</a></li>
+                            </ul>
+                        </div><!-- /.widget -->
+                	</div>
+                	<!-- Are You like me widget -->
+                	<div class = "col-md-4">
+						<div class="widget">
+                	        <h3 class="widget-title">Are You Like Me</h3>
+                            <ul class="list-socials">
+                                <li><a href="#" title=""><i class="icon icon-twitter"></i></a></li>
+                                <li><a href="#" title=""><i class="icon icon-facebook"></i></a></li>
+                                <li><a href="#" title=""><i class="icon icon-google-plus"></i></a></li>
+                                <li><a href="#" title=""><i class="icon icon-pinterest"></i></a></li>
+                            </ul>
+                        </div>
+                        <div class="widget">
+	                        <h3 class="widget-title">PAYMENT ACCEPT</h3>
+                            <ul class="list-socials">
+                                <li>
+                                    <a href="#" title="">
+                                        <i class="fa fa-cc-paypal"></i>
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="#" title="">
+                                        <i class="fa fa-cc-visa"></i>
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="#" title="">
+                                        <i class="fa fa-cc-amex"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div><!-- /.widget -->                	
+                	</div>
+				</div>
+			</div> <!-- container ended -->
+		</div> <!-- footer widget ended -->
+        <div class="footer-copyright">
+  	      <div class="container">
+ 	         <div class="copyright">
+	             <p>Copyright &copy; 2015 JJuice - All Rights Reserved.</p>
+             </div>
+             <div class="footer-nav">
+	             <nav>
+	                 <ul>
+	                     <li><a href="#" title="">Contact Us</a></li>
+	                     <li><a href="#" title="">Term of Use</a></li>
+	                     <li><a href="#" title="">Privacy Policy</a></li>
+	                     <li><a href="#" title="">Site Map</a></li>
+	                 </ul>
+	             </nav>
+                 <nav>
+                     <ul>
+                         <li class="dropdown dropup">
+                             <div class="language-select">
+                                 <span class="select-title">Language:</span>
+
+                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                     <span>ENG</span>
+                                     <span class="icon icon-arrow-down"></span>
+                                 </a>
+
+                                 <ul class="dropdown-menu" role="menu">
+                                     <li><a href="#">English</a></li>
+                                 </ul>
+                             </div>
+                         </li>
+                         <li class="dropdown dropup">
+                             <div class="price-select">
+                                 <span class="select-title">Price:</span>
+                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                     <span>USD</span>
+                                     <span class="icon icon-arrow-down"></span>
+                                 </a>
+                                 <ul class="dropdown-menu" role="menu">
+                                     <li><a href="#">USD</a></li>
+                                 </ul>
+                             </div>
+                         </li>
+                     </ul>
+                 </nav>
+             </div>
+         </div>
+       </div><!-- /.footer-copyright -->
+	</div> <!-- footer wrapper -->
+	<a href="#" class="back-top" title="">
+        <span class="back-top-image">
+            <img src="./img/back-top.png" alt="">
+        </span>
+        <small>Back top top</small>
+    </a>
+</footer>
+{% endblock %}

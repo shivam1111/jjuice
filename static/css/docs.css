@@ -1,0 +1,111 @@
+.elements-section {
+  padding: 120px 0;
+  overflow: hidden;
+}
+
+.doc-icons-list {
+  padding-left: 0;
+  list-style: none;
+  overflow: hidden;
+}
+
+.doc-icons-list li {
+  background-color: #f9f9f9;
+  border: 1px solid #fff;
+  float: left;
+  font-size: 12px;
+  height: 125px;
+  line-height: 1.4;
+  padding: 10px;
+  text-align: center;
+  -webkit-transition: all 0.25s ease;
+          transition: all 0.25s ease;
+  width: 50%;
+}
+
+.doc-icons-list li:hover {
+  background-color: #333;
+  color: #fff;
+}
+
+@media (min-width: 1200px) {
+  .doc-icons-list li {
+    width: 12.5%;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+  .doc-icons-list li {
+    width: 20%;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .doc-icons-list li {
+    width: 25%;
+  }
+}
+
+.doc-icons-list .doc-list-class {
+  display: block;
+  text-align: center;
+  word-wrap: break-word;
+}
+
+.doc-icons-list .doc-list-icon {
+  font-size: 32px;
+  margin-bottom: 5px;
+  margin-top: 10px;
+  display: inline-block;
+}
+
+.fix-footer {
+  margin-bottom: -50px;
+}
+
+.doc-background {
+  height: 750px;
+}
+
+.heading-large {
+  font-size: 52px;
+}
+
+@media (max-width: 767px) {
+  .heading-large {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 767px) {
+  .heading-large {
+    font-size: 18px;
+  }
+}
+
+.box-row {
+  color: #fff;
+  background: #333;
+  margin-bottom: 15px;
+  height: 30px;
+  line-height: 30px;
+  overflow: hidden;
+  position: relative;
+  text-align: center;
+  -webkit-transition: all 0.25s ease;
+          transition: all 0.25s ease;
+}
+
+.box-row:hover {
+  background: #666;
+}
+
+.docs-map-1 {
+  height: 500px;
+}
+
+.docs-carousel-3 .owl-dots {
+  margin-top: 50px;
+}
+
+/*# sourceMappingURL=maps/docs.css.map */
