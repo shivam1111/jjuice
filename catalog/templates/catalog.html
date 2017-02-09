@@ -47,7 +47,24 @@
 					</ul> <!-- Navigation Bar Icons End -->
 					
 					<ul class="navbar-search"> <!-- Navigation Bar Search -->
-						{% block search %}{% endblock %}
+	                    <li>
+	                        <a href="#" title="" class="awemenu-icon awe-menubar-search" id="open-search-form">
+	                            <span class="sr-only">Search</span>
+	                            <span class="icon icon-search"></span>
+	                        </a>
+	
+	                        <div class="menubar-search-form" id="menubar-search-form">
+	                            <form action="index.html" method="GET">
+	                                <input type="text" name="s" class="form-control" placeholder="Search your entry here...">
+	                                <div class="menubar-search-buttons">
+	                                    <button type="submit" class="btn btn-sm btn-white">Search</button>
+	                                    <button type="button" class="btn btn-sm btn-white" id="close-search-form">
+	                                        <span class="icon icon-remove"></span>
+	                                    </button>
+	                                </div>
+	                            </form>
+	                        </div><!-- /.menubar-search-form -->
+	                    </li>
 					</ul>
 				</div>
 				<div class="awe-logo">
@@ -56,7 +73,70 @@
 				<!-- /.awe-logo -->
 				<div class="awemenu-bars"><span class="fa fa-bars"></span></div>
 				<ul class="awemenu awemenu-right">
-					{% block header_menus %}{% endblock %}
+	                <li class="awemenu-item">
+	                   <a href="/" title="">
+	                       <span>HOME</span>
+	                   </a>
+	                </li>
+	                <li class="awemenu-item">
+	                   <a href="#" title="">
+	                       <span>SHOP</span>
+	                   </a>
+	                   <ul class="awemenu-submenu awemenu-megamenu" data-width="90%" data-animation="fadeup">
+	                   		<li class="awemenu-megamenu-item">
+	                   			<div class="container-fluid">
+	                   				<div class="row">
+	                                    <div class="col-lg-offset-1 col-lg-3">
+	                                        <div class="awe-media inline margin-bottom-25">
+	                                            <div class="awe-media-image">
+	                                                <a href="#" title="">
+	                                                    <img src="{% static 'img/samples/menu/horosen-shop.jpg' %}" alt="">
+	                                                </a>
+	                                            </div>
+	                                            <h4 class="awe-media-title medium upper center">
+	                                                <a href="#" title="">10 ML</a>
+	                                            </h4>
+	                                        </div>
+                                        </div>
+	                                    <div class="col-lg-offset-1 col-lg-3">
+	                                        <div class="awe-media inline">
+	                                            <div class="awe-media-image">
+	                                                <a href="#" title="">
+	                                                    <img src="{% static 'img/samples/menu/police-shop.jpg' %}" alt="">
+	                                                </a>
+	                                            </div>
+	                                            <h4 class="awe-media-title medium upper center">
+	                                                <a href="#" title="">30 ML</a>
+	                                            </h4>
+	                                        </div>
+                                        </div>
+				                        <div class="col-lg-offset-1 col-lg-3">       
+	                                        <div class="awe-media inline">
+	                                            <div class="awe-media-image">
+	                                                <a href="#" title="">
+	                                                    <img src="{% static 'img/samples/menu/police-shop.jpg' %}" alt="">
+	                                                </a>
+	                                            </div>
+	                                            <h4 class="awe-media-title medium upper center">
+	                                                <a href="#" title="">60 ML</a>
+	                                            </h4>
+	                                        </div>	                                        
+	                                   </div>
+	                   				</div>
+	                   			</div>
+	                   		</li>
+	                   </ul>
+	                </li>
+	                <li class="awemenu-item">
+	                   <a href="#" title="">
+	                       <span>ABOUT US</span>
+	                   </a>
+	                </li>	                
+	                <li class="awemenu-item">
+	                   <a href="#" title="">
+	                       <span>CONTACT US</span>
+	                   </a>
+	                </li>	                	                
 				</ul>				
 			</div>
 		</div>
@@ -64,59 +144,61 @@
 </header>
 {% endblock %}
 
-{% block footer %}
+{% block site_footer %}
 <footer class="footer">
 	<div class="footer-wrapper">
 		<div class="footer-widgets">
 			<div class="container">
 				<div class="row">
-                	<!-- Aboutn Widget -->
-                	<div class="col-md-4">
+                	<!-- About Us Widget -->
+                	<div class="col-md-3">
 	                    <div class="row">
 	                        <div class="col-md-12 col-sm-6">
 	                            <div class="widget">
-	                                <h3 class="widget-title">ABOUT HOSOREN</h3>
-	
+	                                <h3 class="widget-title">
+	                                	<a href="#"><span>ABOUT US</span></a>
+	                                </h3>
 	                                <div class="widget-content">
-	                                    <p>Lorem ipsum dolor sit amet isse potenti. Vesquam ante aliquet lacusemper elit. Cras neque nulla, convallis non commodo et, euismod nonsese.</p>
+	                                    <p>A community of people being rad… Our group has been working on formulating the perfect vape experience, primarily for ourselves, until we realized every vaper we knew loved our juice and only wanted to fill their vapes with the ‘good stuff’. This was our inspiration...</p>
 	                                </div>
 	                            </div>
 	                        </div>
-	                        <div class="col-md-12 col-sm-6">
-	                            <div class="widget">
-	                                <h3 class="widget-title">WE CAN HELP YOU?</h3>
-	                                <div class="widget-content">
-	                                    <p>Phone 1: 8 (495) 989—20—11</p>
-	                                    <p>Phone 2: 8 (800) 875—05—26</p>
-	                                    <p>Open - Close: 09:00-21:00</p>
-	                                    <p>Mail: hosoren@gmail.com</p>
-	                                </div>
-	                            </div><!-- /.widget -->
-	                        </div>
 	                    </div>
                 	</div>
+                	<div class="col-md-3">
+                    	<div class="widget">
+            	            <h3 class="widget-title">WE CAN HELP YOU?</h3>
+                            <div class="widget-content">
+                                <p><i class="icon icon-telephone" style="color:white;padding-right:10px;"></i>(801) 331-8919</p>
+								<p><i class="glyphicon glyphicon-map-marker" style="color:white;padding-right:10px;"></i>12411 South 265 West Ste C</p>
+								<p><i class="glyphicon" style="color:white;padding-right:25px;"></i>Draper Utah, 84020</p>
+								<p><i class="glyphicon" style="color:white;padding-right:25px;"></i>USA</p>
+                                <p><i class="glyphicon glyphicon-envelope" style="color:white;padding-right:10px;"></i>hello@vapejjuice.com</p>
+                            </div>
+                        </div><!-- /.widget -->                	
+                	</div>
                 	<!-- Shopping Widget -->
-                	<div class="col-md-4">
+                	<div class="col-md-3">
                 		<div class="widget">
                         	<h3 class="widget-title">Shopping</h3>
                             <ul>
                                 <li><a href="#" title="">Your Cart</a></li>
                                 <li><a href="#" title="">Your Orders</a></li>
-                                <li><a href="#" title="">Compared Items</a></li>
-                                <li><a href="#" title="">Wishlist Items</a></li>
-                                <li><a href="#" title="">Shipping Detail</a></li>
+                                <li><a href="#" title="">10 ML</a></li>
+                                <li><a href="#" title="">30 ML</a></li>
+                                <li><a href="#" title="">60 ML</a></li>
                             </ul>
                         </div><!-- /.widget -->
                 	</div>
                 	<!-- Are You like me widget -->
-                	<div class = "col-md-4">
+                	<div class = "col-md-3">
 						<div class="widget">
                 	        <h3 class="widget-title">Are You Like Me</h3>
                             <ul class="list-socials">
-                                <li><a href="#" title=""><i class="icon icon-twitter"></i></a></li>
-                                <li><a href="#" title=""><i class="icon icon-facebook"></i></a></li>
-                                <li><a href="#" title=""><i class="icon icon-google-plus"></i></a></li>
-                                <li><a href="#" title=""><i class="icon icon-pinterest"></i></a></li>
+                                <li><a href="https://twitter.com/vapejjuice" title=""><i class="icon icon-twitter"></i></a></li>
+                                <li><a href="http://facebook.com/vapejjuice" title=""><i class="icon icon-facebook"></i></a></li>
+                                <li><a href="http://instagram.com/vapejjuice" title=""><i class="fa fa-instagram"></i></a></li>
+                                <li><a href="http://vapejjuice.tumblr.com/" title=""><i class="fa fa-tumblr"></i></a></li>
                             </ul>
                         </div>
                         <div class="widget">
@@ -148,7 +230,7 @@
         <div class="footer-copyright">
   	      <div class="container">
  	         <div class="copyright">
-	             <p>Copyright &copy; 2015 JJuice - All Rights Reserved.</p>
+	             <p>Copyright &copy; 2017 JJuice - All Rights Reserved.</p>
              </div>
              <div class="footer-nav">
 	             <nav>
@@ -195,9 +277,9 @@
 	</div> <!-- footer wrapper -->
 	<a href="#" class="back-top" title="">
         <span class="back-top-image">
-            <img src="./img/back-top.png" alt="">
+            <img src="{% static '/img/back-top.png' %}" alt="">
         </span>
-        <small>Back top top</small>
+        <small>Back to top</small>
     </a>
 </footer>
 {% endblock %}

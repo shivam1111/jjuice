@@ -1,0 +1,79 @@
+{% extends "catalog.html" %}
+{% block site_main %}
+{% load static %}
+<section>
+	<div class="container">
+		<div class="margin-vertical-30">
+			<div class="main-slider-wrapper">
+				<div class="main-slider owl-carousel owl-carousel-inset">
+					{% for x in banners %}
+		            <div class="main-slider-item">
+		                <div class="main-slider-image">
+		                    <img src="{{ x.url }}" alt="">
+		                </div>
+<!-- 		                <div class="main-slider-text">
+		                    <div class="fp-table">
+		                        <div class="fp-table-cell center">
+		                            <div class="container">
+		                                <h3>The Shoes For Summer</h3>
+		                                <h2>Shoes Vans<br>$160.00</h2>
+		
+		                                <div class="button">
+		                                    <a href="#" class="btn btn-lg btn-primary margin-right-15">Shop now</a>
+		                                    <a href="#" class="btn btn-lg btn-white btn-outline">Browse category</a>
+		                                </div>
+		                            </div>
+		                        </div>
+		                    </div>
+		                </div> -->
+		            </div>
+		            {% endfor %}
+				</div>
+			</div>
+			<script>
+				$(function() {  aweMainSlider({}); });
+			</script>
+		</div>
+	</div>
+</section>
+<section>
+    <div class="container">
+        <div class="padding-bottom-30">
+            <div class="row">
+            	{% for x in policies %}
+                <div class="col-md-3">
+                    <div class="policy policy-block">
+                        <div class="policy-icon">
+                            <img src="{{ x.url }}" />
+                        </div>
+                        <div class="policy-text">
+                            <h4>{{ x.name }}</h4>
+                            <p>{{ x.description }}</p>
+                        </div>						
+                    </div>
+                </div>
+                {% endfor %}
+                <div class="col-md-3">
+                    <div class="subscible-wrapper subscible-block">
+                        <h3 class="subscribe-title">Subscribe newsletter</h3>
+                        <div class="subscribe-comment">
+                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry</p>
+                        </div>
+                        <form method="GET" action="index.html" class="subscible-form">
+                            <div class="form-group">
+                                <label class="sr-only" for="subscribe-email">Email</label>
+                                <input type="email" placeholder="Enter your email address" class="form-control" id="subscribe-email">
+                            </div>
+
+                            <div class="form-submit">
+                                <button class="btn btn-lg btn-primary" type="submit">Subscribe email</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

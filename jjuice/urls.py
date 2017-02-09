@@ -17,11 +17,12 @@ from django.conf.urls import url
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
-from preview import views as preview
+from django.conf.urls import include
+from catalog import urls
 admin.autodiscover()
 
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^catalog/$', preview.home),
+    url(r'^', include('catalog.urls',namespace="catalog")),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
