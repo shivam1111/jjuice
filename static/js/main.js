@@ -91,6 +91,8 @@ function aweMainSlider() {
         nav: true,
         dots: true,
         autoplay: true,
+        loop: true,
+        autoplayHoverPause: true,
         onInitialized: function() {
             $slider.find('.owl-item').each(function() {
                 var $owlItem = $(this);
