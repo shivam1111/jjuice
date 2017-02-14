@@ -82,46 +82,25 @@
 	                   <a href="#" title="">
 	                       <span>SHOP</span>
 	                   </a>
-	                   <ul class="awemenu-submenu awemenu-megamenu" data-width="90%" data-animation="fadeup">
+	                   <ul class="awemenu-submenu awemenu-megamenu" data-width="100%" data-animation="fadeup">
 	                   		<li class="awemenu-megamenu-item">
 	                   			<div class="container-fluid">
 	                   				<div class="row">
+	                                    {% for key,value in request.volumes_data.items %}
 	                                    <div class="col-lg-offset-1 col-lg-3">
 	                                        <div class="awe-media inline margin-bottom-25">
 	                                            <div class="awe-media-image">
-	                                                <a href="#" title="">
-	                                                    <img src="{% static 'img/samples/menu/horosen-shop.jpg' %}" alt="">
+	                                                <a href="{% url 'catalog:volume' id=key  %}" title="">
+	                                                    <!-- <img src="{% static 'img/samples/menu/horosen-shop.jpg' %}" alt=""> -->
+	                                                	<img src="{{ value.url }}" alt="{% static 'img/samples/menu/horosen-shop.jpg' %}" />
 	                                                </a>
 	                                            </div>
 	                                            <h4 class="awe-media-title medium upper center">
-	                                                <a href="#" title="">10 ML</a>
+	                                                <a href="#" title="">{{ value.name }}</a>
 	                                            </h4>
 	                                        </div>
                                         </div>
-	                                    <div class="col-lg-offset-1 col-lg-3">
-	                                        <div class="awe-media inline">
-	                                            <div class="awe-media-image">
-	                                                <a href="#" title="">
-	                                                    <img src="{% static 'img/samples/menu/police-shop.jpg' %}" alt="">
-	                                                </a>
-	                                            </div>
-	                                            <h4 class="awe-media-title medium upper center">
-	                                                <a href="#" title="">30 ML</a>
-	                                            </h4>
-	                                        </div>
-                                        </div>
-				                        <div class="col-lg-offset-1 col-lg-3">       
-	                                        <div class="awe-media inline">
-	                                            <div class="awe-media-image">
-	                                                <a href="#" title="">
-	                                                    <img src="{% static 'img/samples/menu/police-shop.jpg' %}" alt="">
-	                                                </a>
-	                                            </div>
-	                                            <h4 class="awe-media-title medium upper center">
-	                                                <a href="#" title="">60 ML</a>
-	                                            </h4>
-	                                        </div>	                                        
-	                                   </div>
+                                        {% endfor %}
 	                   				</div>
 	                   			</div>
 	                   		</li>
@@ -184,9 +163,6 @@
                             <ul>
                                 <li><a href="#" title="">Your Cart</a></li>
                                 <li><a href="#" title="">Your Orders</a></li>
-                                <li><a href="#" title="">10 ML</a></li>
-                                <li><a href="#" title="">30 ML</a></li>
-                                <li><a href="#" title="">60 ML</a></li>
                             </ul>
                         </div><!-- /.widget -->
                 	</div>

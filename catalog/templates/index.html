@@ -6,10 +6,10 @@
 		<div class="margin-vertical-30">
 			<div class="main-slider-wrapper">
 				<div class="main-slider owl-carousel owl-carousel-inset">
-					{% for x in banners %}
+					{% for i in banners %}
 		            <div class="main-slider-item">
 		                <div class="main-slider-image">
-		                    <img src="{{ x.url }}" alt="">
+		                    <img src="{{ i.get_image_url }}" alt="">
 		                </div>
 <!-- 		                <div class="main-slider-text">
 		                    <div class="fp-table">
@@ -44,7 +44,7 @@
                 <div class="col-md-3">
                     <div class="policy policy-block">
                         <div class="policy-icon">
-                            <img src="{{ x.url }}" />
+                            <img src="{{ x.get_image_url }}" />
                         </div>
                         <div class="policy-text">
                             <h4>{{ x.name }}</h4>
@@ -57,12 +57,12 @@
                     <div class="subscible-wrapper subscible-block">
                         <h3 class="subscribe-title">Subscribe newsletter</h3>
                         <div class="subscribe-comment">
-                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry</p>
+                            <!-- <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry</p> -->
                         </div>
-                        <form method="GET" action="index.html" class="subscible-form">
+                        <form method="GET" action="/misc/newsletter/" class="subscible-form">
                             <div class="form-group">
                                 <label class="sr-only" for="subscribe-email">Email</label>
-                                <input type="email" placeholder="Enter your email address" class="form-control" id="subscribe-email">
+                                <input type="email" name="email" required placeholder="Enter your email address" class="form-control" id="subscribe-email">
                             </div>
 
                             <div class="form-submit">

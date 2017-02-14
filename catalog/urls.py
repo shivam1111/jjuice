@@ -1,9 +1,11 @@
 from django.conf.urls import url
-import views as catalog
+from views import *
 
 
 urlpatterns = [
-    url(r'^$', catalog.index, { 'template_name':'catalog/index.html'}, 'catalog_home'),
+    url(r'^$', Index.as_view(), { 'template_name':'catalog/index.html'}, name='catalog_home'),
+    url(r'^volume/(?P<id>[0-9]+)/$', Volume.as_view(), { 'template_name':'volumes.html'}, name='volume'),
+    url(r'^flavor/(?P<id>[0-9]+)/$', Flavor.as_view(), { 'template_name':'flavors.html'}, name='flavor'),
 ] 
 
 # urlpatterns = patterns('ecomstore.catalog.views',

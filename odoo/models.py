@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 from django.db import models
 from docutils.nodes import description
+from helper import create_aws_url
 
 _PRODUCT_TYPES = [
         ('product','Stockable Product'),
@@ -23,8 +24,12 @@ class S3Object(models.Model):
             
 class WebsiteBanner(models.Model):
     id = models.IntegerField(primary_key=True)
-    s3_object_id = models.ForeignKey(S3Object,verbose_name='S3Object',blank=False,db_column="s3_object_id",related_name="banner_s3_object_ids")
     sequence = models.IntegerField(verbose_name = "Sequence")
+    file_name = models.CharField(verbose_name = "File Name", max_length=100)
+    
+    def get_image_url(self):
+        return create_aws_url(self._meta.db_table,str(self.id))
+        
     
     _DATABASE = "odoo"    
     class Meta:
@@ -33,10 +38,12 @@ class WebsiteBanner(models.Model):
         
 class WebsitePolicy(models.Model):
     id = models.IntegerField(primary_key=True)
-    s3_object_id = models.ForeignKey(S3Object,verbose_name='S3Object',blank=False,db_column="s3_object_id",related_name="policy_s3_object_ids")
     sequence = models.IntegerField(verbose_name = "Sequence")
     description = models.TextField(verbose_name = "Description",blank=True)
     name = models.CharField(verbose_name = "Name", max_length=100)
+
+    def get_image_url(self):
+        return create_aws_url(self._meta.db_table,str(self.id))
 
     _DATABASE = "odoo"
     class Meta:
@@ -44,11 +51,11 @@ class WebsitePolicy(models.Model):
         db_table = "website_policy"           
 
 class IrConfigParametersManager(models.Manager):
-    def get_param(self,param):
+    def get_param(self,param,default=False):
         try:
             return self.get_queryset().get(key=param).value
         except self.model.DoesNotExist:
-            return False
+            return default
     
 class IrConfigParameters(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -77,39 +84,14 @@ class ProductAttributeValue(models.Model):
     attribute_id = models.ForeignKey(ProductAttribute,verbose_name = "Product Attribute Value",blank=False,
                                      db_column="attribute_id",
                                      related_name="attribute_value_ids")
+    weight = models.FloatField(verbose_name="Weight",blank=True)
+    ratio = models.FloatField(verbose_name='VG/PG Ratio',blank=True)
+    wholesale_price = models.FloatField(verbose_name="Wholesale Price",blank=True)
+    msrp = models.FloatField(verbose_name="MSRP",blank=True)
+    old_price = models.FloatField(verbose_name="Wholesale Price",blank=True)
+    
         
     _DATABASE = "odoo"
     class Meta:
         managed=False
-        db_table = "product_attribute_value"        
-
-class ProductTemplate(models.Model):
-    id = models.IntegerField(primary_key=True)
-    name = models.CharField(verbose_name = "Stone Name",blank=False,max_length = 50)
-     
-    
-    _DATABASE = "odoo"
-    class Meta:
-        managed=False
-        db_table = "product_template"
-
-class ProductVariant(models.Model):
-#     name = models.CharField(verbose_name = "Stone Name",blank=False,max_length = 50)
-    id = models.IntegerField(primary_key=True)
-    active = models.NullBooleanField(verbose_name="Active")
-    shipping = models.NullBooleanField(verbose_name="Shipping")
-    sale_ok = models.NullBooleanField(verbose_name="Can be Sold")
-    type = models.CharField(max_length = 20,verbose_name = "Type",choices = _PRODUCT_TYPES)
-    lst_price = models.FloatField(verbose_name="Total Price",blank=True,null=True)
-    description = models.TextField(verbose_name = "Remarks")
-    product_tmpl_id = models.ForeignKey(ProductTemplate,verbose_name = "Product Template",
-                                        db_column = "product_tmpl_id" , 
-                                        blank=False,
-                                        related_name="product_variant_ids")
-
-    _DATABASE = "odoo"
-    class Meta:
-        managed=False
-        db_table = "product_product"        
-             
-    
+        db_table = "product_attribute_value"

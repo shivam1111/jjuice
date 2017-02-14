@@ -4,7 +4,11 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>{{ site_name }}</title>
+        {% if name %}
+        <title>{{ site_name  }} - {{ name }}</title>
+        {% else %}
+        <title>{{ site_name  }}</title>
+        {% endif %}
         <meta name="keywords" content="{{ meta_keywords }}" />
         <meta name="description" content="{{ meta_description }}">
        	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -12,6 +16,9 @@
         <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Montserrat:400,700">
         <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,700,400italic,700italic&amp;subset=latin,vietnamese">
 
+		<!-- custom.css -->
+		<link rel="stylesheet" href="{% static 'css/custom.css' %}">
+		
         <!-- build:css css/bootstrap.css -->
         <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
         <!-- endbuild -->

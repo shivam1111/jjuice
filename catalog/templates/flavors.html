@@ -1,0 +1,254 @@
+{% extends "catalog.html" %}
+{% load options %}
+{% load static %}
+{% load rating %}
+{% block site_main %}
+<div class="main-header background background-image-heading-product">
+    <div class="container">
+        <h1>{{  flavor.name }}</h1>
+    </div>
+</div>
+<div id="breadcrumb">
+	<div class="container">
+		<ol class="breadcrumb">
+			<li><a href="/">Home</a></li>
+			<li><a href="{% url 'catalog:volume' id=volume_id %}">{{ current_volume.name }}</a></li>
+			<li class="active"><span>{{ flavor.name }}</span></li>
+		</ol>
+	</div>
+</div>	
+<div class="container" >
+	<div class="row" >
+		<div class="col-md-6">
+			<div class="product-slider-wrapper thumbs-bottom" >
+				<div class="swiper-container product-slider-main">
+                	<div class="swiper-wrapper">
+                	   {% for product in products %}
+                        <div class="swiper-slide">
+                            <div class="easyzoom easyzoom--overlay">
+                                <a href="{{ product.get_image_url }}" title="">
+                                    <img src="{{ product.get_image_url }}" alt="">
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                	</div>
+					<div class="swiper-button-prev"><i class="fa fa-chevron-left"></i></div>
+                    <div class="swiper-button-next"><i class="fa fa-chevron-right"></i></div>
+				</div><!-- /.swiper-container -->
+				<div class="swiper-container product-slider-thumbs">
+					<div class="swiper-wrapper">
+						{% for product in products %}
+                        <div class="swiper-slide">
+                            <img src="{{ product.get_image_url }}" alt="">
+                        </div>						
+                        {% endfor %}
+					</div>
+				</div><!-- /.swiper-container -->
+			</div><!-- /.product-slider-wrapper -->
+		</div>
+		<div class="col-md-6">
+            <nav class="pnav">
+<!--                 <div class="pull-right">
+                    <a href="#" class="btn btn-sm btn-arrow btn-default">
+                        <i class="fa fa-chevron-left"></i>
+                    </a>
+
+                    <a href="#" class="btn btn-sm btn-arrow btn-default">
+                        <i class="fa fa-chevron-right"></i>
+                    </a>
+                </div> -->
+
+                <a href="{% url 'catalog:volume' id=volume_id %}" class="back-to-pcate">
+                    <i class="fa fa-chevron-left"></i>
+                    <span>Back</span>
+                </a>
+            </nav><!-- /header -->
+            <div class="product-details-wrapper">
+                <h2 class="product-name">
+                    <a href="#" title=" {{ flavor.name }}">{{ flavor.name }}</a>
+                </h2><!-- /.product-name -->
+	            <div class="product-description">
+	                <p>{{ flavor.short_description }}</p>
+	            </div><!-- /.product-description -->
+	            <div class="product-features">
+				    <h3>Special Features:</h3>
+				    
+				    <ul>
+				        <li>1914 translation by H. Rackham</li>
+				        <li>The standard Lorem Ipsum passage, used since the 1500s</li>
+				        <li>Section 1.10.33 of "de Finibus Bonorum et Malorum</li>
+				    </ul>
+				</div><!-- /.product-features -->
+                <div class="product-actions-wrapper">
+                    <form action="product-quick-view.html" method="POST">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="p_color">Volume</label>
+                                    <select name="volume_id" id="p_color" class="form-control" >
+                                        <option value="{{ volume_id }}">{{ current_volume.name }}</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="p_size">Nicotine Strength</label>
+                                    <select name="conc_id" id="p_size" class="form-control">
+                                        {% for i in products %}
+                                        	<option value="{{ i.conc_id.id }}">{{ i.conc_id.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="p_qty">Qty</label>
+                                    <input name="qty" id="p_qty" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </form><!-- /.form -->				
+                    <div class="product-list-actions">
+                        <span class="product-price">
+                            <span class="amount">{{ price }}</span>
+                            {% if old_price != 0 %}
+                            <del class="amount">{{ old_price }}</del>
+                            {% endif %}
+                        </span><!-- /.product-price -->
+
+                        <button class="btn btn-lg btn-primary" >Add to cart</button>
+                    </div><!-- /.product-list-actions -->
+                </div><!-- /.product-actions-wrapper -->				                            
+            </div>
+		</div>		
+	</div><!-- end row -->
+    <div class="product-socials">
+        <ul class="list-socials">
+            <li><a data-toggle="tooltip" href="https://twitter.com/vapejjuice" title=""><i class="icon icon-twitter"></i></a></li>
+            <li><a data-toggle="tooltip" href="http://facebook.com/vapejjuice" title=""><i class="icon icon-facebook"></i></a></li>
+            <li><a data-toggle="tooltip" href="http://instagram.com/vapejjuice" title=""><i class="fa fa-instagram"></i></a></li>
+            <li><a data-toggle="tooltip" href="http://vapejjuice.tumblr.com/" title=""><i class="fa fa-tumblr"></i></a></li>        
+		    
+        </ul>
+    </div><!-- /.product-socials -->	
+    <div class="product-details-left">
+    	<div role="tabpanel" class="product-details">
+            <nav>
+                <ul class="nav" role="tablist">
+                    <li role="presentation" class="active">
+                        <a href="#product-description"  data-toggle="tab">Description</a>
+                    </li>
+                    <li role="presentation">
+                        <a href="#product-infomation"  data-toggle="tab">Additional Infomation</a>
+                    </li>
+                    <li role="presentation">
+                        <a href="#product-review"  data-toggle="tab">Review <span>({{ flavor.flavor_review_ids.count }})</span></a>
+                    </li>
+                </ul><!-- /.nav -->
+            </nav><!-- /nav -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="product-description">
+                    <p>{{ flavor.long_description }}</p>
+                </div><!-- /.tab-pane -->
+                <div role="tabpanel" class="tab-pane" id="product-infomation">
+                    <ul>
+                        <li>
+                            <span>Weight</span>
+                            <span class="value">{{ current_volume.weight }}</span>
+                        </li>
+
+                        <li>
+                            <span>Ratio</span>
+                            <span class="value">{{ current_volume.ratio }}</span>
+                        </li>
+
+                        <li>
+                            <span>Nicotine Strengths Available</span>
+                            <span class="value">
+                            {% for product in products %}
+                            {{ product.conc_id.name }}
+                            {% if not forloop.last %} ,{% endif %}
+                            {% endfor %}
+                            </span>
+                        </li>
+                    </ul>
+                </div><!-- /.tab-pane -->
+                <div role="tabpanel" class="tab-pane" id="product-review">
+                	<h3>Reviews <span>({{ flavor.flavor_review_ids.count }})</span></h3>
+                	<ol class="product-review-list">
+                		{% for r in flavor.flavor_review_ids.values %}
+                		<li>
+                			{% rating r %}
+	           			    <div class="review-comment">
+	                            <p>{{ r.description }}</p>
+	                        </div>
+                            <div class="review-meta">
+                                <span>Posted by</span>
+                                <a href="#" class="author">{{ r.name }}</a>
+                                <span>-</span>
+                                <span>{{ r.create_date|date:"M d, Y" }}</span>
+                            </div>	                                  
+                        </li>      		
+                		{% endfor %}
+                	</ol>
+                	<h3>Add a review</h3>
+                    <form action="product-fullwidth.html" method="POST" >
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="reply-name">Name <sup>*</sup></label>
+                                    <input type="text" class="form-control" required id="reply-name" placeholder="Name">
+                                </div><!-- /.form-group -->
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="reply-email">Email <sup>*</sup></label>
+                                    <input type="email" required class="form-control" id="reply-email" placeholder="Email">
+                                </div><!-- /.form-group -->
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reply-title">Title <sup>*</sup></label>
+                            <input type="text" class="form-control" required id="reply-title" placeholder="title">
+                        </div><!-- /.form-group -->
+
+                        <div class="form-group">
+                            <label for="reply-text">Your review <sup>*</sup></label>
+                            <textarea name="reply-text" required class="form-control" id="reply-text" rows="7" placeholder="Your review"></textarea>
+                        </div><!-- /.form-group -->
+
+                        <div class="form-submit clearfix">
+                            <div class="review-rating">
+								<div class="stars">
+								    <input class="star star-5" value="5" id="star-5" type="radio" name="star"/>
+								    <label class="star star-5" for="star-5"></label>
+								    <input class="star star-4" value="4" id="star-4" type="radio" name="star"/>
+								    <label class="star star-4" for="star-4"></label>
+								    <input class="star star-3" value="3" id="star-3" type="radio" name="star"/>
+								    <label class="star star-3" for="star-3"></label>
+								    <input class="star star-2" value="2" id="star-2" type="radio" name="star"/>
+								    <label class="star star-2" for="star-2"></label>
+								    <input class="star star-1" value="1" id="star-1" type="radio" name="star"/>
+								    <label class="star star-1" for="star-1"></label>
+								</div>
+                            </div>
+                            <div class="pull-right">
+                                <button type="submit" class="submit btn btn-lg btn-default">Submit</button>
+                            </div>
+                        </div><!-- /.form-submit -->
+                    </form><!-- /form -->                	
+                </div>                
+            </div>
+    	</div>
+    </div>
+</div>
+<script>
+    $(function() { aweProductRender(true); });
+</script>
+
+{% endblock %} 

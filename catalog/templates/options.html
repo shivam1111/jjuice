@@ -1,0 +1,7 @@
+{% for option in options %}
+    {% if option.0 == active_option %}
+    	<option value = "{{ option.0 }}" selected>{{ option.1 }}</option>
+    {% else %}
+    	<option value = "{{ option.0 }}" >{{ option.1 }}</option>
+    {% endif %}
+{% endfor %}

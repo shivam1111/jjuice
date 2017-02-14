@@ -18,11 +18,22 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls import include
-from catalog import urls
+from django.shortcuts import render
 admin.autodiscover()
 
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('catalog.urls',namespace="catalog")),
+    url(r'^misc/', include('misc.urls',namespace="misc")),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+def handler404(request):
+    response = render(request,'404.html', locals())
+    response.status_code = 404
+    return response
+
+def handler500(request):
+    response = render(request,'500.html', locals())
+    response.status_code = 500
+    return response
