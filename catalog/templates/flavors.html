@@ -221,9 +221,10 @@
                             <label for="reply-text">Your review <sup>*</sup></label>
                             <textarea name="reply-text" required class="form-control" id="reply-text" rows="7" placeholder="Your review"></textarea>
                         </div><!-- /.form-group -->
-
                         <div class="form-submit clearfix">
-                            <div class="review-rating">
+                        	<span class="title pull-left">Your rating:</span>
+	                        <div class="review-rating">
+	                        	
 								<div class="stars">
 								    <input class="star star-5" value="4" id="star-5" type="radio" name="star"/>
 								    <label class="star star-5" for="star-5"></label>
@@ -233,10 +234,10 @@
 								    <label class="star star-3" for="star-3"></label>
 								    <input class="star star-2" value="1" id="star-2" type="radio" name="star"/>
 								    <label class="star star-2" for="star-2"></label>
-								    <input class="star star-1" value="0" id="star-1" type="radio" name="star"/>
+								    <input class="star star-1" value="0" id="star-1" required type="radio" name="star"/>
 								    <label class="star star-1" for="star-1"></label>
 								</div>
-                            </div>
+	                        </div>                        
                             <div class="pull-right">
                                 <button type="submit" class="submit btn btn-lg btn-default">Submit</button>
                             </div>

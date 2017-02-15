@@ -19,7 +19,7 @@
                          <i class="icon icon-star"></i>
                      </a> -->
 
-                     <a href="product-quick-view.html" class="awe-button product-quick-view" data-toggle="tooltip" title="Quickview">
+                     <a href="{% url 'catalog:flavor_quick_view' id=line.flavor_id.id %}?volume_id={{ line.tab_id.vol_id.id }}" class="awe-button product-quick-view" data-toggle="tooltip" title="Quickview">
                          <i class="icon icon-eye"></i>
                      </a>
             	    </div>

@@ -1,0 +1,73 @@
+<div class="col-md-12">
+        <div class="product product-list">
+            <div class="product-media">
+                <div class="product-thumbnail">
+                    <a href="{% url 'catalog:flavor' id=line.flavor_id.id %}?volume_id={{ line.tab_id.vol_id.id }}" title="">
+                        <img src="{{ line.flavor_id.get_image_url }}" alt="">
+                    </a>
+                </div><!-- /.product-thumbnail -->
+                
+                <div class="product-hover">
+                    <div class="product-actions">
+                        <button  class="">
+                            <span class="icon icon-shopping-bag"></span>
+                        </button>
+
+<!--                         <button  class="">
+                            <span class="icon icon-star"></span>
+                        </button>
+ -->
+                        <button  class="">
+                            <span class="fa fa-eye"></span>
+                        </button>
+                    </div>
+                </div><!-- /.product-hover -->
+
+<!--                 <span class="product-label hot">
+                    <span>hot</span>
+                </span> -->
+                
+            </div><!-- /.product-media -->
+
+            <div class="product-body">
+                <h2 class="product-name">
+                    <a href="#" title="{{ line.flavor_id.name }}">{{ line.flavor_id.name }}</a>
+                </h2><!-- /.product-product -->
+
+                <div class="product-category">
+                    <span>{{ line.tab_id.vol_id.name }}</span>
+                </div><!-- /.product-category -->
+
+<!--                 <div class="product-price">
+                    
+                    <span class="amount">$246</span>
+                    
+                </div><! /.product-price --> 
+
+<!--                 <div class="product-stars">
+                    <span class="rating">
+                        <span class="star"></span>
+                        <span class="star"></span>
+                        <span class="star"></span>
+                        <span class="star"></span>
+                        <span class="star"></span>
+                    </span>
+                </div> -->
+
+                <div class="product-description">
+                    <p>{{ line.flavor_id.short_description |default_if_none:"" }}</p>
+                </div>
+
+                <div class="product-list-actions">
+                    <button class="btn btn-lg btn-primary" >Add to cart</button>
+                    <a href="{% url 'catalog:flavor_quick_view' id=line.flavor_id.id %}?volume_id={{ line.tab_id.vol_id.id }}" class="awe-button product-quick-view" data-toggle="tooltip" title="Quickview">
+                         
+                         <button class="btn btn-lg btn-dark btn-outline" > Quickview </button>                
+                     </a>
+                    
+                </div><!-- /.product-actions -->
+
+            </div><!-- /.product-body -->
+        </div><!-- /.product -->
+
+</div>

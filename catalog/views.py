@@ -6,7 +6,7 @@ from django.db.models import FieldDoesNotExist
 import urlparse
 from django.db import connection
 from django.views import View
-from helper import safe_cast  
+from helper import safe_cast,get_price
 
 _PER_PAGE_OPTIONS = [
         (10,'10'),
@@ -73,23 +73,44 @@ class Flavor(View):
         flavor = get_object_or_404(ProductFlavors, pk=flavor_id)
         current_volume = get_object_or_404(ProductAttributeValue, pk=volume_id)
         next_id =  request.GET.get('next_id','')
-        price = old_price = 0
         previous_id = request.GET.get('previous_id','')
+        price = old_price = 0
+        is_authenticated = request.user.is_authenticated()
         if next_id:
             next_id = int(next_id)
         if previous_id:
             previous_id = int(previous_id)
         assert volume_id and (volume_id in request.volumes_data.keys()) , "You are not allowed to acces this page"
-        if request.user.is_authenticated():
+        if is_authenticated:
             # If the user is logged the behaviour goes here
             pass            
         else:
 #             volumes = flavor.flavor_product_variant_ids.values_list('vol_id__id','vol_id__name').distinct('vol_id__id')
             products = flavor.flavor_product_variant_ids.filter(vol_id=volume_id).distinct('conc_id__id')
-            price = current_volume.msrp
+            price = get_price(is_authenticated,current_volume) 
             old_price = current_volume.old_price
         return render(request,template_name,locals()) 
-            
+
+class FlavorQuickView(View):
+    
+    @safe_cast
+    def get(self,request,id,template_name="flavor_quick_view.html"):
+        flavor_id = int(id) # TypeError and ValueError handled by the decorator
+        volume_id = request.GET.get('volume_id',False)
+        volume_id = int(volume_id)
+        flavor = get_object_or_404(ProductFlavors, pk=flavor_id)
+        current_volume = get_object_or_404(ProductAttributeValue, pk=volume_id)   
+        price  = 0 
+        is_authenticated = request.user.is_authenticated()   
+        assert volume_id and (volume_id in request.volumes_data.keys()) , "You are not allowed to access this page" 
+        if is_authenticated:
+            # If the user is logged the behaviour goes here
+            pass            
+        else:
+            products = flavor.flavor_product_variant_ids.filter(vol_id=volume_id).distinct('conc_id__id')
+            price = get_price(is_authenticated,current_volume)
+            old_price = current_volume.old_price
+        return render(request,template_name,locals())         
                 
                 
     

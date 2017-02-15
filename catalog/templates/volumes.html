@@ -2,8 +2,6 @@
 {% load options %}
 {% load static %}
 {% block site_main %}
-{% load flavor_grid_view %}
-
 <div class="main-header background background-image-heading-products">
     <div class="container">
         <h1>Enjoy Yourself!</h1>
@@ -36,8 +34,8 @@
                     <div class="row">
                         <div class="col-md-4 col-sm-6">
                             <div class="view-icons">
-                                <a href="#" class="view-icon active"><span class="icon icon-th"></span></a>
-                                <!-- <a href="#" class="view-icon "><span class="icon icon-th-list"></span></a> -->
+								{% block active_grid_view_indicator %}
+								{% endblock %}                            
                             </div>
                             <div class="view-count">
                                 <span class="text-muted">Page {{ lines.number }} of {{ lines.paginator.num_pages }}</span>
@@ -64,14 +62,9 @@
                     </div><!-- /.row -->
                 </form>	
 			</div> <!-- /.product-header-actions -->
-			<div class="products products-grid-wrapper">
-				<div class="row">
-				{% for line in lines %}
-					{# Django provides it you can use {{ forloop.counter }} index start at 1 or {{ forloop.counter0 }} index start at 0. #}
-					{% flavor_grid_view line %}
-				{% endfor %} 					
-				</div>
-			</div>
+			{% block display_flavors %}
+
+			{% endblock %}
             <ul class="pagination">
             	{% if lines.has_previous %}
             	<li class="pagination-prev"><a href="?page={{ lines.previous_page_number }}"><i class="icon icon-arrow-prev"></i></a></li>

@@ -1,0 +1,19 @@
+{% extends "volumes.html" %}
+{% load flavor_grid_view %}
+
+{% block active_grid_view_indicator %}
+<a href="#" class="view-icon active"><span class="icon icon-th"></span></a>
+<a href="{% url 'catalog:volumes_list' id=volume_id %}" class="view-icon "><span class="icon icon-th-list"></span></a>
+{% endblock %}             
+               
+{% block display_flavors %}
+<div class="products products-grid-wrapper">
+	<div class="row">
+	{% for line in lines %}
+		{# Django provides it you can use {{ forloop.counter }} index start at 1 or {{ forloop.counter0 }} index start at 0. #}
+		{% flavor_grid_view line %}
+	{% endfor %} 						
+	
+	</div>
+</div>
+{% endblock %}
