@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('catalog.urls',namespace="catalog")),
     url(r'^misc/', include('misc.urls',namespace="misc")),
+    url(r'^cart/', include('cart.urls',namespace="cart")),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 def handler404(request):

@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
+{% load get_price %}
+{% load catalog_filters %}
 {% block site_header %} 
 <header id="header" class="awe-menubar-header">
 	<nav class="awemenu-nav headroom" data-responsive-width="1200">
@@ -40,9 +42,65 @@
 	 	                    <a href="#" title="" class="awemenu-icon menu-shopping-cart">
 	                          <i class="icon icon-shopping-bag"></i>
 	                          <span class="awe-hidden-text">Cart</span>
-	                          <!-- <span class="cart-number">2</span> -->
+                              {% if cart_item_count and cart_item_count > 0 %}
+                              <span class="cart-number">{{ cart_item_count }}</span>
+                              {% endif %}
 	                      	</a>
-                   			{% block cart_list %}{% endblock %}
+                   			<ul class="submenu megamenu">
+                                {% if cart_item_count == 0 %}
+                                <li>
+                                    <div class="container-fluid">
+                                        <span class="text-muted">Cart is empty</span>
+                                    </div>
+                                </li>
+                                {% else %}
+                                <li>
+                                    <div class="container-fluid">
+                                        <ul class="whishlist">
+                                            {%  for item in cart_items %}
+                                            <li>
+                                                <div class="whishlist-item">
+                                                    <div class="product-image">
+                                                        <a href="#" title="">
+                                                            <img src="{{ item.product.flavor_id.get_image_url }}" alt="">
+                                                        </a>
+                                                    </div>
+
+                                                    <div class="product-body">
+                                                        <div class="whishlist-name">
+                                                            <h3><a href="#" title="">{{ item.product.flavor_id.name }}</a></h3>
+                                                        </div>
+
+                                                        <div class="whishlist-price">
+                                                            <span>Price:</span>
+                                                            <strong>{{ item.get_price }}</strong>
+                                                        </div>
+
+                                                        <div class="whishlist-quantity">
+                                                            <span>Quantity:</span>
+                                                            <span>{{ item.quantity }}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+<!--                                                 <a href="#" title="" class="remove">
+                                                    <i class="icon icon-remove"></i>
+                                                </a> -->
+                                            </li>                                                
+                                            {% endfor %}
+                                        </ul>
+                                        <div class="menu-cart-total">
+                                            <span>Total</span>
+                                            <span class="price">{{ cart_total|currency }}</span>                                            
+                                        </div>
+                                        <div class="cart-action">
+                                            <a href="cart.html" title="" class="btn btn-lg btn-dark btn-outline btn-block">View cart</a>
+                                            <a href="checkout.html" title="" class="btn btn-lg btn-primary btn-block">Proceed To Checkout</a>
+                                        </div>
+                                    </div>
+                                </li>                                    
+                                {% endif %}                                
+                            </ul>
 	                    </li>                        
 					</ul> <!-- Navigation Bar Icons End -->
 					

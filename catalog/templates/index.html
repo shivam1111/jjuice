@@ -60,6 +60,7 @@
                             <!-- <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry</p> -->
                         </div>
                         <form method="GET" action="/misc/newsletter/" class="subscible-form">
+                            {% csrf_token %}
                             <div class="form-group">
                                 <label class="sr-only" for="subscribe-email">Email</label>
                                 <input type="email" name="email" required placeholder="Enter your email address" class="form-control" id="subscribe-email">

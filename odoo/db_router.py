@@ -23,4 +23,5 @@ class OdooRouter(object):
         if obj1._state.db in db_list and obj2._state.db in db_list:
             return True
         return None
+    
 

@@ -1,3 +1,5 @@
+{% load catalog_filters %}
+
 <div class="white-popup product-quickview-popup">
     <div class="product">
         <div class="product-media">
@@ -16,7 +18,7 @@
             </h2><!-- /.product-name -->
 
             <div class="product-price">
-                <span class="amount">${{price}}</span>
+                <span class="amount">{{price|currency}}</span>
             </div><!-- /.product-price -->
 
             <div class="product-description">
@@ -33,7 +35,7 @@
                 </div><!-- /.product-features -->
                 <div  id="product-description">
                     <h3>Description:</h3>
-                    <p>{{ flavor.short_description }}</p>
+                    <p>{{ flavor.short_description|default_if_none:" " }}</p>
                 </div><!-- /.tab-pane -->
                 <div id="product-infomation">
                     <h3>Additional Info:</h3>

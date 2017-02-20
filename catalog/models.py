@@ -4,6 +4,7 @@ from django.db import models
 from helper import create_aws_url
 from django.conf import settings
 import os
+from rest_framework.compat import is_authenticated
 
 _TAB_STYLES = [
     (1,'Flavor Concentration Matrix'),
@@ -33,6 +34,12 @@ class ProductFlavors(models.Model):
     file_name = models.CharField(verbose_name="Created Date",max_length=100,blank=False)
     short_description = models.TextField(verbose_name = "Short Description")
     long_description = models.TextField(verbose_name = "Long Description")
+
+    def get_price(self,request,volume):
+        if  request.user.is_authenticated():
+            pass
+        else:
+            volume.msrp
 
     def get_image_url(self):
         url = os.path.join(settings.STATIC_URL,settings.PLACEHOLDER_IMAGE)
@@ -95,8 +102,8 @@ class ProductVariant(models.Model):
         url = os.path.join(settings.STATIC_URL,settings.PLACEHOLDER_IMAGE)
         if self.file_name:
             url = create_aws_url(self._meta.db_table,str(self.id))
-        return url   
-    
+        return url 
+
     id = models.IntegerField(primary_key=True)
     product_tmpl_id = models.ForeignKey(
                                     ProductTemplate,verbose_name = "Product Template",

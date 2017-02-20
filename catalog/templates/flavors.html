@@ -2,6 +2,8 @@
 {% load options %}
 {% load static %}
 {% load rating %}
+{% load catalog_filters %}
+
 {% block site_main %}
 <div class="main-header background background-image-heading-product">
     <div class="container">
@@ -81,12 +83,24 @@
 				    </ul>
 				</div><!-- /.product-features -->
                 <div class="product-actions-wrapper">
-                    <form action="product-quick-view.html" method="POST">
+                    <div>
+                    {% if form.errors %}
+                    <div class="alert alert-danger">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <i class="fa fa-exclamation-triangle"></i>
+                        {% for key,value in form.errors.items  %}      
+                        <span>{{ key|escape }} : {{ value|escape }}</span>
+                        {% endfor %}        
+                    </div>                                            
+                    {% endif %}                
+                    </div>
+                    <form action="{% url 'catalog:flavor' id=flavor.id %} " method="POST">
+                        {% csrf_token %}
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="p_color">Volume</label>
-                                    <select name="volume_id" id="p_color" class="form-control" >
+                                    <select name="volume_id" id="p_color" class="form-control text-center" >
                                         <option value="{{ volume_id }}">{{ current_volume.name }}</option>
                                     </select>
                                 </div>
@@ -95,7 +109,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="p_size">Nicotine Strength</label>
-                                    <select name="conc_id" id="p_size" class="form-control">
+                                    <select name="conc_id" id="p_size" class="form-control text-center">
                                         {% for i in products %}
                                         	<option value="{{ i.conc_id.id }}">{{ i.conc_id.name }}</option>
                                         {% endfor %}
@@ -106,21 +120,22 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="p_qty">Qty</label>
-                                    <input name="qty" id="p_qty" class="form-control">
+                                    <input name="quantity" id="p_qty" class="form-control text-center" autocomplete="off" required>
                                 </div>
                             </div>
+                            <input name="flavor_id" id="p_flavor_id" type="hidden" required class="form-control" value="{{flavor.id}}"/>
                         </div>
-                    </form><!-- /.form -->				
-                    <div class="product-list-actions">
-                        <span class="product-price">
-                            <span class="amount">{{ price }}</span>
-                            {% if old_price != 0 %}
-                            <del class="amount">{{ old_price }}</del>
-                            {% endif %}
-                        </span><!-- /.product-price -->
+                        <div class="product-list-actions">
+                            <span class="product-price">
+                                <span class="amount">{{ price|currency }}</span>
+                                {% if old_price != 0 %}
+                                <del class="amount">{{ old_price|currency }}</del>
+                                {% endif %}
+                            </span><!-- /.product-price -->
 
-                        <button class="btn btn-lg btn-primary" >Add to cart</button>
-                    </div><!-- /.product-list-actions -->
+                            <button class="btn btn-lg btn-primary" type="submit" >Add to cart</button>
+                        </div><!-- /.product-list-actions -->
+                    </form>
                 </div><!-- /.product-actions-wrapper -->				                            
             </div>
 		</div>		
