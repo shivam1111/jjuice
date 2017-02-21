@@ -71,7 +71,7 @@
                     <a href="#" title=" {{ flavor.name }}">{{ flavor.name }}</a>
                 </h2><!-- /.product-name -->
 	            <div class="product-description">
-	                <p>{{ flavor.short_description }}</p>
+	                <p>{{ flavor.short_description|default_if_none:" " }}</p>
 	            </div><!-- /.product-description -->
 	            <div class="product-features">
 				    <h3>Special Features:</h3>
@@ -146,7 +146,6 @@
             <li><a data-toggle="tooltip" href="http://facebook.com/vapejjuice" title=""><i class="icon icon-facebook"></i></a></li>
             <li><a data-toggle="tooltip" href="http://instagram.com/vapejjuice" title=""><i class="fa fa-instagram"></i></a></li>
             <li><a data-toggle="tooltip" href="http://vapejjuice.tumblr.com/" title=""><i class="fa fa-tumblr"></i></a></li>        
-		    
         </ul>
     </div><!-- /.product-socials -->	
     <div class="product-details-left">
@@ -166,7 +165,7 @@
             </nav><!-- /nav -->
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="product-description">
-                    <p>{{ flavor.long_description }}</p>
+                    <p>{{ flavor.long_description|default_if_none:" " }}</p>
                 </div><!-- /.tab-pane -->
                 <div role="tabpanel" class="tab-pane" id="product-infomation">
                     <ul>
@@ -198,7 +197,7 @@
                 		<li>
                 			{% rating r %}
 	           			    <div class="review-comment">
-	                            <p>{{ r.description }}</p>
+	                            <p>{{ r.description|default_if_none:" " }}</p>
 	                        </div>
                             <div class="review-meta">
                                 <span>Posted by</span>

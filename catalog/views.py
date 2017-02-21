@@ -87,7 +87,7 @@ class Flavor(View):
             pass            
         else:
 #             volumes = flavor.flavor_product_variant_ids.values_list('vol_id__id','vol_id__name').distinct('vol_id__id')
-            products = flavor.flavor_product_variant_ids.filter(vol_id=volume_id).distinct('conc_id__id')
+            products = flavor.flavor_product_variant_ids.filter(vol_id=volume_id,product_tmpl_id__type="product").distinct('conc_id__id')
             price = get_price(is_authenticated,current_volume) 
             old_price = current_volume.old_price
         return render(request,template_name,locals())
@@ -119,7 +119,7 @@ class Flavor(View):
             # If the user is logged the behaviour goes here
             pass            
         else:
-            products = flavor.flavor_product_variant_ids.filter(vol_id=volume_id).distinct('conc_id__id')
+            products = flavor.flavor_product_variant_ids.filter(vol_id=volume_id,product_tmpl_id__type="product").distinct('conc_id__id')
             price = flavor.get_price(request,current_volume) 
             old_price = current_volume.old_price        
         request.session.set_test_cookie()

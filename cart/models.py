@@ -4,6 +4,7 @@ from catalog.models import ProductVariant
 from helper import get_price
 import uuid
 from django.conf import settings
+from django.core.urlresolvers import reverse
 
 class CartItem(models.Model):
     id = models.AutoField(primary_key=True)
@@ -20,6 +21,12 @@ class CartItem(models.Model):
         ordering = ("create_date",)
     
     @property
+    def get_product_url(self):
+        if self.product:
+            return self.product.get_url()
+        return "#" 
+
+    @property
     def get_price(self):
         if self.user_id:
             pass
@@ -29,10 +36,12 @@ class CartItem(models.Model):
     @property
     def product(self):
         return ProductVariant.objects.get(id=self.product_id)
-            
-    def total(self):
-        price = self.get_price()
-        return self.quantity * price    
+    
+    @property       
+    def get_total(self):
+        price = self.get_price
+        total = self.quantity * price
+        return total    
 
     def name(self,product):
         return product.product_tmpl_id.name

@@ -10,8 +10,3 @@ urlpatterns = [
     url(r'^flavor_quick_view/(?P<id>[0-9]+)/$', FlavorQuickView.as_view(), { 'template_name':'flavor_quick_view.html'}, name='flavor_quick_view'),
 ] 
 
-# urlpatterns = patterns('ecomstore.catalog.views',
-# , (r'^category/(?P<category_slug>[-\w]+)/$',  
-# 'show_category', { 'template_name':'catalog/category.html'},'catalog_category'),
-# (r'^product/(?P<product_slug>[-\w]+)/$',   'show_product', {
-# 'template_name':'catalog/product.html'},'catalog_product'), )

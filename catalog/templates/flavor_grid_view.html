@@ -11,7 +11,7 @@
              </div><!-- /.product-thumbnail -->
              <div class="product-hover">
                  <div class="product-actions">
-                     <a href="#" class="awe-button product-add-cart" data-toggle="tooltip" title="Add to cart">
+                     <a href="{% url 'cart:quick_show_cart' id=line.flavor_id.id %}?volume_id={{ line.tab_id.vol_id.id }}" class="awe-button product-quick-view" data-toggle="tooltip" title="Add to cart">
                          <i class="icon icon-shopping-bag"></i>
                      </a>
 

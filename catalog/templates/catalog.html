@@ -10,15 +10,17 @@
 				<div class="navbar-header">
 					<ul class="navbar-icons"> <!-- Navigation Bar Icons -->
                         <li class="menubar-account">
-                            <a href="#" title="" class="awemenu-icon">
+                            <a href="#login-popup" title="" class="awemenu-icon">
                                 <i class="icon icon-user-circle"></i>
                                 <span class="awe-hidden-text">Account</span>
                             </a>
+                            {% if request.user.is_authenticated %}
                             <ul class="submenu megamenu">
                                 <li>
                                     <div class="container-fluid">
                                         <div class="header-account">
-                           	        		{% block account_info %}{% endblock %}
+                                            {% block account_info %}
+                                            {% endblock %}
 <!--                                             <div class="header-account-avatar">
                                                 <a href="#" title="">
                                                     <img src="./img/samples/avatars/customers/1.jpg" alt="" class="img-circle">
@@ -35,7 +37,18 @@
                                         </div>
                                     </div>
                                 </li>
-                            </ul> <!-- submenu megamenu -->
+                            </ul> <!-- submenu megamenu -->                            
+                            {% else %}
+                            <ul class="submenu dropdown">
+                                <li>
+                                    <a href="#login-popup" title="">Login</a>
+                                </li>
+
+                                <li>
+                                    <a href="#registration-popup" title="">Register</a>
+                                </li>
+                            </ul>
+                            {% endif %}
                         </li>
                         {% block wishlist %}{% endblock %}
                         <li class="menubar-cart">
@@ -61,14 +74,14 @@
                                             <li>
                                                 <div class="whishlist-item">
                                                     <div class="product-image">
-                                                        <a href="#" title="">
+                                                        <a href="{% url 'catalog:flavor' id=item.product.flavor_id.id %}?volume_id={{ item.product.vol_id.id }}" title="">
                                                             <img src="{{ item.product.flavor_id.get_image_url }}" alt="">
                                                         </a>
                                                     </div>
 
                                                     <div class="product-body">
                                                         <div class="whishlist-name">
-                                                            <h3><a href="#" title="">{{ item.product.flavor_id.name }}</a></h3>
+                                                            <h3><a href="{% url 'catalog:flavor' id=item.product.flavor_id.id %}?volume_id={{ item.product.vol_id.id }}" title="">{{ item.product.get_name }}</a></h3>
                                                         </div>
 
                                                         <div class="whishlist-price">
@@ -94,7 +107,7 @@
                                             <span class="price">{{ cart_total|currency }}</span>                                            
                                         </div>
                                         <div class="cart-action">
-                                            <a href="cart.html" title="" class="btn btn-lg btn-dark btn-outline btn-block">View cart</a>
+                                            <a href="{% url 'cart:show_cart' %}" title="" class="btn btn-lg btn-dark btn-outline btn-block">View cart</a>
                                             <a href="checkout.html" title="" class="btn btn-lg btn-primary btn-block">Proceed To Checkout</a>
                                         </div>
                                     </div>
@@ -219,7 +232,7 @@
                 		<div class="widget">
                         	<h3 class="widget-title">Shopping</h3>
                             <ul>
-                                <li><a href="#" title="">Your Cart</a></li>
+                                <li><a href="/cart/" title="">My Cart</a></li>
                                 <li><a href="#" title="">Your Orders</a></li>
                             </ul>
                         </div><!-- /.widget -->
@@ -316,4 +329,131 @@
         <small>Back to top</small>
     </a>
 </footer>
+<div id = "registration-popup" class="white-popup login-popup mfp-hide">
+    <div role="tabpanel">
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active">
+                <a href="#account-login" aria-controls="account-login" role="tab" data-toggle="tab">Signup</a>
+            </li>
+        </ul><!-- /.nav -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="account-register">
+                <form action="index.html" method="POST" >
+                    <div class="form-group">
+                        <label for="register-username">Username <sup>*</sup></label>
+                        <input type="text" class="form-control" id="register-username">
+                    </div><!-- /.form-group -->
+
+                    <div class="form-group">
+                        <label for="register-email">Email <sup>*</sup></label>
+                        <input type="text" class="form-control" id="register-email">
+                    </div><!-- /.form-group -->
+
+                    <div class="form-group">
+                        <label for="register-password">Password <sup>*</sup></label>
+                        <input type="password" class="form-control" id="register-password">
+                    </div><!-- /.form-group -->
+
+                    <div class="form-group">
+                        <label for="register-confirm-password">Confirm Password <sup>*</sup></label>
+                        <input type="password" class="form-control" id="register-confirm-password">
+                    </div><!-- /.form-group -->
+
+                    <div class="form-button">
+                        <button type="submit" class="btn btn-lg btn-warning btn-block">Register</button>
+                    </div><!-- /.form-button -->
+                </form>
+            </div><!-- /.tab-pane -->        
+        </div>
+    </div>
+</div>
+
+{% if not request.user.is_authenticated %}
+<div id="login-popup" class="white-popup login-popup mfp-hide">
+    <div role="tabpanel">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active">
+                <a href="#account-login" aria-controls="account-login" role="tab" data-toggle="tab">Account Login</a>
+            </li>
+        </ul><!-- /.nav -->
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="account-login">
+                <form action="{% url 'auth:login' %}" method="POST" id="login-popup-form">
+<!--                     <div class="alert alert-danger">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <strong>Whoop!</strong> <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span>                        
+                    </div>
+                    <div class="alert alert-danger">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <strong>Whoop!</strong> <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span>                        
+                    </div> -->
+                    {% csrf_token %}                                            
+                    <div class="form-group">
+                        <label for="login-account">Account</label>
+                        <input required type="text" name="username" class="form-control" id="login-account">
+                    </div><!-- /.form-group -->
+
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" required name="password" class="form-control" id="login-password" data-show-password="true">
+                    </div><!-- /.form-group -->
+
+                    <div class="forgot-passwd">
+                        <a href="#" title="">
+                            <i class="icon icon-key"></i>
+                            <span>Forgot your password?</span>
+                        </a>
+                    </div><!-- /.forgot-passwd -->
+                    <div class="forgot-passwd">
+                        <a href="#registration-popup" title="">
+                            <i class="fa fa-user-plus" aria-hidden="true"></i>
+                            <span>New to JJuice? Signup</span>
+                        </a>
+                    </div><!-- /.forgot-passwd -->                    
+
+                    <div class="form-button">
+                        <button type="submit" class="btn btn-lg btn-primary btn-block has-spinner"><span class="spinner"><img src="{% static 'img/ajax-loader.gif' %}" width="10" height="10"></span>Login</button>
+                    </div><!-- /.form-group -->
+                </form>
+            </div><!-- /.tab-pane -->
+        </div><!-- /.tab-content -->
+    </div>
+</div><!-- /.login-popup -->
+
+<script>
+    $(function() {
+        $('a[href="#login-popup"],a[href="#registration-popup"]').magnificPopup({
+            type:'inline',
+            midClick: false,
+            closeOnBgClick: false
+        });
+        $("form#login-popup-form").on('submit',function(){
+            event.preventDefault();
+            var form = this;
+            // console.log($(this));
+            var url = $(form).attr('action');
+            $.ajax({
+                type: "POST",
+                url: url,
+                beforeSend:function(){
+                    $(form).find("button[type='submit']").addClass('active')
+                },
+                data: $(form).serializeArray(),
+                error:function(data){
+                    console.log("error",data)
+                },
+                complete:function(){
+                    $(form).find("button[type='submit']").removeClass('active')
+                },                
+                success:function(data){
+                    console.log("success")
+                },
+            });
+        });
+    });
+</script>
+{% endif %}
 {% endblock %}

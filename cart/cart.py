@@ -39,7 +39,7 @@ def add_to_cart(request):
     # get quantity added , return 1 if empty
     quantity = int(postdata.get('quantity',1))
     #fetch the product or return a missing page error
-    p = get_object_or_404(ProductVariant,vol_id=volume_id,conc_id=conc_id,flavor_id=flavor_id)
+    p = get_object_or_404(ProductVariant,vol_id=volume_id,conc_id=conc_id,flavor_id=flavor_id,active=True,product_tmpl_id__type="product")
     # get products in cart
     cart_products = get_cart_items(request)
     # Check to see if item already in cart
@@ -66,7 +66,7 @@ def get_cart_total(request):
     total = 0.00
     cart_items = get_cart_items(request)
     try:
-        total = round(sum(item.get_price for item in cart_items),2)
+        total = round(sum(item.get_total for item in cart_items),2)
     except Exception as e:
         pass
     return total

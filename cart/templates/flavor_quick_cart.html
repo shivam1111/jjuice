@@ -21,6 +21,9 @@
                 <span class="amount">{{price|currency}}</span>
             </div><!-- /.product-price -->
 
+            <div class="product-description">
+                <p>{{flavor.short_description|default_if_none:" "}}</p>
+            </div>
             <div class="product-details-wrapper">
                 <div class="product-features">
                     <h3>Special Features:</h3>
@@ -30,34 +33,48 @@
                         <li>Section 1.10.33 of "de Finibus Bonorum et Malorum</li>
                     </ul>
                 </div><!-- /.product-features -->
-                <div  id="product-description">
-                    <h3>Description:</h3>
-                    <p>{{ flavor.long_description|default_if_none:" " }}</p>
-                </div><!-- /.tab-pane -->
-                <div id="product-infomation">
-                    <h3>Additional Info:</h3>
-                    <ul>
-                        <li>
-                            <span>Weight</span>
-                            <span class="value">{{ current_volume.weight }}</span>
-                        </li>
+                <form action="{% url 'catalog:flavor' id=flavor.id %} " method="POST">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="p_color">Volume</label>
+                                <select name="volume_id" id="p_color" class="form-control text-center" >
+                                    <option value="{{ volume_id }}">{{ current_volume.name }}</option>
+                                </select>
+                            </div>
+                        </div>
 
-                        <li>
-                            <span>Ratio</span>
-                            <span class="value">{{ current_volume.ratio }}</span>
-                        </li>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="p_size">Nicotine Strength</label>
+                                <select name="conc_id" id="p_size" class="form-control text-center">
+                                    {% for i in products %}
+                                        <option value="{{ i.conc_id.id }}">{{ i.conc_id.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
 
-                        <li>
-                            <span>Nicotine Strengths Available</span>
-                            <span class="value">
-                            {% for product in products %}
-                            {{ product.conc_id.name }}
-                            {% if not forloop.last %} ,{% endif %}
-                            {% endfor %}
-                            </span>
-                        </li>
-                    </ul>
-                </div><!-- /.tab-pane -->                
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="p_qty">Qty</label>
+                                <input name="quantity" id="p_qty" class="form-control text-center" autocomplete="off" required>
+                            </div>
+                        </div>
+                        <input name="flavor_id" id="p_flavor_id" type="hidden" required class="form-control" value="{{flavor.id}}"/>
+                    </div>
+                    <div class="product-list-actions">
+                        <span class="product-price">
+                            <span class="amount">{{ price|currency }}</span>
+                            {% if old_price != 0 %}
+                            <del class="amount">{{ old_price|currency }}</del>
+                            {% endif %}
+                        </span><!-- /.product-price -->
+
+                        <button class="btn btn-lg btn-primary" type="submit" >Add to cart</button>
+                    </div><!-- /.product-list-actions -->
+                </form>
             </div>
             <!-- <div class="product-list-actions-wrapper">
                  <form action="product-quick-view.html" method="POST">

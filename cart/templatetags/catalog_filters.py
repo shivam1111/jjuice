@@ -5,7 +5,6 @@ register = template.Library()
 
 @register.filter(name="currency")
 def currency(value):
-    print "=======================value",value
     try:
         locale.setlocale(locale.LC_ALL,'en_US.UTF-8')
     except:

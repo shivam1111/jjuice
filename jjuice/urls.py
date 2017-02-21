@@ -27,6 +27,8 @@ urlpatterns = [
     url(r'^', include('catalog.urls',namespace="catalog")),
     url(r'^misc/', include('misc.urls',namespace="misc")),
     url(r'^cart/', include('cart.urls',namespace="cart")),
+    url(r'^accounts/', include('odoo_auth.urls',namespace="odoo_auth")),
+    url(r'^accounts/', include('django.contrib.auth.urls',namespace="auth")),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 def handler404(request):

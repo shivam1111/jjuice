@@ -3,8 +3,10 @@ from odoo.models import ProductAttributeValue
 from django.db import models
 from helper import create_aws_url
 from django.conf import settings
-import os
+from django.core.urlresolvers import reverse
 from rest_framework.compat import is_authenticated
+from django.utils.six.moves.urllib.parse import urlencode
+import os
 
 _TAB_STYLES = [
     (1,'Flavor Concentration Matrix'),
@@ -35,11 +37,15 @@ class ProductFlavors(models.Model):
     short_description = models.TextField(verbose_name = "Short Description")
     long_description = models.TextField(verbose_name = "Long Description")
 
+    def get_url(self):
+        return reverse('catalog:flavor',args=[self.id])
+        
+
     def get_price(self,request,volume):
         if  request.user.is_authenticated():
             pass
         else:
-            volume.msrp
+            return volume.msrp
 
     def get_image_url(self):
         url = os.path.join(settings.STATIC_URL,settings.PLACEHOLDER_IMAGE)
@@ -98,12 +104,26 @@ class ProductTemplate(models.Model):
 
 class ProductVariant(models.Model):
 
+    def get_name(self):
+        name = ""
+        if self.flavor_id and self.vol_id and self.conc_id:
+            name = " | ".join([self.flavor_id.name,self.vol_id.name,self.conc_id.name])
+        else:
+            name = self.product_tmpl_id.name 
+        return name
+
     def get_image_url(self):
         url = os.path.join(settings.STATIC_URL,settings.PLACEHOLDER_IMAGE)
         if self.file_name:
             url = create_aws_url(self._meta.db_table,str(self.id))
         return url 
 
+    def get_url(self):
+        flavor_link = self.flavor_id.get_url()
+        data = {'volume_id':self.vol_id.id}
+        product_url = "?".join([flavor_link,urlencode(data)])
+        return product_url
+    
     id = models.IntegerField(primary_key=True)
     product_tmpl_id = models.ForeignKey(
                                     ProductTemplate,verbose_name = "Product Template",
