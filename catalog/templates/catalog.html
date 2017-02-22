@@ -19,21 +19,22 @@
                                 <li>
                                     <div class="container-fluid">
                                         <div class="header-account">
-                                            {% block account_info %}
-                                            {% endblock %}
-<!--                                             <div class="header-account-avatar">
-                                                <a href="#" title="">
-                                                    <img src="./img/samples/avatars/customers/1.jpg" alt="" class="img-circle">
+                                             <div class="header-account-avatar">
+                                                <a href="#" title="Click to edit" data-toggle="tooltip" id = "upload-image-link">
+                                                    {% if request.user.odoo_user.partner_id.image %}
+                                                    <img src="data:image/jpg;base64,{{ odoo_user.partner_id.image }}" alt="" class="img-responsive img-circle" style="max-width:90px;max-height:90px;">
+                                                    {% else %}
+                                                    <img src="{% static 'img/image-placeholder.png' %}" alt="" class="img-responsive img-circle" style="width:90px;height:90px;">
+                                                    {% endif %}
                                                 </a>
+                                                <input type="file" class="hidden" id="upload-image" />
                                             </div>
                                             <div class="header-account-username">
-                                                <h4><a href="#">Jessica Alba</a></h4>
+                                                <h4><a href="#">{{ odoo_user.partner_id.name }}</a></h4>
                                             </div>
                                             <ul>
-                                                <li><a href="#">Invite Friends</a></li>
-                                                <li><a href="#">Account Infomation</a></li>
-                                                <li><a href="#">Logout</a></li>
-                                            </ul> -->
+                                                <li><a href="{% url 'auth:logout' %}?next=/">Logout</a></li>
+                                            </ul>
                                         </div>
                                     </div>
                                 </li>
@@ -362,13 +363,73 @@
                     <div class="form-button">
                         <button type="submit" class="btn btn-lg btn-warning btn-block">Register</button>
                     </div><!-- /.form-button -->
+                    <div class="forgot-passwd">
+                        <a href="#login-popup" title="">
+                            <i class="fa fa-sign-in" aria-hidden="true"></i>
+                            <span>Signin</span>
+                        </a>                    
+                    </div>
                 </form>
             </div><!-- /.tab-pane -->        
         </div>
     </div>
 </div>
 
-{% if not request.user.is_authenticated %}
+{% if request.user.is_authenticated %}
+<script>
+    $(function(){
+        var upload_image_link = $("a#upload-image-link");
+        var upload_input = $("input#upload-image")
+        var profile_image_allowed = ['image/jpeg','image/png','image/gif']
+        upload_image_link.on("click",function(){
+            upload_input.click();
+        });    
+        upload_input.on("change",function(){
+            var inputFile = upload_input[0].files[0]
+            var data = new FormData();
+            if (inputFile == undefined){
+                return
+            }
+            var size_mb = parseFloat((inputFile.size/1048576).toFixed(2)) //inputFile.size is in bytes
+            if (size_mb > 1){
+                $.notify("Sorry! Only 5 MB filesize allowed",'warning','error')
+                return                  
+            }
+
+            if (profile_image_allowed.indexOf(inputFile.type) < 0 ){
+                $.notify("Sorry! Only png / jpg / gif format allowed",'error')
+                return
+            }
+            data.append('image', inputFile);
+            data.append('csrfmiddlewaretoken',"{{csrf_token}}")
+            $.ajax({
+                type: "POST",
+                url: "{% url 'odoo_auth:upload' %}",
+                beforeSend:function(){
+                    // Before Send
+                },
+                data: data, 
+                cache: false,
+                contentType: false,
+                processData: false,                
+                error:function(data){
+                    console.log("error",data)
+                },
+                complete:function(){
+                    // on complete
+                },                
+                success:function(data){
+                    // on success
+                    console.log("success",data)
+                    console.log(upload_image_link.find('image'));
+                    upload_image_link.find('img').attr('src','data:image/jpg;base64,'+data)
+                },                
+            })
+        });
+    });
+
+</script>
+{% else %}
 <div id="login-popup" class="white-popup login-popup mfp-hide">
     <div role="tabpanel">
         <!-- Nav tabs -->
@@ -413,7 +474,7 @@
                             <span>New to JJuice? Signup</span>
                         </a>
                     </div><!-- /.forgot-passwd -->                    
-
+                    <input type="hidden" name="next" value="{{ next }}" />
                     <div class="form-button">
                         <button type="submit" class="btn btn-lg btn-primary btn-block has-spinner"><span class="spinner"><img src="{% static 'img/ajax-loader.gif' %}" width="10" height="10"></span>Login</button>
                     </div><!-- /.form-group -->
@@ -425,6 +486,7 @@
 
 <script>
     $(function() {
+        console.log("Dude")
         $('a[href="#login-popup"],a[href="#registration-popup"]').magnificPopup({
             type:'inline',
             midClick: false,
@@ -449,7 +511,7 @@
                     $(form).find("button[type='submit']").removeClass('active')
                 },                
                 success:function(data){
-                    console.log("success")
+                    location.reload();
                 },
             });
         });

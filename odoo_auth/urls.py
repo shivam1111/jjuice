@@ -1,6 +1,7 @@
 from django.conf.urls import url
-
+from views import UploadProfileImage
 urlpatterns = [
+        url(r'^upload/$', UploadProfileImage.as_view(),name='upload'),    
 #         url(r'^register/$', 'register',name='register'),
 #         url(r'^my_account/$', 'my_account',{'template_name': 'registration/my_account.html'}, 'my_account'),
 #         url(r'^order_details/(?P<order_id>[-\w]+)/$', 'order_details', {'template_name': 'registration/order_details.html'}, 'order_details'),

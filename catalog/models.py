@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-from odoo.models import ProductAttributeValue
+from odoo.models import ProductAttributeValue,Partner
 from django.db import models
 from helper import create_aws_url
 from django.conf import settings
@@ -66,6 +66,8 @@ class ProductTab(models.Model):
                                      related_name="tab_ids")
     consumable_stockable = models.CharField(max_length=20,verbose_name="Product Type",choices = _PRODUCT_TYPES)
     visible_all_customers = models.NullBooleanField(verbose_name="Visible to all customers")
+    active = models.NullBooleanField(verbose_name="Active")
+    specific_customer_ids = models.ManyToManyField(Partner,db_table="product_tab_res_partners",related_name="tab_ids")
     
     _DATABASE = "odoo"    
     class Meta:

@@ -9,6 +9,23 @@ _PRODUCT_TYPES = [
         ('service','Service'),
     ]
 
+import base64
+
+class Base64Field(models.TextField):
+
+    def contribute_to_class(self, cls, name):
+        if self.db_column is None:
+            self.db_column = name
+        self.field_name = name + '_base64'
+        super(Base64Field, self).contribute_to_class(cls, self.field_name)
+        setattr(cls, name, property(self.get_data, self.set_data))
+
+    def get_data(self, obj):
+        return getattr(obj, self.field_name)
+#         return base64.decodestring(getattr(obj, self.field_name))
+
+    def set_data(self, obj, data):
+        setattr(obj, self.field_name, base64.encodestring(data))
 
 class S3Object(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -95,3 +112,39 @@ class ProductAttributeValue(models.Model):
     class Meta:
         managed=False
         db_table = "product_attribute_value"
+
+class Country(models.Model):
+    name = models.CharField(verbose_name = "Name",blank=False,max_length = 60)
+    code = models.CharField(verbose_name = "Name",blank=False,max_length = 2)
+    id = models.IntegerField(primary_key=True)
+    
+    _DATABASE = "odoo"    
+    class Meta:
+        managed=False
+        db_table = "res_country"
+
+class Partner(models.Model):
+    id = models.IntegerField(primary_key=True)
+    name = models.CharField(verbose_name="Name",blank=False,max_length = 50)
+    image = models.BinaryField(verbose_name = "Image",db_column="image")
+    is_company = models.NullBooleanField("Is Company")
+    parent_id = models.ForeignKey('self',verbose_name = "Company",blank=True,related_name="child_ids",db_column = "parent_id",null=True)
+    city = models.CharField(verbose_name="City",blank=True,max_length = 60)
+    country_id = models.ForeignKey(Country,verbose_name = "Country",db_column = "country_id",null=True)
+    email = models.EmailField(verbose_name = "Email",blank=True)
+    _DATABASE = "odoo"    
+    
+    class Meta:
+        managed=False
+        db_table = "res_partner"                
+
+class ResUsers(models.Model):
+    id = models.IntegerField(primary_key=True)
+    login  = models.CharField(verbose_name="Login",max_length = 64,blank=False)
+    partner_id = models.ForeignKey(Partner,db_column = "partner_id",blank=False,verbose_name = "Partner") 
+
+    _DATABASE = "odoo"    
+    
+    class Meta:
+        managed=False
+        db_table = "res_users"                    

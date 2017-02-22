@@ -25,9 +25,8 @@ _SORT_BY = [
 class Index(View):
     def get(self,request,template_name="index.html"):
         banners = policies = []
-        if not request.user.is_authenticated():
-            banners = WebsiteBanner.objects.all().order_by('sequence')
-            policies = WebsitePolicy.objects.all().order_by('sequence')[:3]
+        banners = WebsiteBanner.objects.all().order_by('sequence')
+        policies = WebsitePolicy.objects.all().order_by('sequence')[:3]
         return render(request,"index.html",{'banners':banners,'policies':policies})        
 
 class Volume(View):
@@ -35,16 +34,19 @@ class Volume(View):
     @safe_cast
     def get(self,request,id,template_name="volumes.html"):
         volume_id = int(id) # TypeError and ValueError handled by the decorator
-        assert volume_id in request.volumes_data.keys() , "You are not allowed to acces this page"
+        assert volume_id in request.volumes_data.keys() , "You are not allowed to access this page"
         name = request.volumes_data[volume_id]['name']
         sort_by = request.GET.get('sort_by','default')
-        if request.user.is_authenticated():
-            # If the user is logged the behaviour goes here
+        if request.user.is_authenticated:
+            # If the user is logged in  the behaviour goes here
             pass            
         else:
-            lines_list = FlavorConcDetails.objects.filter(tab_id__vol_id=volume_id,
+            lines_list = FlavorConcDetails.objects.filter(
+                                                          tab_id__vol_id=volume_id,
                                                           tab_id__visible_all_customers=True,
-                                                          tab_id__consumable_stockable = 'product')
+                                                          tab_id__consumable_stockable = 'product',
+                                                          tab_id__active = True
+                                                        )
 
         try:
             lines_list.order_by(sort_by)

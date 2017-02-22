@@ -1,8 +1,18 @@
 from django.db import models
-from django.contrib.auth.models import User
+from odoo.models import ResUsers
+from django.contrib.auth.models import AbstractUser
 
 
-class OdooUser(models.Model):
-    user = models.OneToOneField(User)
-    odoo_id = models.BigIntegerField(primary_key=True)
-    username = models.CharField(max_length=256)
+class OdooUser(AbstractUser):
+    REQUIRED_FIELDS = ['odoo_id','email']
+
+    odoo_id = models.BigIntegerField(blank=False,null=False,verbose_name = "Odoo ID",unique=True)
+    
+    @property
+    def odoo_user(self):
+        try:
+            return ResUsers.objects.get(id=self.odoo_id)
+        except ResUsers.DoesNotExist:
+            return None
+        
+        
