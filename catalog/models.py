@@ -4,7 +4,6 @@ from django.db import models
 from helper import create_aws_url
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from rest_framework.compat import is_authenticated
 from django.utils.six.moves.urllib.parse import urlencode
 import os
 
