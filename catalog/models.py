@@ -29,6 +29,7 @@ _RATING = [
         ('4','Very Good')
     ] 
 
+
 class ProductFlavors(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=100,verbose_name="Name",blank=False)
@@ -40,12 +41,14 @@ class ProductFlavors(models.Model):
     def get_url(self):
         return reverse('catalog:flavor',args=[self.id])
         
-
-    def get_price(self,request,volume):
-        if  request.user.is_authenticated():
-            pass
-        else:
-            return volume.msrp
+    def get_price(self,user,volume):
+        if user and (not user.is_anonymous()):
+            price_line = user.odoo_user.partner_id.volume_price_line_ids.filter(product_attribute_id=volume.id)[:1]
+            if price_line.exists():
+                return price_line[0].price
+            elif user.odoo_user.partner_id.classify_finance in ['wholesale','private_label']:
+                return volume.wholesale_price
+        return volume.msrp
 
     def get_image_url(self):
         url = os.path.join(settings.STATIC_URL,settings.PLACEHOLDER_IMAGE)

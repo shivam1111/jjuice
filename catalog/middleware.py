@@ -1,16 +1,19 @@
 from helper import create_aws_url
 from django.utils.deprecation import MiddlewareMixin
+from collections import OrderedDict
 
 class CatalogMiddleware(MiddlewareMixin):
     
     def process_request(self,request):
         from odoo.models import IrConfigParameters,ProductAttributeValue
-        
         volumes_available_ids = eval(IrConfigParameters.objects.get_param('attributes_available_ids','[]'))
-        volumen_not_available = eval(IrConfigParameters.objects.get_param('attribute_value_ids','[]'))
-        volumes_display_ids = set(volumes_available_ids) - set(volumen_not_available)
-        volume_objects = ProductAttributeValue.objects.filter(id__in=volumes_display_ids).order_by('name')
-        volumes_data = {}
+        if (not request.user.is_authenticated) or (not request.user.odoo_user.partner_id.classify_finance) or (request.user.odoo_user.partner_id.classify_finance == 'website'):
+            volumes_not_available = eval(IrConfigParameters.objects.get_param('attribute_value_ids','[]'))
+            volumes_display_ids = set(volumes_available_ids) - set(volumes_not_available)
+        else :
+            volumes_display_ids = volumes_available_ids
+        volume_objects = ProductAttributeValue.objects.filter(id__in=volumes_display_ids).order_by('sequence')
+        volumes_data = OrderedDict()
         for i in volume_objects:
             volumes_data.update({
                     i.id:{
@@ -18,4 +21,4 @@ class CatalogMiddleware(MiddlewareMixin):
                        'url':create_aws_url(ProductAttributeValue._meta.db_table,str(i.id)) 
                     }
                 })
-        request.volumes_data = volumes_data        
+        request.volumes_data = volumes_data

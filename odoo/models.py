@@ -1,12 +1,17 @@
 from __future__ import unicode_literals
 from django.db import models
-from docutils.nodes import description
 from helper import create_aws_url
 
 _PRODUCT_TYPES = [
         ('product','Stockable Product'),
         ('consu','Consumable Product'),
         ('service','Service'),
+    ]
+_CLASSIFICATION_FINANCE = [
+        ('retailer','Retailer'),
+        ('wholesale','WholeSale'),
+        ('private_label','Private Label'),
+        ('website','Website Visitor')
     ]
 
 import base64
@@ -106,6 +111,7 @@ class ProductAttributeValue(models.Model):
     wholesale_price = models.FloatField(verbose_name="Wholesale Price",blank=True)
     msrp = models.FloatField(verbose_name="MSRP",blank=True)
     old_price = models.FloatField(verbose_name="Wholesale Price",blank=True)
+    sequence = models.IntegerField(verbose_name="sequence")
     
         
     _DATABASE = "odoo"
@@ -132,6 +138,8 @@ class Partner(models.Model):
     city = models.CharField(verbose_name="City",blank=True,max_length = 60)
     country_id = models.ForeignKey(Country,verbose_name = "Country",db_column = "country_id",null=True)
     email = models.EmailField(verbose_name = "Email",blank=True)
+    classify_finance = models.CharField(max_length=20,verbose_name="Account Classification",choices = _CLASSIFICATION_FINANCE)
+    
     _DATABASE = "odoo"    
     
     class Meta:
@@ -147,4 +155,17 @@ class ResUsers(models.Model):
     
     class Meta:
         managed=False
-        db_table = "res_users"                    
+        db_table = "res_users"
+    
+class VolumePricesLine(models.Model):
+    id = models.IntegerField(primary_key=True)
+    product_attribute = models.ForeignKey(ProductAttributeValue,db_column="product_attribute",verbose_name="Product Attribute",blank=False)
+    price = models.FloatField(verbose_name="Price")
+    customer_id = models.ForeignKey(Partner,db_column = "customer_id",verbose_name="Partner",blank=False,related_name = "volume_price_line_ids")
+    _DATABASE = "odoo"
+    class Meta:
+        managed=False
+        db_table = "volume_prices_line"
+        
+            
+                        

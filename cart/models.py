@@ -24,20 +24,17 @@ class CartItem(models.Model):
     def get_product_url(self):
         if self.product:
             return self.product.get_url()
-        return "#" 
-
+        return "#"
+     
     @property
     def get_price(self):
-        if self.user_id:
-            pass
-        else:
-            return self.product.vol_id.msrp
-            
+        return self.product.flavor_id.get_price(self.user_id,self.product.vol_id)
+        
     @property
     def product(self):
         return ProductVariant.objects.get(id=self.product_id)
     
-    @property       
+    @property
     def get_total(self):
         price = self.get_price
         total = self.quantity * price

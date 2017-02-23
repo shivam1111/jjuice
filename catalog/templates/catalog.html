@@ -159,7 +159,7 @@
 	                   			<div class="container-fluid">
 	                   				<div class="row">
 	                                    {% for key,value in request.volumes_data.items %}
-	                                    <div class="col-lg-offset-1 col-lg-3">
+	                                    <div class="col-lg-2">
 	                                        <div class="awe-media inline margin-bottom-25">
 	                                            <div class="awe-media-image">
 	                                                <a href="{% url 'catalog:volume' id=key  %}" title="">
@@ -196,7 +196,7 @@
 {% endblock %}
 
 {% block site_footer %}
-<footer class="footer">
+<footer class="footer" style="z-index:0">
 	<div class="footer-wrapper">
 		<div class="footer-widgets">
 			<div class="container">
@@ -442,15 +442,14 @@
         <!-- Tab panes -->
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="account-login">
-                <form action="{% url 'auth:login' %}" method="POST" id="login-popup-form">
+                <form action="{% url 'odoo_auth:login' %}" method="POST" id="login-popup-form">
 <!--                     <div class="alert alert-danger">
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                         <strong>Whoop!</strong> <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span>                        
-                    </div>
-                    <div class="alert alert-danger">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                        <strong>Whoop!</strong> <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span>                        
                     </div> -->
+                    <div class="alert alert-warning hidden" id="auth_failed">
+                        <strong>Whoop!</strong> <span>Wrong username or password</span>                        
+                    </div> 
                     {% csrf_token %}                                            
                     <div class="form-group">
                         <label for="login-account">Account</label>
@@ -486,7 +485,6 @@
 
 <script>
     $(function() {
-        console.log("Dude")
         $('a[href="#login-popup"],a[href="#registration-popup"]').magnificPopup({
             type:'inline',
             midClick: false,
@@ -495,7 +493,7 @@
         $("form#login-popup-form").on('submit',function(){
             event.preventDefault();
             var form = this;
-            // console.log($(this));
+            $(form).find('div#auth_failed').addClass('hidden');
             var url = $(form).attr('action');
             $.ajax({
                 type: "POST",
@@ -511,7 +509,16 @@
                     $(form).find("button[type='submit']").removeClass('active')
                 },                
                 success:function(data){
-                    location.reload();
+                    if (data['auth'] == true){
+                        $.notify("Login Successful",'success')
+                        $(form).find('div#auth_failed').addClass('hidden');
+                        location.reload();    
+                    }else{
+                        console.log($(form).find('div#auth_failed'))
+                        $(form).find('div#auth_failed').removeClass('hidden')
+                        $.notify("Login Failed")
+                    }
+                    
                 },
             });
         });

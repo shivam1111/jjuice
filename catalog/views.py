@@ -8,7 +8,7 @@ from cart import cart
 from cart.forms import ProductAddToCartForm
 from django.db import connection
 from django.views import View
-from helper import safe_cast,get_price
+from helper import safe_cast
 from django.core import urlresolvers
 
 _PER_PAGE_OPTIONS = [
@@ -37,16 +37,12 @@ class Volume(View):
         assert volume_id in request.volumes_data.keys() , "You are not allowed to access this page"
         name = request.volumes_data[volume_id]['name']
         sort_by = request.GET.get('sort_by','default')
-        if request.user.is_authenticated:
-            # If the user is logged in  the behaviour goes here
-            pass            
-        else:
-            lines_list = FlavorConcDetails.objects.filter(
-                                                          tab_id__vol_id=volume_id,
-                                                          tab_id__visible_all_customers=True,
-                                                          tab_id__consumable_stockable = 'product',
-                                                          tab_id__active = True
-                                                        )
+        lines_list = FlavorConcDetails.objects.filter(
+                                                      tab_id__vol_id=volume_id,
+                                                      tab_id__visible_all_customers=True,
+                                                      tab_id__consumable_stockable = 'product',
+                                                      tab_id__active = True
+                                                    )
 
         try:
             lines_list.order_by(sort_by)
@@ -78,20 +74,14 @@ class Flavor(View):
         flavor = get_object_or_404(ProductFlavors, pk=flavor_id)
         current_volume = get_object_or_404(ProductAttributeValue, pk=volume_id)
         price = old_price = 0
-        is_authenticated = request.user.is_authenticated()
         name = flavor.name
         assert volume_id and (volume_id in request.volumes_data.keys()) , "You are not allowed to acces this page"
         form = ProductAddToCartForm(request=request, label_suffix=':') 
         # set the test cookie on our first GET request 
         request.session.set_test_cookie()
-        if is_authenticated:
-            # If the user is logged the behaviour goes here
-            pass            
-        else:
-#             volumes = flavor.flavor_product_variant_ids.values_list('vol_id__id','vol_id__name').distinct('vol_id__id')
-            products = flavor.flavor_product_variant_ids.filter(vol_id=volume_id,product_tmpl_id__type="product").distinct('conc_id__id')
-            price = get_price(is_authenticated,current_volume) 
-            old_price = current_volume.old_price
+        products = flavor.flavor_product_variant_ids.filter(vol_id=volume_id,product_tmpl_id__type="product").distinct('conc_id__id')
+        price = flavor.get_price(request.user,current_volume) 
+        old_price = current_volume.old_price or 0
         return render(request,template_name,locals())
     
     @safe_cast
@@ -116,14 +106,10 @@ class Flavor(View):
         current_volume = get_object_or_404(ProductAttributeValue, pk=volume_id)
         price = old_price = 0
         name = flavor.name
-        assert volume_id and (volume_id in request.volumes_data.keys()) , "You are not allowed to acces this page"        
-        if request.user.is_authenticated():
-            # If the user is logged the behaviour goes here
-            pass            
-        else:
-            products = flavor.flavor_product_variant_ids.filter(vol_id=volume_id,product_tmpl_id__type="product").distinct('conc_id__id')
-            price = flavor.get_price(request,current_volume) 
-            old_price = current_volume.old_price        
+        assert volume_id and (volume_id in request.volumes_data.keys()) , "You are not allowed to access this page"        
+        products = flavor.flavor_product_variant_ids.filter(vol_id=volume_id,product_tmpl_id__type="product").distinct('conc_id__id')
+        price = flavor.get_price(request.user,current_volume) 
+        old_price = current_volume.old_price        
         request.session.set_test_cookie()
         return render(request,template_name,locals())
 
@@ -138,13 +124,9 @@ class FlavorQuickView(View):
         current_volume = get_object_or_404(ProductAttributeValue, pk=volume_id)   
         price  = 0 
         assert volume_id and (volume_id in request.volumes_data.keys()) , "You are not allowed to access this page" 
-        if request.user.is_authenticated():
-            # If the user is logged the behaviour goes here
-            pass            
-        else:
-            products = flavor.flavor_product_variant_ids.filter(vol_id=volume_id).distinct('conc_id__id')
-            price = flavor.get_price(request,current_volume)
-            old_price = current_volume.old_price
+        products = flavor.flavor_product_variant_ids.filter(vol_id=volume_id).distinct('conc_id__id')
+        price = flavor.get_price(request.user,current_volume)
+        old_price = current_volume.old_price
         return render(request,template_name,locals())         
                 
                 

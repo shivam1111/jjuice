@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect,Http404
 from helper import safe_cast
 import decimal,uuid
+from django.db.models import Q
 from __builtin__ import True
 
 CART_ID_SESSION_KEY = "cart_id"
@@ -20,8 +21,8 @@ def _generate_cart_id():
 
 # return all items from the current user's cart
 def get_cart_items(request):
-    if request.user.is_authenticated():
-        return CartItem.objects.filter(cart_id=_cart_id(request),user_id=request.user)
+    if request.user.is_authenticated:
+        return CartItem.objects.filter(Q(user_id=request.user.id) | Q(cart_id=_cart_id(request)))
     else:
         return CartItem.objects.filter(cart_id=_cart_id(request),user_id__isnull=True)
 
@@ -55,7 +56,8 @@ def add_to_cart(request):
         ci.product_id = p.id
         ci.quantity = quantity
         ci.cart_id = _cart_id(request)
-        ci.user_id = request.user.id
+        if request.user.is_authenticated:
+            ci.user_id = request.user
         ci.save()        
 
 # return the total number of items in user's cart
