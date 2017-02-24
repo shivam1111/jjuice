@@ -2,9 +2,22 @@ from django.shortcuts import render
 # from odoo.models import Newsletter
 import urlparse
 from django.http import HttpResponseRedirect
-from models import NewsletterContact,MailingList
+from models import NewsletterContact,MailingList,HrEmployee
 from odoo.models import IrConfigParameters
 from odoo_helpers import get_login_authenticate
+from django.views import View
+
+class AboutUs(View):
+    
+    def get(self,request,template_name="aboutus.html"):
+        employees = HrEmployee.objects.filter(publish=True)
+        return render(request,template_name,locals())
+
+class ContactUs(View):
+    
+    def get(self,request,template_name="contactus.html"):
+        return render(request,template_name,locals())    
+
 
 def newsletter(request):
     name = ''

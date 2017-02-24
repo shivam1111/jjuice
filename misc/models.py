@@ -28,4 +28,33 @@ class NewsletterContact(models.Model):
     class Meta:
         managed=False
         db_table = "mail_mass_mailing_contact"    
+
+class HrJob(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(verbose_name="Name",max_length=100,blank=True)
+    state = models.CharField(verbose_name='State',max_length=50,
+                             choices=[('open','Recruitment Closed'),('recruit','Recruitment Open')])
+    
+    _DATABASE = "odoo"
+    class Meta:
+        managed=False
+        db_table = "hr_job"                
+
+class HrEmployee(models.Model):
+    id = models.AutoField(primary_key=True)
+    work_email = models.EmailField(verbose_name="Work Email")
+    name_related = models.CharField(verbose_name="Name",max_length=100,blank=True)
+    create_date = models.DateTimeField(auto_now_add=True)
+    write_date = models.DateTimeField(auto_now=True)
+    write_uid = models.IntegerField('Write UID')
+    create_uid = models.IntegerField('Write UID')
+    publish = models.NullBooleanField('Publish on Website')
+    image_medium = models.BinaryField("Image")
+    image = models.BinaryField("Image")
+    job_id = models.ForeignKey(HrJob,db_column="job_id",verbose_name = "Job Title",related_name ="employee_ids",blank=True)
+    
+    _DATABASE = "odoo"
+    class Meta:
+        managed=False
+        db_table = "hr_employee"            
     
