@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from odoo_auth.models import OdooUser
 from odoo_helpers import authenticate
-from odoo_auth.settings import *
+from odoo_auth.settings import ODOO_SERVER_URL,ODOO_SERVER_PORT,ODOO_SERVER_DBNAME
 import xmlrpclib
 import logging
 logger = logging.getLogger(__name__)
