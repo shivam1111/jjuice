@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from odoo_auth.models import OdooUser
 from odoo_helpers import authenticate
-from settings import *
+from django.conf import settings
 import xmlrpclib
 import logging
 logger = logging.getLogger(__name__)
@@ -15,9 +15,9 @@ class OdooBackend(object):
     ODOO_SOCK_COMMON = None
 
     def __init__(self):
-        self.ODOO_SERVER_URL = ODOO_SERVER_URL
-        self.ODOO_SERVER_PORT = ODOO_SERVER_PORT
-        self.ODOO_SERVER_DBNAME = ODOO_SERVER_DBNAME
+        self.ODOO_SERVER_URL = settings.ODOO_URL
+        self.ODOO_SERVER_PORT = settings.ODOO_SERVER_PORT
+        self.ODOO_SERVER_DBNAME = settings.ODOO_DB
 
         if not self.ODOO_SERVER_PORT:
             #If ODOO_SERVER_PORT == 0 or False, you use port standard 80
