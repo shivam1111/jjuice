@@ -42,6 +42,7 @@ class HrJob(models.Model):
 
 class HrEmployee(models.Model):
     id = models.AutoField(primary_key=True)
+    sequence = models.IntegerField('Sequence')
     work_email = models.EmailField(verbose_name="Work Email")
     name_related = models.CharField(verbose_name="Name",max_length=100,blank=True)
     create_date = models.DateTimeField(auto_now_add=True)

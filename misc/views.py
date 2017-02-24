@@ -10,7 +10,7 @@ from django.views import View
 class AboutUs(View):
     
     def get(self,request,template_name="aboutus.html"):
-        employees = HrEmployee.objects.filter(publish=True)
+        employees = HrEmployee.objects.filter(publish=True).order_by('sequence')
         return render(request,template_name,locals())
 
 class ContactUs(View):
