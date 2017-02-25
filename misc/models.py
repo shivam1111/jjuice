@@ -1,7 +1,15 @@
 from __future__ import unicode_literals
-
 from django.db import models
+from catalog.models import ProductFlavors
+from odoo.models import Partner
 
+_RATING = [
+        ('1','Very Bad'),
+        ('2','Bad'),
+        ('3', 'Normal'),
+        ('4', 'Good'),
+        ('5','Very Good')
+    ] 
 class MailingList(models.Model):
     id = models.IntegerField(primary_key=True)
     name = name = models.CharField(verbose_name = "Name",blank=False,max_length = 100)

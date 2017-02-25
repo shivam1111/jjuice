@@ -1,7 +1,9 @@
 {% extends "catalog.html" %}
 {% block site_main %}
 {% load static %}
-<section>
+<!-- <section>
+    <link href='http://fonts.googleapis.com/css?family=Buenard:700' rel='stylesheet' type='text/css'>
+    <script src="http://pupunzi.com/mb.components/mb.YTPlayer/demo/inc/jquery.mb.YTPlayer.js"></script>
 	<div class="container">
 		<div class="margin-vertical-30">
 			<div class="main-slider-wrapper">
@@ -11,7 +13,7 @@
 		                <div class="main-slider-image">
 		                    <img src="{{ i.get_image_url }}" alt="">
 		                </div>
-<!-- 		                <div class="main-slider-text">
+		                <div class="main-slider-text">
 		                    <div class="fp-table">
 		                        <div class="fp-table-cell center">
 		                            <div class="container">
@@ -25,7 +27,7 @@
 		                            </div>
 		                        </div>
 		                    </div>
-		                </div> -->
+		                </div>
 		            </div>
 		            {% endfor %}
 				</div>
@@ -35,35 +37,68 @@
 			</script>
 		</div>
 	</div>
+</section> -->
+
+<!--Video Section-->
+<link href='http://fonts.googleapis.com/css?family=Buenard:700' rel='stylesheet' type='text/css'>       
+<script src="{% static 'js/plugins/jquery.mb.YTPlayer.js' %}"></script>
+<section class="content-section video-section">
+    <div class="pattern-overlay">
+        <a id="bgndVideo" class="player" data-property="{videoURL:'https://www.youtube.com/watch?v=3LTJXcvz2ro',containment:'.video-section', quality:'large', autoPlay:true, mute:true, opacity:1}">bg</a>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+<!--                     <h1>Full Width Video</h1>  
+                    <h3>Enjoy Adding Full Screen Videos to your Page Sections</h3> -->
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
-<section>
+
+<!--Video Section Ends Here-->
+<section class="border-bottom">
     <div class="container">
-        <div class="padding-bottom-30">
+        <div class="policy-wrapper">
             <div class="row">
             	{% for x in policies %}
-                <div class="col-md-3">
-                    <div class="policy policy-block">
+                <div class="col-md-4 col-sm-4 col-xs-8">
+                    <div class="policy">
                         <div class="policy-icon">
                             <img src="{{ x.get_image_url }}" />
                         </div>
-                        <div class="policy-text">
+                        <div class="policy-text" style="text-align:center;padding-top: 15px">
                             <h4>{{ x.name }}</h4>
                             <p>{{ x.description }}</p>
                         </div>						
                     </div>
                 </div>
                 {% endfor %}
-                <div class="col-md-3">
-                    <div class="subscible-wrapper subscible-block">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="container">
+        <div class="margin-bottom-50">
+            <div class="subscible-wrapper subscible-inline">
+                <div class="row">
+                    <div class="col-md-2">
                         <h3 class="subscribe-title">Subscribe newsletter</h3>
+                    </div>
+
+                    <div class="col-md-4">
                         <div class="subscribe-comment">
-                            <!-- <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry</p> -->
+                            <p>Subscripte to our newsletter to get the updated from upcoming flavors</p>
                         </div>
-                        <form method="GET" action="/misc/newsletter/" class="subscible-form">
-                            {% csrf_token %}
+                    </div>
+                    <div class="col-md-6">
+                        <form method="GET" action="{% url 'misc:newsletter' %}" class="subscible-form">
+                            {% csrf_token %}    
                             <div class="form-group">
                                 <label class="sr-only" for="subscribe-email">Email</label>
-                                <input type="email" name="email" required placeholder="Enter your email address" class="form-control" id="subscribe-email">
+                                <input type="email" name="email"  required placeholder="Enter your email address" class="form-control" id="subscribe-email">
                             </div>
 
                             <div class="form-submit">
@@ -72,9 +107,15 @@
                         </form>
                     </div>
                 </div>
-            </div>
+            </div><!-- /.subscible-wrapper -->
         </div>
-    </div>
-</section>
+    </div><!-- /.container -->
+</section><!-- /section -->
+
+<script>
+$(document).ready(function () {
+    $(".player").mb_YTPlayer();
+});
+</script>
 
 {% endblock %}

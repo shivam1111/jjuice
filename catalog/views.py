@@ -1,9 +1,9 @@
-from django.shortcuts import render,get_object_or_404,HttpResponseRedirect
+from django.shortcuts import render,get_object_or_404,HttpResponseRedirect,HttpResponse
 from odoo.models import WebsiteBanner,WebsitePolicy,IrConfigParameters,ProductAttributeValue
-from models import FlavorConcDetails,ProductVariant,ProductFlavors
+from models import FlavorConcDetails,ProductVariant,ProductFlavors,FlavorReviews as FlavorReviewModel
 from django.core.paginator import Paginator,EmptyPage, PageNotAnInteger
 from django.db.models import FieldDoesNotExist
-import urlparse
+from urllib import urlencode
 from cart import cart
 from cart.forms import ProductAddToCartForm
 from django.db import connection
@@ -128,6 +128,30 @@ class FlavorQuickView(View):
         price = flavor.get_price(request.user,current_volume)
         old_price = current_volume.old_price
         return render(request,template_name,locals())         
+
+class FlavorReview(View):
+    
+    def post(self,request):
+        postdata = request.POST.copy()
+        flavor_id = postdata.get('flavor_id',False)
+        partner = request.user.odoo_user.partner_id
+        flavor = get_object_or_404(ProductFlavors,id=flavor_id)
+        if request.user.is_authenticated and flavor_id:
+            if not partner.review_ids.filter(flavor_id =flavor_id ).exists():
+                FlavorReviewModel.objects.create(**{
+                        'partner_id':partner,
+                        'flavor_id':flavor,
+                        'title':postdata.get('title',"No Title"),
+                        'name':postdata.get('name',partner.name),
+                        'email':postdata.get('email',partner.email),
+                        'description':postdata.get('description',"-"),
+                        'rating':postdata.get('rating',"3")
+                })
+        url_flavor = flavor.get_url()
+        qstr = urlencode({'volume_id':postdata.get('volume_id',"")})
+        url = "?".join([url_flavor,qstr])
+        return HttpResponseRedirect(url)
+        
                 
                 
     

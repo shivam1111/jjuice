@@ -169,23 +169,22 @@ class ProductVariant(models.Model):
 
 class FlavorReviews(models.Model):
     id = models.AutoField(primary_key=True)
-    email = models.EmailField(verbose_name="Email")
-    title = models.CharField(verbose_name="Name",max_length=200,blank=True)
-    name = models.CharField(verbose_name="Name",max_length=100,blank=True)
     create_date = models.DateTimeField(auto_now_add=True)
     write_date = models.DateTimeField(auto_now=True)
     write_uid = models.IntegerField('Write UID')
     create_uid = models.IntegerField('Write UID')
-    flavor_id = models.ForeignKey(ProductFlavors,verbose_name = "Flavor",db_column="flavor_id",blank=False,
-                                  related_name = "flavor_review_ids"
-                              )
-    rating = models.CharField(max_length=20,verbose_name="Rating",choices = _RATING)
-    description = models.TextField('Description')
-    
+    name = models.CharField(verbose_name='Name',max_length=100)
+    email = models.EmailField(verbose_name='Email ID')
+    title = models.CharField(verbose_name='Title',max_length=200)
+    description = models.TextField(verbose_name='Description')
+    flavor_id = models.ForeignKey(ProductFlavors,verbose_name = "Flavor",db_column="flavor_id",blank=False,related_name = "flavor_review_ids")
+    partner_id = models.ForeignKey(Partner,verbose_name='Customer',db_column="partner_id",related_name="review_ids")
+    rating = models.CharField(verbose_name = "Rating",max_length=20,choices = _RATING)        
+
     _DATABASE = "odoo"
     class Meta:
         managed=False
-        db_table = "flavor_reviews"    
+        db_table = "flavor_reviews"          
             
         
             

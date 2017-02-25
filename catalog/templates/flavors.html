@@ -208,55 +208,65 @@
                         </li>      		
                 		{% endfor %}
                 	</ol>
+                    {% if request.user.odoo_user.partner_id.review_ids.count <= 0 %}
+                    {% if request.user.is_authenticated %}
                 	<h3>Add a review</h3>
-                    <form action="product-fullwidth.html" method="POST" >
+                    <form action="{% url 'catalog:flavor_review' %}" method="POST" >
+                        {% csrf_token %}
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="reply-name">Name <sup>*</sup></label>
-                                    <input type="text" class="form-control" required id="reply-name" placeholder="Name">
+                                    <input type="text" name="name" class="form-control" value="{{ request.user.odoo_user.partner_id.name|safe}}" required id="reply-name" placeholder="Name">
+                                    <input type="hidden" class="form-control" name="flavor_id" value="{{ flavor.id }}" required id="reply-name" placeholder="Flavor">
+                                    <input type="hidden" class="form-control" name="volume_id" value="{{ volume_id }}" required id="reply-name" placeholder="Flavor">                                                                        
                                 </div><!-- /.form-group -->
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="reply-email">Email <sup>*</sup></label>
-                                    <input type="email" required class="form-control" id="reply-email" placeholder="Email">
+                                    <input type="email" name="email" value="{{ request.user.odoo_user.partner_id.email|safe }}" required class="form-control" id="reply-email" placeholder="Email">
                                 </div><!-- /.form-group -->
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="reply-title">Title <sup>*</sup></label>
-                            <input type="text" class="form-control" required id="reply-title" placeholder="title">
+                            <input type="text" name="title" class="form-control" required id="reply-title" placeholder="title">
                         </div><!-- /.form-group -->
 
                         <div class="form-group">
                             <label for="reply-text">Your review <sup>*</sup></label>
-                            <textarea name="reply-text" required class="form-control" id="reply-text" rows="7" placeholder="Your review"></textarea>
+                            <textarea  name="description" required class="form-control" id="reply-text" rows="7" placeholder="Your review"></textarea>
                         </div><!-- /.form-group -->
                         <div class="form-submit clearfix">
-                        	<span class="title pull-left">Your rating:</span>
-	                        <div class="review-rating">
-	                        	
-								<div class="stars">
-								    <input class="star star-5" value="4" id="star-5" type="radio" name="star"/>
-								    <label class="star star-5" for="star-5"></label>
-								    <input class="star star-4" value="3" id="star-4" type="radio" name="star"/>
-								    <label class="star star-4" for="star-4"></label>
-								    <input class="star star-3" value="2" id="star-3" type="radio" name="star"/>
-								    <label class="star star-3" for="star-3"></label>
-								    <input class="star star-2" value="1" id="star-2" type="radio" name="star"/>
-								    <label class="star star-2" for="star-2"></label>
-								    <input class="star star-1" value="0" id="star-1" required type="radio" name="star"/>
-								    <label class="star star-1" for="star-1"></label>
-								</div>
-	                        </div>                        
+                            <span class="title pull-left">Your rating:</span>
+                            <div class="review-rating">
+                                <div class="stars">
+                                    <input class="star star-5" value="4" id="star-5" type="radio" name="rating"/>
+                                    <label class="star star-5" for="star-5"></label>
+                                    <input class="star star-4" value="3" id="star-4" type="radio" name="rating"/>
+                                    <label class="star star-4" for="star-4"></label>
+                                    <input class="star star-3" value="2" id="star-3" type="radio" name="rating"/>
+                                    <label class="star star-3" for="star-3"></label>
+                                    <input class="star star-2" value="1" id="star-2" type="radio" name="rating"/>
+                                    <label class="star star-2" for="star-2"></label>
+                                    <input class="star star-1" value="0" id="star-1" required type="radio" name="rating"/>
+                                    <label class="star star-1" for="star-1"></label>
+                                </div>
+                            </div>                        
                             <div class="pull-right">
                                 <button type="submit" class="submit btn btn-lg btn-default">Submit</button>
                             </div>
                         </div><!-- /.form-submit -->
                     </form><!-- /form -->                	
+                    {% else %}
+                    <div class="pull-left">
+                        <button type="button"  class="btn btn-lg btn-primary"><a href="#login-popup" >Add product review</a></button>
+                    </div>
+                    {% endif %}
+                    {% endif %}
                 </div>                
             </div>
     	</div>

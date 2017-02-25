@@ -1,7 +1,7 @@
 from django.shortcuts import render
 # from odoo.models import Newsletter
 import urlparse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect,HttpResponse
 from models import NewsletterContact,MailingList,HrEmployee
 from odoo.models import IrConfigParameters
 from odoo_helpers import get_login_authenticate
@@ -35,4 +35,3 @@ def newsletter(request):
                               create_uid = odoo_uid,
                               ).save()
     return HttpResponseRedirect('/')
-        

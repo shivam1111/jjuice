@@ -107,7 +107,7 @@ class ProductAttributeValue(models.Model):
                                      db_column="attribute_id",
                                      related_name="attribute_value_ids")
     weight = models.FloatField(verbose_name="Weight",blank=True)
-    ratio = models.FloatField(verbose_name='VG/PG Ratio',blank=True)
+    ratio = models.CharField(verbose_name='VG/PG Ratio',blank=True,max_length=30)
     wholesale_price = models.FloatField(verbose_name="Wholesale Price",blank=True)
     msrp = models.FloatField(verbose_name="MSRP",blank=True)
     old_price = models.FloatField(verbose_name="Wholesale Price",blank=True)
