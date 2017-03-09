@@ -6,6 +6,7 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.utils.six.moves.urllib.parse import urlencode
 import os
+from pip.utils.outdated import SELFCHECK_DATE_FMT
 
 _TAB_STYLES = [
     (1,'Flavor Concentration Matrix'),
@@ -33,11 +34,13 @@ class ProductFlavors(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=100,verbose_name="Name",blank=False)
     create_date = models.DateTimeField(verbose_name="Created Date") 
-    file_name = models.CharField(verbose_name="Created Date",max_length=100,blank=False)
+    file_name = models.CharField(verbose_name="File Name",max_length=100,blank=False)
+    banner_file_name = models.CharField(verbose_name="Banner Image Name",max_length=100,blank=True)
     short_description = models.TextField(verbose_name = "Short Description")
     long_description = models.TextField(verbose_name = "Long Description")
-
-    def get_url(self):
+    banner_key = "product_flavor_banner"
+    
+    def get_url(SELFCHECK_DATE_FMT):
         return reverse('catalog:flavor',args=[self.id])
         
     def get_price(self,user,volume):
@@ -49,17 +52,43 @@ class ProductFlavors(models.Model):
                 return volume.wholesale_price
         return volume.msrp
 
-    def get_image_url(self):
-        url = os.path.join(settings.STATIC_URL,settings.PLACEHOLDER_IMAGE)
-        if self.file_name:
-            url = create_aws_url(self._meta.db_table,str(self.id)) 
+    def get_image_url(self,volume_id):
+        image_line = self.flavor_attribute_image_ids.filter(attribute_id=volume_id)[:1]
+        url = os.path.join(settings.STATIC_URL,settings.PLACEHOLDER_FLAVOR_IMAGE)
+        if image_line.exists():
+            url = create_aws_url(image_line[0]._meta.db_table,str(image_line[0].id)) 
         return url   
+
+    def get_banner_url(self):
+        url = os.path.join(settings.STATIC_URL,settings.PLACEHOLDER_BANNER_IMAGE)
+        if self.banner_file_name:
+            url = create_aws_url(self.banner_key,str(self.id)) 
+        return url       
+    
+    
+    _DATABASE = "odoo"    
+
+    class Meta:
+        managed=False
+        db_table = "product_flavors"
+
+class S3Object(models.Model):
+    id = models.IntegerField(primary_key=True)
+    file_name = models.CharField(verbose_name = "Name",blank=False,max_length = 200)
+    sequence = models.IntegerField('Sequence')
+    attribute_id = models.ForeignKey(ProductAttributeValue,verbose_name="Attribute",
+                                  db_column="attribute_id",related_name = "attribute_image_ids")
+    flavor_id = models.ForeignKey(ProductFlavors,verbose_name="Flavor",
+                                  db_column="flavor_id",related_name = "flavor_attribute_image_ids")
+    aboutus_banner = models.NullBooleanField(verbose_name = "Is About us Banner ?")
+    contactus_banner = models.NullBooleanField(verbose_name = "Is Contact us Banner ?")
+    customerreview_banner = models.NullBooleanField(verbose_name = "Is Contact Review Banner ?")
     
     _DATABASE = "odoo"    
     class Meta:
         managed=False
-        db_table = "product_flavors"
-        
+        db_table = "s3_object"   
+
 class ProductTab(models.Model):
     id = models.IntegerField(primary_key=True)
     tab_style = models.CharField(max_length=20,verbose_name="Tab Style",choices = _TAB_STYLES)
@@ -117,7 +146,7 @@ class ProductVariant(models.Model):
         return name
 
     def get_image_url(self):
-        url = os.path.join(settings.STATIC_URL,settings.PLACEHOLDER_IMAGE)
+        url = os.path.join(settings.STATIC_URL,settings.PLACEHOLDER_PRODUCT_IMAGE)
         if self.file_name:
             url = create_aws_url(self._meta.db_table,str(self.id))
         return url 

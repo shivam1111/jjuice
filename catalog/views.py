@@ -1,6 +1,6 @@
 from django.shortcuts import render,get_object_or_404,HttpResponseRedirect,HttpResponse
 from odoo.models import WebsiteBanner,WebsitePolicy,IrConfigParameters,ProductAttributeValue
-from models import FlavorConcDetails,ProductVariant,ProductFlavors,FlavorReviews as FlavorReviewModel
+from models import FlavorConcDetails,ProductVariant,ProductFlavors,FlavorReviews as FlavorReviewModel,S3Object
 from django.core.paginator import Paginator,EmptyPage, PageNotAnInteger
 from django.db.models import FieldDoesNotExist
 from urllib import urlencode
@@ -8,8 +8,10 @@ from cart import cart
 from cart.forms import ProductAddToCartForm
 from django.db import connection
 from django.views import View
-from helper import safe_cast
+from helper import safe_cast,create_aws_url
 from django.core import urlresolvers
+from django.conf import settings
+import os
 
 _PER_PAGE_OPTIONS = [
         (10,'10'),
@@ -24,10 +26,16 @@ _SORT_BY = [
 
 class Index(View):
     def get(self,request,template_name="index.html"):
+        from misc.models import PartnerReviews
         banners = policies = []
         banners = WebsiteBanner.objects.all().order_by('sequence')
         policies = WebsitePolicy.objects.all().order_by('sequence')[:3]
-        return render(request,"index.html",{'banners':banners,'policies':policies})        
+        reviews = PartnerReviews.objects.all().order_by('sequence')
+        customerreview_banner_url = os.path.join(settings.STATIC_URL,settings.PLACEHOLDER_BANNER_IMAGE)
+        banner_record =  S3Object.objects.filter(customerreview_banner=True)[:1]
+        if banner_record.exists():
+            customerreview_banner_url = create_aws_url(banner_record[0]._meta.db_table,str(banner_record[0].id))
+        return render(request,"index.html",locals())        
 
 class Volume(View):
 
@@ -35,7 +43,8 @@ class Volume(View):
     def get(self,request,id,template_name="volumes.html"):
         volume_id = int(id) # TypeError and ValueError handled by the decorator
         assert volume_id in request.volumes_data.keys() , "You are not allowed to access this page"
-        name = request.volumes_data[volume_id]['name']
+        volume_data = request.volumes_data[volume_id]
+        name = volume_data['name']
         sort_by = request.GET.get('sort_by','default')
         lines_list = FlavorConcDetails.objects.filter(
                                                       tab_id__vol_id=volume_id,

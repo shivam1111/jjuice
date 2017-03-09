@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% load static %}
+{% load thumbnail %}
 {% load catalog_filters %}
+{% load instagram_client %}
+{% load cache_image_url %}
 {% block site_header %} 
 <header id="header" class="awe-menubar-header">
 	<nav class="awemenu-nav headroom" data-responsive-width="1200">
@@ -163,7 +166,7 @@
 	                                            <div class="awe-media-image">
 	                                                <a href="{% url 'catalog:volume' id=key  %}" title="">
 	                                                    <!-- <img src="{% static 'img/samples/menu/horosen-shop.jpg' %}" alt=""> -->
-	                                                	<img src="{{ value.url }}" alt="{% static 'img/samples/menu/horosen-shop.jpg' %}" />
+	                                                	<img src="{{ value.image_url }}" alt="{% static 'img/samples/menu/horosen-shop.jpg' %}" />
 	                                                </a>
 	                                            </div>
 	                                            <h4 class="awe-media-title medium upper center">
@@ -206,7 +209,7 @@
 	                        <div class="col-md-12 col-sm-6">
 	                            <div class="widget">
 	                                <h3 class="widget-title">
-	                                	<a href="#"><span>ABOUT US</span></a>
+	                                	<a href="{% url 'misc:aboutus' %}"><span>ABOUT US</span></a>
 	                                </h3>
 	                                <div class="widget-content">
 	                                    <p>A community of people being rad… Our group has been working on formulating the perfect vape experience, primarily for ourselves, until we realized every vaper we knew loved our juice and only wanted to fill their vapes with the ‘good stuff’. This was our inspiration...</p>
@@ -269,9 +272,34 @@
                                     </a>
                                 </li>
                             </ul>
-                        </div><!-- /.widget -->                	
+                        </div><!-- /.widget -->
                 	</div>
-				</div>
+				</div>  <!-- Footer First Row -->
+                <div class = "row">
+                    <div class = "col-md-7">
+                        <div class="widget" style="max-height:310px;overflow:scroll;" >
+                            <h3 class="widget-title text-center">Latest Tweets</h3>
+                            <a class="twitter-timeline" href="https://twitter.com/VapeJJuice">Tweets by VapeJJuice</a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+                        </div>
+                    </div>
+                    <div class = "col-md-5">
+                       <div class="widget widget_tag_cloud">
+                            <h3 class="widget-title text-center">Instagram</h3>
+
+                            <ul class="instagram-widget">
+                                {% instagram_user_recent_media vapejjuice %}
+                                {% for media in recent_media %}
+                                <li>
+                                    <a href="{{ media.display_src }}" class="insta-photo target="_blank" title="{{ media.caption }}">
+                                        <img src="data:image/jpg;base64,{% cache_resize_image_url media.thumbnail_src 70 70 %}" />  <!-- working -->
+                                        <!-- <span>{{ media.caption }}</span> -->
+                                    </a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div><!-- /.widget -->                        
+                    </div>
+                </div>
 			</div> <!-- container ended -->
 		</div> <!-- footer widget ended -->
         <div class="footer-copyright">

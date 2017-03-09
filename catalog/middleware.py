@@ -18,7 +18,8 @@ class CatalogMiddleware(MiddlewareMixin):
             volumes_data.update({
                     i.id:{
                        'name':i.name,
-                       'url':create_aws_url(ProductAttributeValue._meta.db_table,str(i.id)) 
+                       'image_url':create_aws_url(ProductAttributeValue._meta.db_table,str(i.id)),
+                       'banner_url': create_aws_url(ProductAttributeValue.banner_key,str(i.id)),
                     }
                 })
         request.volumes_data = volumes_data

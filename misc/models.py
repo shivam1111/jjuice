@@ -65,5 +65,21 @@ class HrEmployee(models.Model):
     _DATABASE = "odoo"
     class Meta:
         managed=False
-        db_table = "hr_employee"            
+        db_table = "hr_employee"  
+        
+class PartnerReviews(models.Model):
+
+    id = models.AutoField(primary_key=True)
+    sequence = models.IntegerField('Sequence')
+    partner_id = models.ForeignKey(Partner,
+                                   db_column = "partner_id",
+                                   verbose_name = "Partner",
+                                   related_name = "partner_review_ids",blank=True) 
+    review = models.TextField(verbose_name = "Review")
+    _DATABASE = "odoo"
+    class Meta:
+        managed=False
+        db_table = "partner_reviews"         
+    
+              
     

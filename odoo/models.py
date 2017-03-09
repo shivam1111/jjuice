@@ -32,18 +32,6 @@ class Base64Field(models.TextField):
     def set_data(self, obj, data):
         setattr(obj, self.field_name, base64.encodestring(data))
 
-class S3Object(models.Model):
-    id = models.IntegerField(primary_key=True)
-    file_name = models.CharField(verbose_name = "Name",blank=False,max_length = 200)
-    store_fname = models.CharField(verbose_name = "Name",blank=False,max_length = 200)
-    url = models.URLField(verbose_name = "File URL")
-    folder_key = models.CharField(verbose_name = "Name",blank=False,max_length = 100)
-
-    _DATABASE = "odoo"    
-    class Meta:
-        managed=False
-        db_table = "s3_object"   
-            
 class WebsiteBanner(models.Model):
     id = models.IntegerField(primary_key=True)
     sequence = models.IntegerField(verbose_name = "Sequence")
@@ -113,8 +101,8 @@ class ProductAttributeValue(models.Model):
     old_price = models.FloatField(verbose_name="Wholesale Price",blank=True)
     sequence = models.IntegerField(verbose_name="sequence")
     
-        
     _DATABASE = "odoo"
+    banner_key = "product_attribute_value_banner"
     class Meta:
         managed=False
         db_table = "product_attribute_value"
@@ -157,6 +145,7 @@ class ResUsers(models.Model):
         managed=False
         db_table = "res_users"
     
+
 class VolumePricesLine(models.Model):
     id = models.IntegerField(primary_key=True)
     product_attribute = models.ForeignKey(ProductAttributeValue,db_column="product_attribute",verbose_name="Product Attribute",blank=False)

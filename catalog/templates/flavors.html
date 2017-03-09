@@ -5,7 +5,7 @@
 {% load catalog_filters %}
 
 {% block site_main %}
-<div class="main-header background background-image-heading-product">
+<div class="main-header background background-image-heading-product" style="background-image: url({{ flavor.get_banner_url }}) !important;">
     <div class="container">
         <h1>{{  flavor.name }}</h1>
     </div>
@@ -77,9 +77,10 @@
 				    <h3>Special Features:</h3>
 				    
 				    <ul>
-				        <li>1914 translation by H. Rackham</li>
-				        <li>The standard Lorem Ipsum passage, used since the 1500s</li>
-				        <li>Section 1.10.33 of "de Finibus Bonorum et Malorum</li>
+				        <li>GMO Free, USP, Kosher - VG & PG</li>
+				        <li>Highest quality flavorings perfectly formulated</li>
+				        <li>Not diluted with any extraneous oils or distilled water</li>
+                        <li>American made</li>
 				    </ul>
 				</div><!-- /.product-features -->
                 <div class="product-actions-wrapper">

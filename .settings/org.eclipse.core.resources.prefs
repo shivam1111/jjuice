@@ -1,0 +1,4 @@
+eclipse.preferences.version=1
+encoding//sorl/thumbnail/images.py=utf-8
+encoding//sorl/thumbnail/management/commands/thumbnail.py=utf-8
+encoding//sorl/thumbnail/templatetags/thumbnail.py=utf-8

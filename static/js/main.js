@@ -19,7 +19,10 @@ function aweMaps(mapElement) {
         el: mapElement,
         lat: $(mapElement).data('lat'),
         lng: $(mapElement).data('lng'),
-
+        title: 'JJuice',
+        infoWindow: {
+        	  content: '<p>JJuice</p>'
+        	},
         draggable: true,
         scrollwheel: false
     });
