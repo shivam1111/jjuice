@@ -1,5 +1,5 @@
 from django.conf import settings as user_settings
-import settings as default_settings
+from . import settings as default_settings
 
 class AppSettings:
     def __getattr__(self, name):
