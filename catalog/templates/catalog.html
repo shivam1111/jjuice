@@ -164,7 +164,7 @@
 	                                    <div class="col-lg-2">
 	                                        <div class="awe-media inline margin-bottom-25">
 	                                            <div class="awe-media-image">
-	                                                <a href="{% url 'catalog:volume' id=key  %}" title="">
+	                                                <a href="{% url 'catalog:volume' id=key  %}" title="{{ value.name }}">
 	                                                    <!-- <img src="{% static 'img/samples/menu/horosen-shop.jpg' %}" alt=""> -->
 	                                                	<img src="{{ value.image_url }}" alt="{% static 'img/samples/menu/horosen-shop.jpg' %}" />
 	                                                </a>
@@ -310,9 +310,9 @@
              <div class="footer-nav">
 	             <nav>
 	                 <ul>
-	                     <li><a href="#" title="">Contact Us</a></li>
-	                     <li><a href="#" title="">Term of Use</a></li>
-	                     <li><a href="#" title="">Privacy Policy</a></li>
+	                     <li><a href="{% url 'misc:contactus' %}" title="">Contact Us</a></li>
+	                     <li><a href="{% url 'misc:terms_conditions' %}" title="">Term of Use</a></li>
+	                     <li><a href="{% url 'misc:privacy_policy' %}" title="">Privacy Policy</a></li>
 	                     <li><a href="#" title="">Site Map</a></li>
 	                 </ul>
 	             </nav>

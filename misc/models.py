@@ -79,7 +79,23 @@ class PartnerReviews(models.Model):
     _DATABASE = "odoo"
     class Meta:
         managed=False
-        db_table = "partner_reviews"         
+        db_table = "partner_reviews" 
+
+class WebsiteContactUs(models.Model):
+
+    id = models.AutoField(primary_key=True)
+    state = models.CharField(verbose_name = "State",choices=[('read','Viewed'),('unread','Not Viewed')],max_length=10)
+    name = models.CharField(verbose_name = "Name",max_length=200)
+    email = models.EmailField(verbose_name = "Email")
+    website = models.URLField(verbose_name="Website")
+    message = models.TextField(verbose_name = "Comment")
+    
+    _DATABASE = "odoo"
+    class Meta:
+        managed=False
+        db_table = "website_contactus"         
+    
+        
     
               
     

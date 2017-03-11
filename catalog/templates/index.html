@@ -1,6 +1,7 @@
 {% extends "catalog.html" %}
 {% block site_main %}
 {% load static %}
+{% load flavor_grid_view %}
 <!-- <section>
     <link href='http://fonts.googleapis.com/css?family=Buenard:700' rel='stylesheet' type='text/css'>
     <script src="http://pupunzi.com/mb.components/mb.YTPlayer/demo/inc/jquery.mb.YTPlayer.js"></script>
@@ -57,9 +58,9 @@
 </section>
 
 <!--Video Section Ends Here-->
-<section class="border-bottom">
+<section>
     <div class="container">
-        <div class="policy-wrapper">
+        <div class="policy-wrapper border-bottom">
             <div class="row">
             	{% for x in policies %}
                 <div class="col-md-4 col-sm-4 col-xs-8">
@@ -79,8 +80,57 @@
     </div>
 </section>
 
-<section class="background background-color-dark background-image-section-customers-say" style="background-image: url({{ customerreview_banner_url }}) !important;">
+<section>
     <div class="container">
+        <div class="home-trending padding-vertical-50 border-bottom">
+            <div class="section-header center">
+                <h2 class="upper margin-bottom-20">SHOP</h2>
+                <p>Choose Whatever Msg You want over here</p>
+            </div><!-- ./section-header -->
+            <div class="products home-products owl-carousel" data-items="{{ request.volumes_available_ids|length }}">
+                {% for key,value in request.volumes_data.items %}
+                    <div class="awe-media">
+                        <div class="awe-media-image">
+                            <a href="{% url 'catalog:volume' id=key  %}" title="{{ value.name }}">
+                                {% if value.category_url %}
+                                    <img src="{{ value.category_url }}" alt="">
+                                {% else %}
+                                    <img src="{% static "img/270x200.jpg" %}" alt="">
+                                {% endif %}
+                            </a>
+                        </div><!-- /.awe-media-image -->
+
+                        <div class="awe-media-body center margin-vertical-20">
+                            <a href="{% url 'catalog:volume' id=key  %}" title="{{value.name}}">{{value.name}}</a>
+                        </div><!-- /.awe-media-body -->
+                    </div><!-- /.awe-media -->
+                {% endfor %}
+            </div><!-- /.products -->            
+        </div><!-- /.home-trending -->
+    </div><!-- /.container -->
+</section><!-- /section -->
+
+<section>
+    <div class="container">
+        <div class="padding-vertical-50 border-bottom">
+            <div class="section-header center">
+                <h2>FEATURED JJUICE BLENDS</h2>
+            </div><!-- /.section-header -->
+
+            <div class="products home-products owl-carousel" data-items="{{ lines_list|length }}">
+                
+                    {% for line in lines_list %}
+                        {# Django provides it you can use {{ forloop.counter }} index start at 1 or {{ forloop.counter0 }} index start at 0. #}
+                        {% flavor_grid_view line %}
+                    {% endfor %}
+                
+            </div><!-- /.products -->
+        </div><!-- /.padding-vertical-50 -->
+    </div><!-- /.container -->
+</section><!-- /section -->
+
+<section class="background background-color-dark background-image-section-customers-say" style="background-image: url({{ customerreview_banner_url }}) !important;">
+    <div class="container" >
         <div class="padding-top-60">
             <div class="section-header center">
                 <h2>Customer Say</h2>
@@ -89,7 +139,7 @@
             <div class="section-customers">
                 <div class="row">
                     <div class="col-md-8 col-md-offset-2">
-                        <div class="customers-carousel owl-carousel" id="customers-carousel" data-toggle="carousel" data-dots="true" data-nav="0">
+                        <div class="customers-carousel owl-carousel"  id="customers-carousel" data-toggle="carousel" data-dots="true" data-nav="0">
                             {% for review in reviews %}
                             <div class="center">
                                 <h4>{{ review.partner_id.name }}</h4>
@@ -105,7 +155,7 @@
 
     <div class="section-brands">
         <div class="container">
-            <div class="brands-carousel owl-carousel" id="brands-carousel">
+            <div class="brands-carousel owl-carousel" data-items="{{ reviews|length }}" id="brands-carousel">
                 {% for review in reviews %}
                 <div class = "center" >
                     {% if review.partner_id.image %}
@@ -124,7 +174,7 @@
 
 <section>
     <div class="container">
-        <div class="margin-bottom-50">
+        <div class="margin-bottom-50 margin-top-50">
             <div class="subscible-wrapper subscible-inline">
                 <div class="row">
                     <div class="col-md-2">

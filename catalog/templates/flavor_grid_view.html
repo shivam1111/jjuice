@@ -1,45 +1,44 @@
  {% load static %}
  {% load call_method %}
- <div class="col-md-4 col-sm-4 col-xs-12">
-     <div class="product product-grid">
-         <div class="product-media">
-             <div class="product-thumbnail">
-                 <a href="{% url 'catalog:flavor' id=line.flavor_id.id %}?volume_id={{ line.tab_id.vol_id.id }}" title="See Flavor Details">
-                     <img src="{% flavor_get_image_url line.flavor_id line.tab_id.vol_id.id %}" alt="" class="current">
-                     <!--<img src="{% static './img/samples/products/index/clothing/2.jpg' %}" alt=""> -->
+
+ <div class="product product-grid">
+     <div class="product-media">
+         <div class="product-thumbnail">
+             <a href="{% url 'catalog:flavor' id=line.flavor_id.id %}?volume_id={{ line.tab_id.vol_id.id }}" title="See Flavor Details">
+                 <img src="{% flavor_get_image_url line.flavor_id line.tab_id.vol_id.id %}" alt="" class="current">
+                 <!--<img src="{% static './img/samples/products/index/clothing/2.jpg' %}" alt=""> -->
+             </a>
+         </div><!-- /.product-thumbnail -->
+         <div class="product-hover">
+             <div class="product-actions">
+                 <a href="{% url 'cart:quick_show_cart' id=line.flavor_id.id %}?volume_id={{ line.tab_id.vol_id.id }}" class="awe-button product-quick-view" data-toggle="tooltip" title="Add to cart">
+                     <i class="icon icon-shopping-bag"></i>
                  </a>
-             </div><!-- /.product-thumbnail -->
-             <div class="product-hover">
-                 <div class="product-actions">
-                     <a href="{% url 'cart:quick_show_cart' id=line.flavor_id.id %}?volume_id={{ line.tab_id.vol_id.id }}" class="awe-button product-quick-view" data-toggle="tooltip" title="Add to cart">
-                         <i class="icon icon-shopping-bag"></i>
-                     </a>
 
-                    <!--  <a href="#" class="awe-button product-quick-whistlist" data-toggle="tooltip" title="Add to whistlist">
-                         <i class="icon icon-star"></i>
-                     </a> -->
+                <!--  <a href="#" class="awe-button product-quick-whistlist" data-toggle="tooltip" title="Add to whistlist">
+                     <i class="icon icon-star"></i>
+                 </a> -->
 
-                     <a href="{% url 'catalog:flavor_quick_view' id=line.flavor_id.id %}?volume_id={{ line.tab_id.vol_id.id }}" class="awe-button product-quick-view" data-toggle="tooltip" title="Quickview">
-                         <i class="icon icon-eye"></i>
-                     </a>
-            	    </div>
-             </div><!-- /.product-hover -->
+                 <a href="{% url 'catalog:flavor_quick_view' id=line.flavor_id.id %}?volume_id={{ line.tab_id.vol_id.id }}" class="awe-button product-quick-view" data-toggle="tooltip" title="Quickview">
+                     <i class="icon icon-eye"></i>
+                 </a>
+        	    </div>
+         </div><!-- /.product-hover -->
 <!--              <span class="product-label hot">
-                 <span>hot</span>
-             </span> -->
-         </div><!-- /.product-media -->
-         <div class="product-body">
-             <h2 class="product-name">
-                 <a href="#" title="{{ line.flavor_id.name }}">{{ line.flavor_id.name }}</a>
-             </h2><!-- /.product-product -->
-             <!-- /.product-category -->
-              <div class="product-category">
-                 <span>{{ line.tab_id.vol_id.name }}</span>
-             </div> 
-             <!-- /.product-price -->
+             <span>hot</span>
+         </span> -->
+     </div><!-- /.product-media -->
+     <div class="product-body">
+         <h2 class="product-name">
+             <a href="#" title="{{ line.flavor_id.name }}">{{ line.flavor_id.name }}</a>
+         </h2><!-- /.product-product -->
+         <!-- /.product-category -->
+          <div class="product-category">
+             <span>{{ line.tab_id.vol_id.name }}</span>
+         </div> 
+         <!-- /.product-price -->
 <!--              <div class="product-price">
-                 <span class="amount">$246</span>
-             </div> -->
-         </div><!-- /.product-body -->
-     </div><!-- /.product -->
- </div>	 <!-- Product End -->				
+             <span class="amount">$246</span>
+         </div> -->
+     </div><!-- /.product-body -->
+ </div><!-- /.product -->

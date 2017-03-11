@@ -48,6 +48,12 @@ class OdooAdapter(object):
             db_logger.exception(e)
         return res
     
+    def create(self,model=False,vals={},context=None):
+        assert model != False
+        if context == None:context={}
+        res = self.execute_method(model,'create',[vals,context])
+        return res        
+    
     def search_read(self,model=False,domain=None, fields=None, offset=0, limit=None, order=None, context=None):
         assert model != False
         if context == None:context={}

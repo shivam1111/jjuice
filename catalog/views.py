@@ -27,12 +27,29 @@ _SORT_BY = [
 class Index(View):
     def get(self,request,template_name="index.html"):
         from misc.models import PartnerReviews
-        banners = policies = []
-        banners = WebsiteBanner.objects.all().order_by('sequence')
-        policies = WebsitePolicy.objects.all().order_by('sequence')[:3]
+        promo_ids = policies = []
         reviews = PartnerReviews.objects.all().order_by('sequence')
         customerreview_banner_url = os.path.join(settings.STATIC_URL,settings.PLACEHOLDER_BANNER_IMAGE)
         banner_record =  S3Object.objects.filter(customerreview_banner=True)[:1]
+        featured_lines = S3Object.objects.filter(is_featured_item=True,attribute_id__in=request.volumes_available_ids)
+        if (not request.user.is_authenticated) or (not request.user.odoo_user.partner_id.classify_finance) or (request.user.odoo_user.partner_id.classify_finance == 'website'):
+            promo_ids = eval(IrConfigParameters.objects.get_param('promo_non_business_ids','[]'))
+        else :
+            promo_ids = eval(IrConfigParameters.objects.get_param('promo_business_ids','[]'))
+        policies = WebsitePolicy.objects.filter(id__in=promo_ids).order_by('sequence')[:3]
+        lines_list = []
+        if featured_lines.exists():
+            for line in featured_lines:
+                try:
+                    lines_list.append(FlavorConcDetails.objects.get(
+                                                          flavor_id = line.flavor_id,
+                                                          tab_id__vol_id=line.attribute_id,
+                                                          tab_id__visible_all_customers=True,
+                                                          tab_id__consumable_stockable = 'product',
+                                                          tab_id__active = True                    
+                                                    ))
+                except FlavorConcDetails.DoesNotExist:
+                    pass
         if banner_record.exists():
             customerreview_banner_url = create_aws_url(banner_record[0]._meta.db_table,str(banner_record[0].id))
         return render(request,"index.html",locals())        

@@ -20,6 +20,8 @@ class CatalogMiddleware(MiddlewareMixin):
                        'name':i.name,
                        'image_url':create_aws_url(ProductAttributeValue._meta.db_table,str(i.id)),
                        'banner_url': create_aws_url(ProductAttributeValue.banner_key,str(i.id)),
+                       'category_url':i.file_name_category and create_aws_url(ProductAttributeValue.category_key,str(i.id)) or False,
                     }
                 })
         request.volumes_data = volumes_data
+        request.volumes_available_ids = volumes_available_ids

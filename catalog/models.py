@@ -83,6 +83,9 @@ class S3Object(models.Model):
     aboutus_banner = models.NullBooleanField(verbose_name = "Is About us Banner ?")
     contactus_banner = models.NullBooleanField(verbose_name = "Is Contact us Banner ?")
     customerreview_banner = models.NullBooleanField(verbose_name = "Is Contact Review Banner ?")
+    is_featured_item = models.NullBooleanField(verbose_name = "Is Featured Item ?")
+    privacy_policy_banner = models.NullBooleanField(verbose_name = "Is Privacy Policy Banner ?")
+    terms_conditions_banner = models.NullBooleanField(verbose_name = "Is Terms & Conditions Banner ?")
     
     _DATABASE = "odoo"    
     class Meta:

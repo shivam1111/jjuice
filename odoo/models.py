@@ -100,9 +100,12 @@ class ProductAttributeValue(models.Model):
     msrp = models.FloatField(verbose_name="MSRP",blank=True)
     old_price = models.FloatField(verbose_name="Wholesale Price",blank=True)
     sequence = models.IntegerField(verbose_name="sequence")
+    file_name_category = models.CharField(verbose_name = "Category File Name",max_length=200)
     
     _DATABASE = "odoo"
     banner_key = "product_attribute_value_banner"
+    category_key = "product_attribute_value_category"
+    
     class Meta:
         managed=False
         db_table = "product_attribute_value"
