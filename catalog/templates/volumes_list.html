@@ -10,7 +10,7 @@
 <div class="products">
 {% for line in lines %}
 	{# Django provides it you can use {{ forloop.counter }} index start at 1 or {{ forloop.counter0 }} index start at 0. #}
-	{% flavor_list_view line %}
+	{% flavor_list_view line back_url %}
 {% endfor %} 						
 </div>
 {% endblock %}

@@ -40,7 +40,7 @@ class ProductFlavors(models.Model):
     long_description = models.TextField(verbose_name = "Long Description")
     banner_key = "product_flavor_banner"
     
-    def get_url(SELFCHECK_DATE_FMT):
+    def get_url(self):
         return reverse('catalog:flavor',args=[self.id])
         
     def get_price(self,user,volume):
@@ -86,6 +86,8 @@ class S3Object(models.Model):
     is_featured_item = models.NullBooleanField(verbose_name = "Is Featured Item ?")
     privacy_policy_banner = models.NullBooleanField(verbose_name = "Is Privacy Policy Banner ?")
     terms_conditions_banner = models.NullBooleanField(verbose_name = "Is Terms & Conditions Banner ?")
+    search_banner = models.NullBooleanField(verbose_name = "Is Search Page Banner?")
+    checkout_banner = models.NullBooleanField(verbose_name = "Is Checkout Page Banner?")
     
     _DATABASE = "odoo"    
     class Meta:
@@ -94,6 +96,7 @@ class S3Object(models.Model):
 
 class ProductTab(models.Model):
     id = models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=200,verbose_name="Name")
     tab_style = models.CharField(max_length=20,verbose_name="Tab Style",choices = _TAB_STYLES)
     vol_id = models.ForeignKey(ProductAttributeValue,verbose_name = "Volume",blank=False,
                                      db_column="vol_id",

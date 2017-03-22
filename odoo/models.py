@@ -120,6 +120,19 @@ class Country(models.Model):
         managed=False
         db_table = "res_country"
 
+class State(models.Model):
+    name = models.CharField(verbose_name = "Name",blank=False,max_length = 60)
+    code = models.CharField(verbose_name = "Name",blank=False,max_length = 3)
+#     country_id = models.ForeignKey(verbose_name = "Country",Country,blank=False,
+#                                      db_column="country_id",
+#                                      related_name="state_ids")
+    id = models.IntegerField(primary_key=True)
+    
+    _DATABASE = "odoo"    
+    class Meta:
+        managed=False
+        db_table = "res_country_state"        
+
 class Partner(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(verbose_name="Name",blank=False,max_length = 50)

@@ -2,20 +2,20 @@ from django.shortcuts import render,get_object_or_404,HttpResponseRedirect,HttpR
 from odoo.models import WebsiteBanner,WebsitePolicy,IrConfigParameters,ProductAttributeValue
 from models import FlavorConcDetails,ProductVariant,ProductFlavors,FlavorReviews as FlavorReviewModel,S3Object
 from django.core.paginator import Paginator,EmptyPage, PageNotAnInteger
-from django.db.models import FieldDoesNotExist
-from urllib import urlencode
+from django.db.models import FieldDoesNotExist,Q
+from urllib import urlencode,quote,unquote
 from cart import cart
 from cart.forms import ProductAddToCartForm
 from django.db import connection
 from django.views import View
-from helper import safe_cast,create_aws_url
+from helper import safe_cast,create_aws_url,is_user_business
 from django.core import urlresolvers
 from django.conf import settings
 import os
 
 _PER_PAGE_OPTIONS = [
         (10,'10'),
-        (20,'25'),
+        (20,'20'),
         (30,'30')
     ]
 
@@ -32,7 +32,7 @@ class Index(View):
         customerreview_banner_url = os.path.join(settings.STATIC_URL,settings.PLACEHOLDER_BANNER_IMAGE)
         banner_record =  S3Object.objects.filter(customerreview_banner=True)[:1]
         featured_lines = S3Object.objects.filter(is_featured_item=True,attribute_id__in=request.volumes_available_ids)
-        if (not request.user.is_authenticated) or (not request.user.odoo_user.partner_id.classify_finance) or (request.user.odoo_user.partner_id.classify_finance == 'website'):
+        if is_user_business(request.user):
             promo_ids = eval(IrConfigParameters.objects.get_param('promo_non_business_ids','[]'))
         else :
             promo_ids = eval(IrConfigParameters.objects.get_param('promo_business_ids','[]'))
@@ -57,7 +57,7 @@ class Index(View):
 class Volume(View):
 
     @safe_cast
-    def get(self,request,id,template_name="volumes.html"):
+    def get(self,request,id,template_name="volumes_grid.html"):
         volume_id = int(id) # TypeError and ValueError handled by the decorator
         assert volume_id in request.volumes_data.keys() , "You are not allowed to access this page"
         volume_data = request.volumes_data[volume_id]
@@ -87,6 +87,8 @@ class Volume(View):
             lines = paginator.page(paginator.num_pages)
         per_page_options = _PER_PAGE_OPTIONS
         sort_options = _SORT_BY
+        back_url = request.get_full_path()
+        back_url = quote(back_url.encode('utf-8'))
         return render(request,template_name,locals())
 
 class Flavor(View):
@@ -96,6 +98,8 @@ class Flavor(View):
         flavor_id = int(id) # TypeError and ValueError handled by the decorator
         volume_id = request.GET.get('volume_id',False)
         volume_id = int(volume_id)
+        back_url = request.GET.get('back',"/")
+        back_url = unquote(back_url.encode('utf-8'))
         conc_id = request.GET.get('conc_id',False) and int(request.GET['conc_id']) or False
         flavor = get_object_or_404(ProductFlavors, pk=flavor_id)
         current_volume = get_object_or_404(ProductAttributeValue, pk=volume_id)
@@ -105,7 +109,7 @@ class Flavor(View):
         form = ProductAddToCartForm(request=request, label_suffix=':') 
         # set the test cookie on our first GET request 
         request.session.set_test_cookie()
-        products = flavor.flavor_product_variant_ids.filter(vol_id=volume_id,product_tmpl_id__type="product").distinct('conc_id__id')
+        products = flavor.flavor_product_variant_ids.filter(vol_id=volume_id,product_tmpl_id__type="product",product_tmpl_id__sale_ok=True).distinct('conc_id__id')
         price = flavor.get_price(request.user,current_volume) 
         old_price = current_volume.old_price or 0
         return render(request,template_name,locals())
@@ -133,10 +137,12 @@ class Flavor(View):
         price = old_price = 0
         name = flavor.name
         assert volume_id and (volume_id in request.volumes_data.keys()) , "You are not allowed to access this page"        
-        products = flavor.flavor_product_variant_ids.filter(vol_id=volume_id,product_tmpl_id__type="product").distinct('conc_id__id')
+        products = flavor.flavor_product_variant_ids.filter(vol_id=volume_id,product_tmpl_id__type="product",product_tmpl_id__sale_ok=True).distinct('conc_id__id')
         price = flavor.get_price(request.user,current_volume) 
         old_price = current_volume.old_price        
         request.session.set_test_cookie()
+        back_url = request.GET.get('back',"/")
+        back_url = unquote(back_url.encode('utf-8'))
         return render(request,template_name,locals())
 
 class FlavorQuickView(View):
@@ -154,6 +160,46 @@ class FlavorQuickView(View):
         price = flavor.get_price(request.user,current_volume)
         old_price = current_volume.old_price
         return render(request,template_name,locals())         
+
+class Search(View):
+    
+    def get(self,request,template_name = "search.html"):
+        lines_list = []
+        search = request.GET.get('search',False)
+        page = int(request.GET.get('page',1))
+        per_page = int(request.GET.get('per_page',20))
+        if search:
+            lines_list = FlavorConcDetails.objects.filter(
+                                                  Q(flavor_id__name__icontains = search) |
+                                                  Q(tab_id__name__icontains=search)
+                                              ).filter(                                                  
+                                                  Q(tab_id__visible_all_customers=True) , 
+                                                  Q(tab_id__consumable_stockable = 'product') ,
+                                                  Q(tab_id__active = True),
+                                                  Q(tab_id__vol_id__in=request.volumes_available_ids)                    
+                                              )
+        paginator = Paginator(lines_list, per_page)
+        try:
+            lines = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            lines = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            lines = paginator.page(paginator.num_pages)
+        per_page_options = _PER_PAGE_OPTIONS                    
+        search_banner_url = os.path.join(settings.STATIC_URL,settings.PLACEHOLDER_BANNER_IMAGE)
+        banner_record =  S3Object.objects.filter(search_banner=True)[:1]
+        back_url = "?".join([request.path,urlencode({
+                'search':search,
+                'per_page':per_page,
+                'page':page
+            })])
+        back_url = quote(back_url.encode("utf-8"))
+        if banner_record.exists():
+            search_banner_url = create_aws_url(banner_record[0]._meta.db_table,str(banner_record[0].id))        
+        return render(request,template_name,locals())
+        
 
 class FlavorReview(View):
     

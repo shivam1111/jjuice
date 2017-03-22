@@ -30,7 +30,7 @@
 				<li class="pagination-next"><a href="?page={{ lines.next_page_number }}"><i class="icon icon-arrow-next"></i></a></li>
 	        {% endif %}                
 	        </ul><!-- ./pagination -->			
-                <form action="/volume/{{ volume_id }}/" method="GET" class="form-inline" >
+                <form action="{{back_url}}" method="GET" class="form-inline" >
                     <div class="row">
                         <div class="col-md-4 col-sm-6">
                             <div class="view-icons">
@@ -51,12 +51,12 @@
                                     <strong>per page</strong>
                                 </div><!-- /.form-group -->
 
-                                <div class="form-group pull-right text-right">
+<!--                                 <div class="form-group pull-right text-right">
                                     <label for="p_sort_by">Sort By</label>
                                     <select name="sort_by" id="sort_by" onchange="this.form.submit()" class="form-control input-sm">
 										{% options sort_options sort_by %}
                                     </select>
-                                </div><!-- /.form-group -->
+                                </div> -->
                             </div>
                         </div>
                     </div><!-- /.row -->

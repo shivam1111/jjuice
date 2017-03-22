@@ -4,7 +4,7 @@
  <div class="product product-grid">
      <div class="product-media">
          <div class="product-thumbnail">
-             <a href="{% url 'catalog:flavor' id=line.flavor_id.id %}?volume_id={{ line.tab_id.vol_id.id }}" title="See Flavor Details">
+             <a href="{% url 'catalog:flavor' id=line.flavor_id.id %}?volume_id={{ line.tab_id.vol_id.id }}&back={{back_url}}" title="See Flavor Details">
                  <img src="{% flavor_get_image_url line.flavor_id line.tab_id.vol_id.id %}" alt="" class="current">
                  <!--<img src="{% static './img/samples/products/index/clothing/2.jpg' %}" alt=""> -->
              </a>

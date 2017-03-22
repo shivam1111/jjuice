@@ -1,0 +1,158 @@
+{% extends "catalog.html" %}
+{% load options %}
+{% load catalog_filters %}
+{% load static %}
+{% load thumbnail %}
+{% load flavor_grid_view %}
+{% block site_main %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/checkout.css' %}">.
+<script type="text/javascript" src="{% static 'js/lib/underscore/underscore.js' %}" ></script>
+<script type="text/javascript" src="{% static 'js/lib/backbone/backbone-min.js' %}" ></script>
+<script type="text/javascript" src="{% static 'js/checkout.js' %}"></script>
+<script type="text/javascript">
+$(function(){
+	$('a[title]').tooltip();
+});
+
+</script>
+<div class="main-header background background-image-heading-checkout" style="background-image: url({{checkout_banner_url}});">
+    <div class="container">
+        <h1>Checkout</h1>
+    </div>
+</div>
+<div id="breadcrumb">
+    <div class="container">
+        <ol class="breadcrumb">
+		    <li><a href="/">Home</a></li>
+		    {% if back_url %}
+	    	<li><a href="{{back_url}}">{{back_url_name}}</a></li>
+		    {% endif %}
+	    	<li class="active"><span>Checkout</span></li>
+		</ol>
+    </div>
+</div>
+<div class="checkout-wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7">
+                <div class="board">
+                <!-- <h2>Welcome to IGHALO!<sup>™</sup></h2>-->
+                    <div class="board-inner">
+	                    <ul class="nav nav-tabs" id="myTab">
+		                    <div class="liner"></div>
+		                    <li class="active">
+		                    	<a href="#shipping" data-toggle="tab" title="Shipping Information">
+				                    <span class="round-tabs two">
+				                        <i class="glyphicon glyphicon-user"></i>
+				                    </span> 
+					           </a>
+		                	</li>
+		                 	<li>
+			                 	<a href="#billing" data-toggle="tab" title="Billing Information">
+				                    <span class="round-tabs three">
+				                          <i class="glyphicon glyphicon-credit-card"></i>
+				                    </span> 
+			                    </a>
+		                     </li>
+		                    <li><a href="#doner" data-toggle="tab" title="completed">
+		                        <span class="round-tabs five">
+		                              <i class="glyphicon glyphicon-ok"></i>
+		                        </span> </a>
+		                    </li>
+	                    </ul>
+                    </div>
+                    <div class="tab-content">
+                    	<div class="tab-pane fade in active" id="shipping">
+                        	<h3>Shipping Details</h3>
+		                    <div class="form-group">
+		                        <label for="country">Country <sup>*</sup></label>
+		                        <select name="country_id" id="country" class="form-control dark">
+		                            {% for i in countries_list %}
+		                            {% if i.1 == "United States" %}
+	                            	<option selected value="{{i.0}}">{{i.1}}</option>
+		                            {% else %}
+		                            <option value="{{i.0}}">{{i.1}}</option>
+		                            {% endif %}
+		                            
+		                            {% empty %}
+		                            <!-- Do nothing -->
+		                            {% endfor %}
+		                        </select>
+		                    </div><!-- /.form-group -->                        	
+                        </div>
+	                    <div class="tab-pane fade" id="billing">
+	                    	<p>Billing</p>
+	                    </div>
+	                    <div class="tab-pane fade" id="doner">
+					  		<div class="text-center">
+					    		<i class="img-intro icon-checkmark-circle"></i>
+							</div>
+						</div>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+            </div> <!-- col-md-7 end-->
+            <div class="col-md-5">
+                <div class="payment-right">
+                    <!-- <h2>Your payment details</h2> -->
+
+                    <div class="payment-detail-wrapper">
+                        <ul class="cart-list">
+                        	{% for item in cart_items %}
+                            <li>
+                                <div class="cart-item">
+                                    <div class="product-image">
+                                        <a href="{{ item.get_product_url }}&back={{ back_url }}" title="{{item.product.get_name}}">
+                                            <img src="{{item.product.get_image_url}}" style="height:75px;width:75px;" alt="">
+                                        </a>
+                                    </div>
+
+                                    <div class="product-body">
+                                        <div class="product-name">
+                                            <h3>
+                                                <a href="#" title="{{item.product.get_name}}">{{item.product.get_name}}</a>
+                                            </h3>
+                                        </div>
+                                    	<span>Qty:{{ item.quantity }}</span>
+                                        <div class="product-price">
+                                            <span>{{item.get_total|currency}}</span>
+
+                                        </div>
+                                    </div>
+                                </div><!-- /.cart-item -->
+								<form method="POST" action="{% url 'cart:show_cart' %}">
+									{% csrf_token %}
+									<input type="hidden" name="item_id" value="{{ item.id }}" />
+									<input type="hidden" name="action" value="delete" />
+									<button type="submit"  class="remove-cart btn btn-default no-border" value=""><i class="fa fa-trash-o fa-2x"></i></button>
+								</form>
+                            </li>
+                            {% empty %}
+                            <li><div class="cart-item">CART EMPTY</div></li>
+                            {% endfor %}
+                        </ul> <!-- /.cart-list -->
+                    </div><!-- /.payment-detail-wrapper -->
+                    <div class="cart-total">
+                        <table>
+                            <tbody>
+                                <tr class="cart-subtotal">
+                                    <th>Cart Subtotal:</th>
+                                    <td><span class="amount">{{cart_total|currency}}</span></td>
+                                </tr>
+                                <tr class="shipping">
+                                    <th>Shipping:</th>
+                                    <td>-</td>
+                                </tr>
+                                <tr class="order-total">
+                                    <th>Order Total:</th>
+                                    <td><strong><span class="amount">-</span></strong> </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div><!-- /.cart-total -->
+                </div>
+            </div>
+        </div>
+    </div><!-- /.container -->
+</div><!-- /.checkout-wrapper -->
+{% endblock %}

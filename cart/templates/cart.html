@@ -27,8 +27,8 @@
 	        	{% for item in cart_items %}
 				<tr>
 					<td class="cart-product">
-						<a href="{{ item.get_product_url }}" title="" class="product-cart">
-							<img src="{{item.product.flavor_id.get_image_url}}" alt="" style="width:70px;height:80px;" />
+						<a href="{{ item.get_product_url }}&back={{ back_url }}" title="{{item.product.get_name}}" class="product-cart">
+							<img src="{{item.product.get_image_url}}" alt="" style="width:70px;height:80px;" />
 							<h3 class="product-title">{{item.product.get_name}}</h3>
 						</a>
 					</td>
@@ -93,7 +93,7 @@
 	                			<td><strong><span class="amount">{{cart_total|currency}}</span></strong></td>
 	              			</tr>
 	              			<tr>
-	                			<td colspan="2"><a href="#" role="button" class="btn btn-primary"><span>Proceed to checkout</span></a></td>
+	                			<td colspan="2"><a href="{% url 'checkout:checkout' %}?back_url={{back_url}}&back_url_name={{back_url_name}}" role="button" class="btn btn-primary"><span>Proceed to checkout</span></a></td>
 	              			</tr>
 	            		</tbody>
 	          		</table>

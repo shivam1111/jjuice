@@ -111,7 +111,7 @@
                                         </div>
                                         <div class="cart-action">
                                             <a href="{% url 'cart:show_cart' %}" title="" class="btn btn-lg btn-dark btn-outline btn-block">View cart</a>
-                                            <a href="checkout.html" title="" class="btn btn-lg btn-primary btn-block">Proceed To Checkout</a>
+                                            <a href="{% url 'checkout:checkout' %}" title="" class="btn btn-lg btn-primary btn-block">Proceed To Checkout</a>
                                         </div>
                                     </div>
                                 </li>                                    
@@ -128,8 +128,8 @@
 	                        </a>
 	
 	                        <div class="menubar-search-form" id="menubar-search-form">
-	                            <form action="index.html" method="GET">
-	                                <input type="text" name="s" class="form-control" placeholder="Search your entry here...">
+	                            <form action="{% url 'catalog:search'  %}?page=1" method="GET">
+	                                <input type="text" name="search" required class="form-control" placeholder="Search here...">
 	                                <div class="menubar-search-buttons">
 	                                    <button type="submit" class="btn btn-sm btn-white">Search</button>
 	                                    <button type="button" class="btn btn-sm btn-white" id="close-search-form">

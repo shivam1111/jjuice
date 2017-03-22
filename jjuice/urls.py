@@ -29,6 +29,7 @@ urlpatterns = [
     url(r'^cart/', include('cart.urls',namespace="cart")),
     url(r'^accounts/', include('odoo_auth.urls',namespace="odoo_auth")),
     url(r'^accounts/', include('django.contrib.auth.urls',namespace="auth")),
+    url(r'^checkout/', include('checkout.urls',namespace="checkout")),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 def handler404(request):

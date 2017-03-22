@@ -4,17 +4,24 @@ from models import CartItem
 from catalog.models import ProductFlavors,ProductAttributeValue
 from cart import *
 from helper import safe_cast
+from urllib import quote
 
 class Cart(View):
     _name = "Shopping Cart"
     def get(self,request,template_name="cart.html"):
         name = self._name
+        back_url = request.get_full_path()
+        back_url = quote(back_url.encode('utf-8'))
+        back_url_name = "Cart"
         return render(request,template_name,locals())
     
     def post(self,request,template_name="cart.html"):
         postdata = request.POST.copy()
         name = self._name
         action = postdata.get('action',False)
+        back_url = request.get_full_path()
+        back_url = quote(back_url.encode('utf-8'))        
+        back_url_name = "Cart"
         if action:
             item_id = postdata.get('item_id',False)
             if action == "update" and item_id:
@@ -42,7 +49,7 @@ class QuickCart(View):
         price  = 0 
         request.session.set_test_cookie()
         assert volume_id and (volume_id in request.volumes_data.keys()) , "You are not allowed to access this page" 
-        products = flavor.flavor_product_variant_ids.filter(vol_id=volume_id).distinct('conc_id__id')
+        products = flavor.flavor_product_variant_ids.filter(vol_id=volume_id,product_tmpl_id__type="product",product_tmpl_id__sale_ok=True).distinct('conc_id__id')
         price = flavor.get_price(request.user,current_volume)
         old_price = current_volume.old_price or 0
         return render(request,template_name,locals())

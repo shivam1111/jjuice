@@ -9,5 +9,6 @@ urlpatterns = [
     url(r'^flavor_review/$', FlavorReview.as_view(), name='flavor_review'),
     url(r'^flavor/(?P<id>[0-9]+)/$', Flavor.as_view(), { 'template_name':'flavors.html'}, name='flavor'),
     url(r'^flavor_quick_view/(?P<id>[0-9]+)/$', FlavorQuickView.as_view(), { 'template_name':'flavor_quick_view.html'}, name='flavor_quick_view'),
+    url(r'^search/$', Search.as_view(), { 'template_name':'search.html'}, name='search'),
 ] 
 

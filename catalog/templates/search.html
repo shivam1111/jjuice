@@ -1,0 +1,85 @@
+{% extends "catalog.html" %}
+{% load options %}
+{% load static %}
+{% load thumbnail %}
+{% load flavor_grid_view %}
+{% block site_main %}
+<div class="main-header background background-image-heading-products" style="background-image:url({{search_banner_url}});">
+    <div class="container">
+        <h1>Search</h1>
+    </div>
+</div>
+<div id="breadcrumb">
+	<div class="container">
+		<ol class="breadcrumb">
+		    <li><a href="/">Home</a></li>
+		    <li class="active"><span>{{ search }}</span></li>
+		</ol>
+	</div>
+</div>
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="product-header-actions">
+			<ul class="pagination">
+	       	{% if lines.has_previous %}
+		       	<li class="pagination-prev"><a href="?page={{ lines.next_page_number }}&per_page={{ per_page }}&search={{ search }}"><i class="icon icon-arrow-prev"></i></a></li>
+	           	<li><span>...</span></li>
+	   		{% endif %}
+	            <li class="active" ><a href="#">{{ lines.number }}</a></li>
+			{% if lines.has_next %}
+				<li><span>...</span></li>
+				<li class="pagination-next"><a href="?page={{ lines.next_page_number }}&per_page={{ per_page }}&search={{ search }}"><i class="icon icon-arrow-next"></i></a></li>
+	        {% endif %}                
+	        </ul><!-- ./pagination -->			
+                <form action="{% url 'catalog:search'  %}" method="GET" class="form-inline" >
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6">
+                            <div class="view-count">
+                                <span class="text-muted">Page {{ lines.number }} of {{ lines.paginator.num_pages }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-8 col-sm-6 col-xs-12">
+                            <div class="form-show-sort">
+                                <div class="form-group pull-left">
+                                    <label for="p_show">Show</label>
+                                    <input type="hidden" id="page" name="page" class="form-control input-sm" value="{{lines.number}}">
+                                    <input type="hidden" id="search" name="search" class="form-control input-sm" value="{{search}}">
+                                    <select name="per_page" id="per_page" class="form-control input-sm" onchange="this.form.submit()">
+                                    	{% options per_page_options per_page %}
+                                    </select>
+                                    <strong>per page</strong>
+                                </div><!-- /.form-group -->
+                            </div>
+                        </div>
+                    </div><!-- /.row -->
+                </form>	
+			</div> <!-- /.product-header-actions -->
+			{% block display_flavors %}
+			<div class="products products-grid-wrapper">
+				<div class="row">
+				{% for line in lines %}
+					{# Django provides it you can use {{ forloop.counter }} index start at 1 or {{ forloop.counter0 }} index start at 0. #}
+					 <div class="col-md-4 col-sm-4 col-xs-12">
+						{% flavor_grid_view line back_url %}
+					</div>
+				{% endfor %} 						
+				
+				</div>
+			</div>
+			{% endblock %}
+            <ul class="pagination">
+            	{% if lines.has_previous %}
+            	<li class="pagination-prev"><a href="?page={{ lines.previous_page_number }}&per_page={{ per_page }}&search={{ search }}"><i class="icon icon-arrow-prev"></i></a></li>
+            	<li><span>...</span></li>
+        		{% endif %}
+                <li class="active" ><a href="#">{{ lines.number }}</a></li>
+				{% if lines.has_next %}
+					<li><span>...</span></li>
+					<li class="pagination-next"><a href="?page={{ lines.next_page_number }}&per_page={{ per_page }}&search={{ search }}"><i class="icon icon-arrow-next"></i></a></li>
+		        {% endif %}                
+            </ul><!-- ./pagination -->						
+		</div>		
+	</div>
+</div>
+{% endblock %}
