@@ -164,7 +164,7 @@
 	                                    <div class="col-lg-2">
 	                                        <div class="awe-media inline margin-bottom-25">
 	                                            <div class="awe-media-image">
-	                                                <a href="{% url 'catalog:volume' id=key  %}" title="{{ value.name }}">
+	                                                <a href="{% url 'catalog:volume' id=key view='form'  %}" title="{{ value.name }}">
 	                                                    <!-- <img src="{% static 'img/samples/menu/horosen-shop.jpg' %}" alt=""> -->
 	                                                	<img src="{{ value.image_url }}" alt="{% static 'img/samples/menu/horosen-shop.jpg' %}" />
 	                                                </a>

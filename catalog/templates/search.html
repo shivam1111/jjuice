@@ -58,10 +58,10 @@
 			{% block display_flavors %}
 			<div class="products products-grid-wrapper">
 				<div class="row">
-				{% for line in lines %}
+				{% for product in lines %}
 					{# Django provides it you can use {{ forloop.counter }} index start at 1 or {{ forloop.counter0 }} index start at 0. #}
 					 <div class="col-md-4 col-sm-4 col-xs-12">
-						{% flavor_grid_view line back_url %}
+						{% flavor_grid_view product.flavor_id product.vol_id.id product.vol_id.name back_url %}
 					</div>
 				{% endfor %} 						
 				

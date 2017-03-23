@@ -20,25 +20,27 @@
 		<div class="col-md-9 col-md-push-3">
 			<div class="product-header-actions">
 			<ul class="pagination">
-	       	{% if lines.has_previous %}
-		       	<li class="pagination-prev"><a href="?page={{ lines.previous_page_number }}"><i class="icon icon-arrow-prev"></i></a></li>
-	           	<li><span>...</span></li>
-	   		{% endif %}
-	            <li class="active" ><a href="#">{{ lines.number }}</a></li>
-			{% if lines.has_next %}
-				<li><span>...</span></li>
-				<li class="pagination-next"><a href="?page={{ lines.next_page_number }}"><i class="icon icon-arrow-next"></i></a></li>
-	        {% endif %}                
+	       	{% for i in range_pages %}
+				{% if flavor_lines.number == forloop.counter %}	       		
+	       			<li class="active" ><a href="#">{{ forloop.counter }}</a></li>
+       			{% else %}
+       				<li class="" ><a href="{% url 'catalog:volume' id=volume_id view=view %}?page={{forloop.counter}}&per_page={{per_page}}">{{forloop.counter}}</a></li>
+       			{% endif %}
+
+       			{% empty %}
+       			<!--  Do nothing -->
+	       	{% endfor %}
 	        </ul><!-- ./pagination -->			
-                <form action="{{back_url}}" method="GET" class="form-inline" >
+                <form action="{% url 'catalog:volume' id=volume_id view=view  %}" method="GET" class="form-inline" >
                     <div class="row">
                         <div class="col-md-4 col-sm-6">
+                            <input type="hidden" name = "page" value = {{flavor_lines.number}} />
                             <div class="view-icons">
 								{% block active_grid_view_indicator %}
 								{% endblock %}                            
                             </div>
                             <div class="view-count">
-                                <span class="text-muted">Page {{ lines.number }} of {{ lines.paginator.num_pages }}</span>
+                                <span class="text-muted">Page {{ flavor_lines.number }} of {{ flavor_lines.paginator.num_pages }}</span>
                             </div>
                         </div>
                         <div class="col-md-8 col-sm-6 col-xs-12">
@@ -50,13 +52,12 @@
                                     </select>
                                     <strong>per page</strong>
                                 </div><!-- /.form-group -->
-
-<!--                                 <div class="form-group pull-right text-right">
+                                <div class="form-group pull-right text-right">
                                     <label for="p_sort_by">Sort By</label>
                                     <select name="sort_by" id="sort_by" onchange="this.form.submit()" class="form-control input-sm">
 										{% options sort_options sort_by %}
                                     </select>
-                                </div> -->
+                                </div> 
                             </div>
                         </div>
                     </div><!-- /.row -->
@@ -66,12 +67,12 @@
 
 			{% endblock %}
             <ul class="pagination">
-            	{% if lines.has_previous %}
+            	{% if flavor_lines.has_previous %}
             	<li class="pagination-prev"><a href="?page={{ lines.previous_page_number }}"><i class="icon icon-arrow-prev"></i></a></li>
             	<li><span>...</span></li>
         		{% endif %}
-                <li class="active" ><a href="#">{{ lines.number }}</a></li>
-				{% if lines.has_next %}
+                <li class="active" ><a href="#">{{ flavor_lines.number }}</a></li>
+				{% if flavor_lines.has_next %}
 					<li><span>...</span></li>
 					<li class="pagination-next"><a href="?page={{ lines.next_page_number }}"><i class="icon icon-arrow-next"></i></a></li>
 		        {% endif %}                
@@ -85,9 +86,9 @@
 						<ul>
 							{% for key,value in request.volumes_data.items %}
 							{% if  volume_id == key %}
-								<li class="active"><a href="{% url 'catalog:volume' id=key  %}" title="">{{ value.name }}</a></li>
+								<li class="active"><a href="{% url 'catalog:volume' id=key view=view  %}" title="">{{ value.name }}</a></li>
 							{% else %}
-								<li ><a href="{% url 'catalog:volume' id=key  %}" title="">{{ value.name }}</a></li>
+								<li ><a href="{% url 'catalog:volume' id=key view=view %}" title="">{{ value.name }}</a></li>
 							{% endif %}
 							{% endfor %}
 						</ul>

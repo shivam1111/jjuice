@@ -20,8 +20,8 @@ _PER_PAGE_OPTIONS = [
     ]
 
 _SORT_BY = [
-    ('default','Recommended'),
-    ('-create_date','Latest')
+    ('name','Name'),
+    ('-create_date','Latest'),
 ]
 
 class Index(View):
@@ -41,13 +41,7 @@ class Index(View):
         if featured_lines.exists():
             for line in featured_lines:
                 try:
-                    lines_list.append(FlavorConcDetails.objects.get(
-                                                          flavor_id = line.flavor_id,
-                                                          tab_id__vol_id=line.attribute_id,
-                                                          tab_id__visible_all_customers=True,
-                                                          tab_id__consumable_stockable = 'product',
-                                                          tab_id__active = True                    
-                                                    ))
+                    lines_list.append((line.flavor_id,line.attribute_id))
                 except FlavorConcDetails.DoesNotExist:
                     pass
         if banner_record.exists():
@@ -56,39 +50,41 @@ class Index(View):
 
 class Volume(View):
 
-    @safe_cast
-    def get(self,request,id,template_name="volumes_grid.html"):
+    def get(self,request,id,view='form',template_name="volumes_grid.html"):
         volume_id = int(id) # TypeError and ValueError handled by the decorator
         assert volume_id in request.volumes_data.keys() , "You are not allowed to access this page"
+        if view == 'list':
+            template_name = "volumes_list.html"
         volume_data = request.volumes_data[volume_id]
         name = volume_data['name']
-        sort_by = request.GET.get('sort_by','default')
-        lines_list = FlavorConcDetails.objects.filter(
-                                                      tab_id__vol_id=volume_id,
-                                                      tab_id__visible_all_customers=True,
-                                                      tab_id__consumable_stockable = 'product',
-                                                      tab_id__active = True
-                                                    )
-
-        try:
-            lines_list.order_by(sort_by)
-        except FieldDoesNotExist as e:
-            sort_by = "default"
+        sort_by = request.GET.get('sort_by','name')
+        product_variants = ProductVariant.objects.filter(
+                                                active=True,
+                                                vol_id = volume_id,
+                                                product_tmpl_id__type = 'product',
+                                                product_tmpl_id__sale_ok=True,
+                                                tab_id__vol_id=volume_id,
+                                                tab_id__visible_all_customers=True,
+                                                tab_id__consumable_stockable = 'product',
+                                                tab_id__active = True).distinct('flavor_id__id')
+        flavor_ids = set(map(lambda x: x.flavor_id.id,product_variants))
+        flavors = ProductFlavors.objects.filter(id__in=flavor_ids).order_by(sort_by)
         page = int(request.GET.get('page',1))
-        per_page = int(request.GET.get('per_page',10))
-        paginator = Paginator(lines_list, per_page)
+        per_page = int(request.GET.get('per_page',30))
+        paginator = Paginator(flavors, per_page)
         try:
-            lines = paginator.page(page)
+            flavor_lines = paginator.page(page)
         except PageNotAnInteger:
             # If page is not an integer, deliver first page.
-            lines = paginator.page(1)
+            flavor_lines = paginator.page(1)
         except EmptyPage:
             # If page is out of range (e.g. 9999), deliver last page of results.
-            lines = paginator.page(paginator.num_pages)
+            flavor_lines = paginator.page(paginator.num_pages)
         per_page_options = _PER_PAGE_OPTIONS
         sort_options = _SORT_BY
         back_url = request.get_full_path()
         back_url = quote(back_url.encode('utf-8'))
+        range_pages = range(paginator.num_pages)
         return render(request,template_name,locals())
 
 class Flavor(View):
@@ -169,15 +165,20 @@ class Search(View):
         page = int(request.GET.get('page',1))
         per_page = int(request.GET.get('per_page',20))
         if search:
-            lines_list = FlavorConcDetails.objects.filter(
-                                                  Q(flavor_id__name__icontains = search) |
-                                                  Q(tab_id__name__icontains=search)
-                                              ).filter(                                                  
+            lines_list = ProductVariant.objects.filter(
+                                                  Q(product_tmpl_id__name__icontains = search) |
+                                                  Q(tab_id__name__icontains=search) |
+                                                  Q(vol_id__name__icontains = search)
+                                              ).filter( 
+                                                  Q(product_tmpl_id__sale_ok=True),
+                                                  Q(product_tmpl_id__type = 'product'),
+                                                  Q(active=True),                                 
+                                                  Q(vol_id__in=request.volumes_available_ids) ,                
                                                   Q(tab_id__visible_all_customers=True) , 
                                                   Q(tab_id__consumable_stockable = 'product') ,
                                                   Q(tab_id__active = True),
                                                   Q(tab_id__vol_id__in=request.volumes_available_ids)                    
-                                              )
+                                              ).distinct('flavor_id__id','vol_id__id')
         paginator = Paginator(lines_list, per_page)
         try:
             lines = paginator.page(page)

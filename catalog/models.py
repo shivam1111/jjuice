@@ -88,6 +88,7 @@ class S3Object(models.Model):
     terms_conditions_banner = models.NullBooleanField(verbose_name = "Is Terms & Conditions Banner ?")
     search_banner = models.NullBooleanField(verbose_name = "Is Search Page Banner?")
     checkout_banner = models.NullBooleanField(verbose_name = "Is Checkout Page Banner?")
+    create_date = models.DateTimeField(verbose_name = "Create Date")
     
     _DATABASE = "odoo"    
     class Meta:
@@ -181,7 +182,7 @@ class ProductVariant(models.Model):
                                related_name="conc_product_variant_ids"
                                ) 
     
-    tab_id = models.ForeignKey(ProductAttributeValue,verbose_name="Volume",
+    tab_id = models.ForeignKey(ProductTab,verbose_name="Product Tab",
                                db_column = "tab_id",
                                blank=False,
                                related_name="tab_product_variant_ids"

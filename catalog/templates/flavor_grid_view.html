@@ -4,14 +4,14 @@
  <div class="product product-grid">
      <div class="product-media">
          <div class="product-thumbnail">
-             <a href="{% url 'catalog:flavor' id=line.flavor_id.id %}?volume_id={{ line.tab_id.vol_id.id }}&back={{back_url}}" title="See Flavor Details">
-                 <img src="{% flavor_get_image_url line.flavor_id line.tab_id.vol_id.id %}" alt="" class="current">
+             <a href="{% url 'catalog:flavor' id=flavor_id.id %}?volume_id={{ volume_id }}&back={{back_url}}" title="See Flavor Details">
+                 <img src="{% flavor_get_image_url flavor_id volume_id %}" alt="" class="current">
                  <!--<img src="{% static './img/samples/products/index/clothing/2.jpg' %}" alt=""> -->
              </a>
          </div><!-- /.product-thumbnail -->
          <div class="product-hover">
              <div class="product-actions">
-                 <a href="{% url 'cart:quick_show_cart' id=line.flavor_id.id %}?volume_id={{ line.tab_id.vol_id.id }}" class="awe-button product-quick-view" data-toggle="tooltip" title="Add to cart">
+                 <a href="{% url 'cart:quick_show_cart' id=flavor_id.id %}?volume_id={{ volume_id }}" class="awe-button product-quick-view" data-toggle="tooltip" title="Add to cart">
                      <i class="icon icon-shopping-bag"></i>
                  </a>
 
@@ -19,7 +19,7 @@
                      <i class="icon icon-star"></i>
                  </a> -->
 
-                 <a href="{% url 'catalog:flavor_quick_view' id=line.flavor_id.id %}?volume_id={{ line.tab_id.vol_id.id }}" class="awe-button product-quick-view" data-toggle="tooltip" title="Quickview">
+                 <a href="{% url 'catalog:flavor_quick_view' id=flavor_id.id %}?volume_id={{ volume_id }}" class="awe-button product-quick-view" data-toggle="tooltip" title="Quickview">
                      <i class="icon icon-eye"></i>
                  </a>
         	    </div>
@@ -30,11 +30,11 @@
      </div><!-- /.product-media -->
      <div class="product-body">
          <h2 class="product-name">
-             <a href="#" title="{{ line.flavor_id.name }}">{{ line.flavor_id.name }}</a>
+             <a href="#" title="{{ flavor_id.name }}">{{ flavor_id.name }}</a>
          </h2><!-- /.product-product -->
          <!-- /.product-category -->
           <div class="product-category">
-             <span>{{ line.tab_id.vol_id.name }}</span>
+             <span>{{ name }}</span>
          </div> 
          <!-- /.product-price -->
 <!--              <div class="product-price">

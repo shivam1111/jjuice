@@ -3,16 +3,16 @@
 
 {% block active_grid_view_indicator %}
 <a href="#" class="view-icon active"><span class="icon icon-th"></span></a>
-<a href="{% url 'catalog:volumes_list' id=volume_id %}" class="view-icon "><span class="icon icon-th-list"></span></a>
+<a href="{% url 'catalog:volume' id=volume_id view='list' %}" class="view-icon"><span class="icon icon-th-list"></span></a>
 {% endblock %}             
                
 {% block display_flavors %}
 <div class="products products-grid-wrapper">
 	<div class="row">
-	{% for line in lines %}
+	{% for flavor in flavor_lines %}
 		{# Django provides it you can use {{ forloop.counter }} index start at 1 or {{ forloop.counter0 }} index start at 0. #}
 		 <div class="col-md-4 col-sm-4 col-xs-12">
-			{% flavor_grid_view line back_url %}
+			{% flavor_grid_view flavor volume_id name back_url %}
 		</div>
 	{% endfor %} 						
 	
