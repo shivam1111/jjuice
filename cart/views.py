@@ -3,7 +3,7 @@ from django.views import View
 from models import CartItem
 from catalog.models import ProductFlavors,ProductAttributeValue
 from cart import *
-from helper import safe_cast
+from helper import safe_cast,get_product_variants
 from urllib import quote
 
 class Cart(View):
@@ -49,7 +49,7 @@ class QuickCart(View):
         price  = 0 
         request.session.set_test_cookie()
         assert volume_id and (volume_id in request.volumes_data.keys()) , "You are not allowed to access this page" 
-        products = flavor.flavor_product_variant_ids.filter(vol_id=volume_id,product_tmpl_id__type="product",product_tmpl_id__sale_ok=True).distinct('conc_id__id')
+        products = get_product_variants(flavor,volume_id)
         price = flavor.get_price(request.user,current_volume)
         old_price = current_volume.old_price or 0
         return render(request,template_name,locals())

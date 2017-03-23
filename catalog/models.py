@@ -133,8 +133,8 @@ class ProductTemplate(models.Model):
     type = models.CharField(max_length = 20,verbose_name = "Type",choices = _PRODUCT_TYPES)
     list_price = models.FloatField(verbose_name="Total Price",blank=True,null=True)
     description = models.TextField(verbose_name = "Remarks")
-    sale_ok = models.NullBooleanField(verbose_name="Can be Sold")
-     
+    sale_ok = models.NullBooleanField(verbose_name="Can be Sold ?")
+    purchase_ok = models.NullBooleanField(verbose_name="Can be Purchased ?")
     
     _DATABASE = "odoo"
     class Meta:

@@ -8,7 +8,7 @@ from cart import cart
 from cart.forms import ProductAddToCartForm
 from django.db import connection
 from django.views import View
-from helper import safe_cast,create_aws_url,is_user_business
+from helper import safe_cast,create_aws_url,is_user_business,get_product_variants
 from django.core import urlresolvers
 from django.conf import settings
 import os
@@ -109,7 +109,7 @@ class Flavor(View):
         form = ProductAddToCartForm(request=request, label_suffix=':') 
         # set the test cookie on our first GET request 
         request.session.set_test_cookie()
-        products = flavor.flavor_product_variant_ids.filter(vol_id=volume_id,product_tmpl_id__type="product",product_tmpl_id__sale_ok=True).distinct('conc_id__id')
+        products = get_product_variants(flavor,volume_id)
         price = flavor.get_price(request.user,current_volume) 
         old_price = current_volume.old_price or 0
         return render(request,template_name,locals())
@@ -137,7 +137,7 @@ class Flavor(View):
         price = old_price = 0
         name = flavor.name
         assert volume_id and (volume_id in request.volumes_data.keys()) , "You are not allowed to access this page"        
-        products = flavor.flavor_product_variant_ids.filter(vol_id=volume_id,product_tmpl_id__type="product",product_tmpl_id__sale_ok=True).distinct('conc_id__id')
+        products = get_product_variants(flavor,volume_id)
         price = flavor.get_price(request.user,current_volume) 
         old_price = current_volume.old_price        
         request.session.set_test_cookie()

@@ -2,6 +2,13 @@ from django.conf import settings
 import os
 from django.http import Http404
 
+def get_product_variants(flavor,volume_id,type='product',sellable=True,purchasable=False):
+    return flavor.flavor_product_variant_ids.filter(active=True,
+                                                    vol_id=volume_id,
+                                                    product_tmpl_id__type=type,
+                                                    product_tmpl_id__sale_ok=sellable,
+                                                    product_tmpl_id__purchase_ok=purchasable).distinct('conc_id__id')
+
 def is_user_business(user):
     if (not user.is_authenticated) or (not user.odoo_user.partner_id.classify_finance) or (user.odoo_user.partner_id.classify_finance == 'website'):
         return False
