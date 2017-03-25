@@ -14,6 +14,17 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
+class ShippingReturnsPolicy(View):
+    
+    def get(self,request,template_name="shipping_returns_policy.html"):
+#         banner_url = os.path.join(settings.STATIC_URL,settings.PLACEHOLDER_BANNER_IMAGE)
+#         banner_record =  S3Object.objects.filter(aboutus_banner=True)[:1]
+#         name = "About Us"
+#         if banner_record.exists():
+#             banner_url = create_aws_url(banner_record[0]._meta.db_table,str(banner_record[0].id)) 
+#         employees = HrEmployee.objects.filter(publish=True).order_by('sequence')
+        return render(request,template_name,locals())
+
 class AboutUs(View):
     
     def get(self,request,template_name="aboutus.html"):
