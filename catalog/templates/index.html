@@ -82,31 +82,33 @@
 
 <section>
     <div class="container">
-        <div class="home-trending padding-vertical-50 border-bottom">
-            <div class="section-header center">
-                <h2 class="upper margin-bottom-20">SHOP</h2>
-                <p>Choose Whatever Msg You want over here</p>
-            </div><!-- ./section-header -->
-            <div class="products home-products owl-carousel" data-items="{{ request.volumes_available_ids|length }}">
-                {% for key,value in request.volumes_data.items %}
-                    <div class="awe-media">
-                        <div class="awe-media-image">
-                            <a href="{% url 'catalog:volume' id=key view='form'  %}" title="{{ value.name }}">
-                                {% if value.category_url %}
-                                    <img src="{{ value.category_url }}" alt="">
-                                {% else %}
-                                    <img src="{% static "img/270x200.jpg" %}" alt="">
-                                {% endif %}
-                            </a>
-                        </div><!-- /.awe-media-image -->
+        <div class="padding-vertical-50 border-bottom">
+            <div class = "arrivals">
+                <div class="section-header center">
+                    <h2 class="upper margin-bottom-20">SHOP</h2>
+                    <p>Choose Whatever Msg You want over here</p>
+                </div><!-- ./section-header -->
+                <div class="products home-products owl-carousel" data-items="4">
+                    {% for key,value in request.volumes_data.items %}
+                        <div class="awe-media">
+                            <div class="awe-media-image">
+                                <a href="{% url 'catalog:volume' id=key view='form'  %}" title="{{ value.name }}">
+                                    {% if value.category_url %}
+                                        <img src="{{ value.category_url }}" alt="">
+                                    {% else %}
+                                        <img src="{% static 'img/270x200.jpg' %}" alt="">
+                                    {% endif %}
+                                </a>
+                            </div><!-- /.awe-media-image -->
 
-                        <div class="awe-media-body center margin-vertical-20">
-                            <a href="{% url 'catalog:volume' id=key view='form'  %}" title="{{value.name}}">{{value.name}}</a>
-                        </div><!-- /.awe-media-body -->
-                    </div><!-- /.awe-media -->
-                {% endfor %}
-            </div><!-- /.products -->            
-        </div><!-- /.home-trending -->
+                            <div class="awe-media-body center margin-vertical-20">
+                                <a href="{% url 'catalog:volume' id=key view='form'  %}" title="{{value.name}}">{{value.name}}</a>
+                            </div><!-- /.awe-media-body -->
+                        </div><!-- /.awe-media -->
+                    {% endfor %}
+                </div><!-- /.products -->            
+            </div><!-- /.home-trending -->                
+        </div>
     </div><!-- /.container -->
 </section><!-- /section -->
 
@@ -117,11 +119,11 @@
                 <h2>FEATURED JJUICE BLENDS</h2>
             </div><!-- /.section-header -->
 
-            <div class="products home-products owl-carousel" data-items="{{ lines_list|length }}">
+            <div class="products home-products owl-carousel" data-items="4">
                 
                     {% for line in lines_list %}
                         {# Django provides it you can use {{ forloop.counter }} index start at 1 or {{ forloop.counter0 }} index start at 0. #}
-                        {% flavor_grid_view line.0 line.1.id line.1.name '/' %}
+                        {% flavor_grid_view line.0 line.1 '/' %}
                     {% endfor %}
                 
             </div><!-- /.products -->

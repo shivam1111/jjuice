@@ -56,6 +56,7 @@ class Volume(View):
         if view == 'list':
             template_name = "volumes_list.html"
         volume_data = request.volumes_data[volume_id]
+        
         name = volume_data['name']
         sort_by = request.GET.get('sort_by','name')
         product_variants = ProductVariant.objects.filter(

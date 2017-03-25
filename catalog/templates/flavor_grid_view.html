@@ -1,25 +1,23 @@
- {% load static %}
- {% load call_method %}
-
+{% load static %}
+{% load call_method %}
  <div class="product product-grid">
      <div class="product-media">
          <div class="product-thumbnail">
-             <a href="{% url 'catalog:flavor' id=flavor_id.id %}?volume_id={{ volume_id }}&back={{back_url}}" title="See Flavor Details">
-                 <img src="{% flavor_get_image_url flavor_id volume_id %}" alt="" class="current">
+             <a href="{% url 'catalog:flavor' id=flavor_id.id %}?volume_id={{ current_volume.id }}&back={{back_url}}" title="See Flavor Details">
+                 <img src="{% flavor_get_image_url flavor_id current_volume.id %}" alt="" class="current">
                  <!--<img src="{% static './img/samples/products/index/clothing/2.jpg' %}" alt=""> -->
              </a>
          </div><!-- /.product-thumbnail -->
          <div class="product-hover">
              <div class="product-actions">
-                 <a href="{% url 'cart:quick_show_cart' id=flavor_id.id %}?volume_id={{ volume_id }}" class="awe-button product-quick-view" data-toggle="tooltip" title="Add to cart">
+                 <a href="{% url 'cart:quick_show_cart' id=flavor_id.id %}?volume_id={{ current_volume.id }}" class="awe-button product-quick-view" data-toggle="tooltip" title="Add to cart">
                      <i class="icon icon-shopping-bag"></i>
                  </a>
-
-                <!--  <a href="#" class="awe-button product-quick-whistlist" data-toggle="tooltip" title="Add to whistlist">
-                     <i class="icon icon-star"></i>
-                 </a> -->
-
-                 <a href="{% url 'catalog:flavor_quick_view' id=flavor_id.id %}?volume_id={{ volume_id }}" class="awe-button product-quick-view" data-toggle="tooltip" title="Quickview">
+                <a  class="awe-button product-quick-whistlist" data-toggle="tooltip" title="Price">
+                     ${% call_method flavor_id 'get_price' user=request.user volume=current_volume %}
+                </a> 
+ 
+                 <a href="{% url 'catalog:flavor_quick_view' id=flavor_id.id %}?volume_id={{ current_volume.id }}" class="awe-button product-quick-view" data-toggle="tooltip" title="Quickview">
                      <i class="icon icon-eye"></i>
                  </a>
         	    </div>
