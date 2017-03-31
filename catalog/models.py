@@ -89,7 +89,7 @@ class S3Object(models.Model):
     search_banner = models.NullBooleanField(verbose_name = "Is Search Page Banner?")
     checkout_banner = models.NullBooleanField(verbose_name = "Is Checkout Page Banner?")
     create_date = models.DateTimeField(verbose_name = "Create Date")
-    
+    shipping_returns_policy_banner = models.NullBooleanField(verbose_name = "Is Shipping & Returns Policy Page Banner?")
     _DATABASE = "odoo"    
     class Meta:
         managed=False
@@ -221,6 +221,16 @@ class FlavorReviews(models.Model):
     class Meta:
         managed=False
         db_table = "flavor_reviews"          
-            
+
+class SaleOrder(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(verbose_name = 'Name',max_length=100,blank=False)
+    partner_id = models.ForeignKey(Partner,verbose_name='Customer',db_column="partner_id",related_name="order_ids")
+    _DATABASE = "odoo"
+    class Meta:
+        managed=False
+        db_table = "sale_order"              
+    
+    
         
             

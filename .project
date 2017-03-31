@@ -15,4 +15,11 @@
 		<nature>org.python.pydev.django.djangoNature</nature>
 		<nature>org.python.pydev.pythonNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>static/js/nmi_sale.py</name>
+			<type>1</type>
+			<location>/Users/shivamgoyal/workspace/testing/nmi_sale.py</location>
+		</link>
+	</linkedResources>
 </projectDescription>

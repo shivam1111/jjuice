@@ -1,9 +1,10 @@
-from models import CartItem
+from models import CartItem,CartNote
 from catalog.models import ProductVariant
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect,Http404
 from helper import safe_cast
 import decimal,uuid
+from odoo_helpers import OdooAdapter
 from django.db.models import Q
 from __builtin__ import True
 
@@ -15,6 +16,11 @@ def _cart_id(request):
         request.session[CART_ID_SESSION_KEY] = _generate_cart_id()
     return request.session[CART_ID_SESSION_KEY]
 
+def get_cart_note(request):
+    try:
+        return CartNote.objects.get(cart_id=_cart_id(request))
+    except CartNote.DoesNotExist:
+        return False
 
 def _generate_cart_id():
     return uuid.uuid4().hex
@@ -67,11 +73,38 @@ def cart_distinct_item_count(request):
 def get_cart_total(request):
     total = 0.00
     cart_items = get_cart_items(request)
-    try:
-        total = round(sum(item.get_total for item in cart_items),2)
-    except Exception as e:
-        pass
+    if cart_items.exists():
+        try:
+            total = round(sum(item.get_total for item in cart_items),2)
+        except Exception as e:
+            pass
     return total
         
-    
-
+def create_sale_order_from_cart(request,partner=False,**kwargs):
+    # Accept partner paramter if the user is not logged in
+    vals = {}
+    order = False
+    if request.user.is_authenticated():
+        order_lines = []
+        cart_items = get_cart_items(request)
+        transaction_id = kwargs.get('transaction_id',None)
+        if cart_items.exists():
+            partner = partner or request.user.odoo_user.partner_id
+            note = get_cart_note(request)
+            odoo_adapter = OdooAdapter()
+            for item in cart_items:
+                order_lines.append((0,0,{
+                        'product_id':item.product_id,
+                        'product_uom_qty':item.quantity,
+                        'price_unit':item.get_price,
+                    }))
+                vals = {
+                    'partner_id':partner.id,
+                    'order_line':order_lines,
+                    'origin':transaction_id and  "Transaction ID - %s"%(transaction_id) or '',
+                    'note':note and note.note or '',
+                    'shipping_cost':note and note.shipping_cost or 0.00,
+                }
+            order = odoo_adapter.execute_method('sale.order','create_sale_order_from_cart',[vals])
+    return order
+        

@@ -46,4 +46,10 @@ class CartItem(models.Model):
     def augment_quantity(self,quantity):
         self.quantity = self.quantity + int(quantity)
         self.save()
+
+class CartNote(models.Model):
+    id = models.AutoField(primary_key=True)
+    cart_id = models.UUIDField(editable=False)
+    note  = models.TextField(verbose_name="Note",blank=False)
+    shipping_cost = models.FloatField(verbose_name = "Shipping Cost",default=0.00)
     

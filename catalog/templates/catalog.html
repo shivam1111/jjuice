@@ -78,7 +78,7 @@
                                                 <div class="whishlist-item">
                                                     <div class="product-image">
                                                         <a href="{% url 'catalog:flavor' id=item.product.flavor_id.id %}?volume_id={{ item.product.vol_id.id }}" title="">
-                                                            <img src="{{ item.product.flavor_id.get_image_url }}" alt="">
+                                                            <img src="{{ item.product.get_image_url }}" alt="">
                                                         </a>
                                                     </div>
 
@@ -285,18 +285,18 @@
                     <div class = "col-md-5">
                        <div class="widget widget_tag_cloud">
                             <h3 class="widget-title text-center">Instagram</h3>
-
-                            <ul class="instagram-widget">
+                                <!-- <span>{{ media.caption }}</span>  you can use this also -->
+<!--                             <ul class="instagram-widget">
                                 {% instagram_user_recent_media vapejjuice %}
                                 {% for media in recent_media %}
                                 <li>
                                     <a href="{{ media.display_src }}" class="insta-photo target="_blank" title="{{ media.caption }}">
-                                        <img src="data:image/jpg;base64,{% cache_resize_image_url media.thumbnail_src 70 70 %}" />  <!-- working -->
-                                        <!-- <span>{{ media.caption }}</span> -->
+                                        <img src="data:image/jpg;base64,{% cache_resize_image_url media.thumbnail_src 70 70 %}" />  
+                                        
                                     </a>
                                 </li>
                                 {% endfor %}
-                            </ul>
+                            </ul> -->
                         </div><!-- /.widget -->                        
                     </div>
                 </div>
@@ -360,10 +360,8 @@
 </footer>
 <div id = "registration-popup" class="white-popup login-popup mfp-hide">
     <div role="tabpanel">
-        <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active">
-                <a href="#account-login" aria-controls="account-login" role="tab" data-toggle="tab">Signup</a>
-            </li>
+        <ul class="nav nav-tabs text-center" role="tablist">
+                <h3 href="#account-login"  aria-controls="account-login" role="tab" data-toggle="tab">Signup</h3>
         </ul><!-- /.nav -->
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="account-register">
@@ -461,10 +459,8 @@
 <div id="login-popup" class="white-popup login-popup mfp-hide">
     <div role="tabpanel">
         <!-- Nav tabs -->
-        <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active">
-                <a href="#account-login" aria-controls="account-login" role="tab" data-toggle="tab">Account Login</a>
-            </li>
+        <ul class="nav nav-tabs text-center" role="tablist">
+            <h3 >Account Login</h3>
         </ul><!-- /.nav -->
 
         <!-- Tab panes -->

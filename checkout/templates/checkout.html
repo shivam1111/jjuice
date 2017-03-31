@@ -6,14 +6,16 @@
 {% load flavor_grid_view %}
 {% block site_main %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/checkout.css' %}">.
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.payment/1.2.3/jquery.payment.min.js"></script>
+<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
 <script type="text/javascript" src="{% static 'js/lib/underscore/underscore.js' %}" ></script>
 <script type="text/javascript" src="{% static 'js/lib/backbone/backbone-min.js' %}" ></script>
+<script type="text/javascript" src="{% static 'js/lib/x2js/xml2json.min.js' %}" ></script>
 <script type="text/javascript" src="{% static 'js/checkout.js' %}"></script>
 <script type="text/javascript">
 $(function(){
 	$('a[title]').tooltip();
 });
-
 </script>
 <div class="main-header background background-image-heading-checkout" style="background-image: url({{checkout_banner_url}});">
     <div class="container">
@@ -35,7 +37,7 @@ $(function(){
     <div class="container">
         <div class="row">
             <div class="col-md-7">
-                <div class="board">
+                <div class="board" style="height: 100%">
                 <!-- <h2>Welcome to IGHALO!<sup>™</sup></h2>-->
                     <div class="board-inner">
 	                    <ul class="nav nav-tabs" id="myTab">
@@ -63,25 +65,8 @@ $(function(){
                     </div>
                     <div class="tab-content">
                     	<div class="tab-pane fade in active" id="shipping">
-                        	<h3>Shipping Details</h3>
-		                    <div class="form-group">
-		                        <label for="country">Country <sup>*</sup></label>
-		                        <select name="country_id" id="country" class="form-control dark">
-		                            {% for i in countries_list %}
-		                            {% if i.1 == "United States" %}
-	                            	<option selected value="{{i.0}}">{{i.1}}</option>
-		                            {% else %}
-		                            <option value="{{i.0}}">{{i.1}}</option>
-		                            {% endif %}
-		                            
-		                            {% empty %}
-		                            <!-- Do nothing -->
-		                            {% endfor %}
-		                        </select>
-		                    </div><!-- /.form-group -->                        	
                         </div>
 	                    <div class="tab-pane fade" id="billing">
-	                    	<p>Billing</p>
 	                    </div>
 	                    <div class="tab-pane fade" id="doner">
 					  		<div class="text-center">
@@ -95,7 +80,6 @@ $(function(){
             <div class="col-md-5">
                 <div class="payment-right">
                     <!-- <h2>Your payment details</h2> -->
-
                     <div class="payment-detail-wrapper">
                         <ul class="cart-list">
                         	{% for item in cart_items %}
@@ -141,17 +125,103 @@ $(function(){
                                 </tr>
                                 <tr class="shipping">
                                     <th>Shipping:</th>
-                                    <td>-</td>
+                                    <td id = "shipping_total">-</td>
                                 </tr>
                                 <tr class="order-total">
                                     <th>Order Total:</th>
-                                    <td><strong><span class="amount">-</span></strong> </td>
+                                    <td id = "order_total" ><span class="amount">-</span></td>
                                 </tr>
                             </tbody>
                         </table>
                     </div><!-- /.cart-total -->
                 </div>
-            </div>
+                <div class="row" id = "payment_box" >
+                    <!-- You can make it whatever width you want. I'm making it full width
+                         on <= small devices and 4/12 page width on >= medium devices -->
+                    <div class="payment-right">
+                        <!-- CREDIT CARD FORM STARTS HERE -->
+                        <div class="panel panel-default credit-card-box">
+                            <div class="panel-heading display-table" >
+                                <div class="row display-tr" >
+                                    <h3 class="panel-title display-td" >Payment Details</h3>
+                                    <div class="display-td" >                            
+                                        <img class="img-responsive pull-right" src="http://i76.imgup.net/accepted_c22e0.png">
+                                    </div>
+                                </div>                    
+                            </div>
+                            <div class="panel-body">
+                                <form role="form" id="payment-form" method="POST" action="javascript:void(0);">
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <div class="form-group">
+                                                <label for="billing-cc-number">CARD NUMBER</label>
+                                                <div class="input-group">
+                                                    <input 
+                                                        type="tel"
+                                                        class="form-control"
+                                                        name="billing-cc-number"
+                                                        placeholder="Valid Card Number"
+                                                        autocomplete="cc-number"
+                                                        required autofocus 
+                                                    />
+                                                    <span class="input-group-addon"><i class="fa fa-credit-card"></i></span>
+                                                </div>
+                                            </div>                            
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-7 col-md-7">
+                                            <div class="form-group">
+                                                <label for="billing-cc-exp"><span class="hidden-xs">EXPIRATION</span><span class="visible-xs-inline">EXP</span> DATE</label>
+                                                <input 
+                                                    type="tel" 
+                                                    class="form-control" 
+                                                    name="billing-cc-exp"
+                                                    placeholder="MM / YY"
+                                                    autocomplete="cc-exp"
+                                                    required 
+                                                />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-5 col-md-5 pull-right">
+                                            <div class="form-group">
+                                                <label for="cardCVC">CV CODE</label>
+                                                <input 
+                                                    type="tel" 
+                                                    class="form-control"
+                                                    name="billing-cvv"
+                                                    placeholder="CVC"
+                                                    autocomplete="cc-csc"
+                                                    required
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <div class="form-group">
+                                                <label for="couponCode">COUPON CODE</label>
+                                                <input type="text" class="form-control" name="couponCode" />
+                                            </div>
+                                        </div>                        
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <button id="make_payment" class="subscribe btn btn-success btn-lg btn-block" type="button">Make Payment - $0.00</button>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="display:none;">
+                                        <div class="col-xs-12">
+                                            <p class="payment-errors"></p>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>            
+                        <!-- CREDIT CARD FORM ENDS HERE -->
+                    </div>            
+                </div>
+            </div> <!-- payment details end -->
         </div>
     </div><!-- /.container -->
 </div><!-- /.checkout-wrapper -->

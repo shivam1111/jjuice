@@ -114,6 +114,7 @@ class Country(models.Model):
     name = models.CharField(verbose_name = "Name",blank=False,max_length = 60)
     code = models.CharField(verbose_name = "Name",blank=False,max_length = 2)
     id = models.IntegerField(primary_key=True)
+    is_shipping_allowed = models.NullBooleanField(verbose_name = "Is Shipping Allowed")
     
     _DATABASE = "odoo"    
     class Meta:
@@ -123,9 +124,9 @@ class Country(models.Model):
 class State(models.Model):
     name = models.CharField(verbose_name = "Name",blank=False,max_length = 60)
     code = models.CharField(verbose_name = "Name",blank=False,max_length = 3)
-#     country_id = models.ForeignKey(verbose_name = "Country",Country,blank=False,
-#                                      db_column="country_id",
-#                                      related_name="state_ids")
+    country_id = models.ForeignKey(Country,verbose_name = "Country",blank=False,
+                                     db_column="country_id",
+                                     related_name="country_state_ids")
     id = models.IntegerField(primary_key=True)
     
     _DATABASE = "odoo"    
@@ -134,15 +135,37 @@ class State(models.Model):
         db_table = "res_country_state"        
 
 class Partner(models.Model):
-    id = models.IntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     name = models.CharField(verbose_name="Name",blank=False,max_length = 50)
     image = models.BinaryField(verbose_name = "Image",db_column="image")
-    is_company = models.NullBooleanField("Is Company")
+    is_company = models.NullBooleanField("Is Company?")
+    active = models.NullBooleanField("Active")
+    phone = models.CharField(verbose_name="Phone",blank=True,max_length = 50)
+    customer = models.NullBooleanField("Customer")
+    supplier = models.NullBooleanField("Supplier")
     parent_id = models.ForeignKey('self',verbose_name = "Company",blank=True,related_name="child_ids",db_column = "parent_id",null=True)
     city = models.CharField(verbose_name="City",blank=True,max_length = 60)
     country_id = models.ForeignKey(Country,verbose_name = "Country",db_column = "country_id",null=True)
     email = models.EmailField(verbose_name = "Email",blank=True)
     classify_finance = models.CharField(max_length=20,verbose_name="Account Classification",choices = _CLASSIFICATION_FINANCE)
+    street = models.CharField(max_length=300,verbose_name="Street",blank=True)
+    street2 = models.CharField(max_length=300,verbose_name="Street",blank=True)
+    state_id = models.ForeignKey(State,verbose_name = "State",db_column = "state_id",null=True)
+    zip = models.CharField(max_length=10,verbose_name="Zip",blank=True)
+    notify_email = models.CharField(max_length=20,verbose_name='Notify Email',blank=False,choices=[('none','Never'),('always','All Messages')])
+    commercial_partner_id = models.ForeignKey('self',verbose_name = "Commercial Partner",db_column = "commercial_partner_id",null=True)
+    type = models.CharField(max_length=20,verbose_name="Type",blank=True, choices = [
+                                                                                     ('default','Default'),('invoice','Invoice'),
+                                                                                     ('delivery','Shipping'),('contact','Contact'),
+                                                                                     ('other','Other'),
+                                                                                 ])
+    
+    def save(self,*args,**kwargs):
+        current_partner = self 
+        while not current_partner.is_company and current_partner.parent_id:
+            current_partner = current_partner.parent_id
+        self.commercial_partner_id = current_partner
+        super(Partner, self).save(*args, **kwargs)        
     
     _DATABASE = "odoo"    
     
@@ -171,6 +194,7 @@ class VolumePricesLine(models.Model):
     class Meta:
         managed=False
         db_table = "volume_prices_line"
-        
-            
+
+country_ids = Country.objects.all()
+country_allowed_shipping = country_ids.filter(is_shipping_allowed=True)
                         
