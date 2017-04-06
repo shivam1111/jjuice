@@ -1,4 +1,5 @@
 from django.shortcuts import render,get_object_or_404,HttpResponseRedirect,HttpResponse
+from django.http import JsonResponse
 from odoo.models import WebsiteBanner,WebsitePolicy,IrConfigParameters,ProductAttributeValue
 from models import FlavorConcDetails,ProductVariant,ProductFlavors,FlavorReviews as FlavorReviewModel,S3Object
 from django.core.paginator import Paginator,EmptyPage, PageNotAnInteger
@@ -11,7 +12,12 @@ from django.views import View
 from helper import safe_cast,create_aws_url,is_user_business,get_product_variants
 from django.core import urlresolvers
 from django.conf import settings
-import os
+from odoo_helpers import OdooAdapter
+import os,requests
+from django.utils.decorators import method_decorator
+from django.views.decorators.debug import sensitive_post_parameters
+from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.cache import never_cache
 
 _PER_PAGE_OPTIONS = [
         (10,'10'),

@@ -6,6 +6,7 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.utils.six.moves.urllib.parse import urlencode
 import os
+from odoo_helpers import OdooAdapter
 from pip.utils.outdated import SELFCHECK_DATE_FMT
 
 _TAB_STYLES = [
@@ -28,6 +29,27 @@ _RATING = [
         ('3', 'Good'),
         ('4','Very Good')
     ] 
+
+_SALE_ORDER_STATE = [
+            ('draft', 'Draft Quotation'),
+            ('sent', 'Quotation Sent'),
+            ('cancel', 'Cancelled'),
+            ('waiting_date', 'Waiting Schedule'),
+            ('progress', 'Not Shipped Yet'),
+            ('manual', 'Sale to Invoice'),
+            ('shipping_except', 'Shipping Exception'),
+            ('invoice_except', 'Invoice Exception'),
+            ('done', 'Shipped'),
+        ]
+
+_ACCOUNT_INVOICE_STATE = [
+            ('draft','Draft'),
+            ('proforma','Pro-forma'),
+            ('proforma2','Pro-forma'),
+            ('open','Not Paid Yet'),
+            ('paid','Paid'),
+            ('cancel','Cancelled'),
+    ]
 
 
 class ProductFlavors(models.Model):
@@ -222,14 +244,45 @@ class FlavorReviews(models.Model):
         managed=False
         db_table = "flavor_reviews"          
 
+class AccountInvoice(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(verbose_name = 'Name',max_length=100,blank=False)
+    number =   models.CharField(verbose_name = 'Number',max_length=100,blank=False)
+    partner_id = models.ForeignKey(Partner,verbose_name='Customer',db_column="partner_id",related_name="invoice_ids")
+    state = models.CharField(verbose_name = "State",blank=False,max_length=20,choices=_ACCOUNT_INVOICE_STATE)
+    date_invoice = models.DateField("Invoice Date")
+    amount_total = models.FloatField('Amount Total')
+    _DATABASE = "odoo"
+    class Meta:
+        managed=False
+        db_table = "account_invoice" 
+
 class SaleOrder(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(verbose_name = 'Name',max_length=100,blank=False)
     partner_id = models.ForeignKey(Partner,verbose_name='Customer',db_column="partner_id",related_name="order_ids")
+    state = models.CharField(verbose_name = "State",blank=False,max_length=20,choices=_SALE_ORDER_STATE)
+    invoice_ids = models.ManyToManyField(AccountInvoice,verbose_name = "Invoice IDs",through="SaleOrderInvoiceRel")
+    date_order = models.DateTimeField('Sale Date')
     _DATABASE = "odoo"
+    
+    def get_invoice(self):
+        odoo_adapter = OdooAdapter()
+        order = odoo_adapter.execute_method('sale.order','get_invoice_report',[self.id])
+        return order
+    
     class Meta:
         managed=False
-        db_table = "sale_order"              
+        db_table = "sale_order"
+
+class SaleOrderInvoiceRel(models.Model):
+    id = models.AutoField(primary_key=True)
+    order_id = models.ForeignKey(SaleOrder,db_column="order_id")
+    invoice_id = models.ForeignKey(AccountInvoice,db_column ="invoice_id")
+    class Meta:
+        managed=False
+        db_table = "sale_order_invoice_rel"     
+        
     
     
         

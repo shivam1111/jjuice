@@ -5,7 +5,7 @@ from collections import OrderedDict
 class CatalogMiddleware(MiddlewareMixin):
     
     def process_request(self,request):
-        from odoo.models import IrConfigParameters,ProductAttributeValue
+        from odoo.models import IrConfigParameters,ProductAttributeValue,country_ids
         volumes_available_ids = []
         if (not request.user.is_authenticated) or (not request.user.odoo_user.partner_id.classify_finance) or (request.user.odoo_user.partner_id.classify_finance == 'website'):
 #             eval(IrConfigParameters.objects.get_param('attributes_available_ids','[]'))
@@ -25,3 +25,4 @@ class CatalogMiddleware(MiddlewareMixin):
                 })
         request.volumes_data = volumes_data
         request.volumes_available_ids = volumes_available_ids
+        request.country_ids = country_ids

@@ -1,6 +1,29 @@
 from django.conf import settings
 import os
 from django.http import Http404
+from django.http import JsonResponse
+
+def login(request):
+    from cart.cart import _generate_cart_id,CART_ID_SESSION_KEY
+    from django.contrib.auth.forms import (
+        AuthenticationForm, PasswordChangeForm, PasswordResetForm, SetPasswordForm,
+    )    
+    from django.contrib.auth import login as auth_login
+    cart_id = ''
+    if request.session.get(CART_ID_SESSION_KEY,False):
+        cart_id = request.session[CART_ID_SESSION_KEY]
+        
+    else:
+        cart_id = _generate_cart_id()
+    form = AuthenticationForm(request, data=request.POST)
+    auth = False
+    if form.is_valid():
+        auth_login(request, form.get_user())
+        auth = True
+    request.session[CART_ID_SESSION_KEY] = cart_id
+    return JsonResponse(data={
+            'auth':auth
+        },status=200)    
 
 def get_states_list(country):
     from odoo.models import Country

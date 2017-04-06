@@ -15,19 +15,25 @@
 		<div class ="row">
 			<div class = "text-center">
 				{% if order %}
-				<i class="fa fa-check-circle fa-5x" aria-hidden="true" style="color:green"></i>
-				<h3>Payment Successfull</h3>
-				<button type="button" class="btn btn-circle btn-warning btn-lg" style="cursor:pointer;">
-            		<span><a href="data:application/pdf;base64,{{ order.pdf }}" style="color:white!important;" download="{{ order.name  }}" >Download Invoice</a></span>
-       			</button> 
-				<h4>Thank you very much for your purchase!</h4>
+					{% if display_transaction_status %}
+						<i class="fa fa-check-circle fa-5x" aria-hidden="true" style="color:green"></i>
+						<h3>Payment Successfull</h3>
+					{% endif %}
+					<button type="button" class="btn btn-circle btn-warning btn-lg" style="cursor:pointer;">
+	            		<span><a href="data:application/pdf;base64,{{ order.pdf }}" style="color:white!important;" download="{{ order.name  }}" >Download Invoice</a></span>
+	       			</button>
+	       			{% if display_transaction_status %} 
+						<h4>Thank you very much for your purchase!</h4>
+					{% endif %}
 				{% else %}
-				<i class="fa fa-times-circle fa-5x" aria-hidden="true" style="color:red"></i>
-				<h3>Payment Failed!</h3>
-				<button type="button" class="btn btn-circle btn-warning btn-lg" style="cursor:pointer;">
-            		<span><a href="{% url 'checkout:checkout' %}"  >Proceed to checkout again</a></span>
-       			</button> 
-				<h4>Due to some reason the payment declined!</h4>				
+					{% if display_transaction_status %}
+						<i class="fa fa-times-circle fa-5x" aria-hidden="true" style="color:red"></i>
+						<h3>Payment Failed!</h3>
+						<button type="button" class="btn btn-circle btn-warning btn-lg" style="cursor:pointer;">
+		            		<span><a href="{% url 'checkout:checkout' %}"  >Proceed to checkout again</a></span>
+		       			</button> 
+						<h4>Due to some reason the payment declined!</h4>
+					{% endif %}	
 				{% endif %}
 			</div>		
 		</div>

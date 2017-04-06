@@ -1,0 +1,46 @@
+{% load catalog_filters %}
+<div class="white-popup product-quickview-popup">
+	<div class = "product">
+		<div class="table-responsive">
+		  	<table class="table">
+			<caption style="border: inherit;" class="text-center">
+	            <h3>Order History</h3>
+            </caption>		  	
+				<thead>
+					<tr>
+						<th>Order</th>
+						<th>Date</th>
+						<th>Fullfillment Status</th>
+						<th>Total</th>
+						<th>Payment Status</th>
+						<th>Download</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for  order in order_ids %}
+						{% for  inv in order.invoice_ids.all %}
+						  <tr class="{% if order.state == 'done'%}success{% else %}info{% endif %}">
+					        <td>{{ inv.number }}</td>
+					        <td>{{ inv.date_invoice }}</td>
+					        <td>{{ order.get_state_display }}</td>
+					        <td>{{ inv.amount_total|currency }}</td>
+					        <td>{{ inv.get_state_display }}</td>
+					        <td><a href="{% url 'checkout:order_history' %}?order_id={{ order.id }}&name={{inv.number}}" >Download Invoice</a></td>
+					      </tr>	
+				        {% endfor %}				
+				        {% empty %}
+						  <tr>
+					        <td></td>
+					        <td></td>
+					        <td></td>
+					        <td>No Orders Yet</td>
+					        <td></td>						  
+						  	<td></td>
+					      </tr>					        
+				        
+					{% endfor %}
+				</tbody>		  
+		  	</table>
+		</div>
+	</div>
+</div>

@@ -8,7 +8,6 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/checkout.css' %}">.
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.payment/1.2.3/jquery.payment.min.js"></script>
 <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
-<script type="text/javascript" src="{% static 'js/lib/underscore/underscore.js' %}" ></script>
 <script type="text/javascript" src="{% static 'js/lib/backbone/backbone-min.js' %}" ></script>
 <script type="text/javascript" src="{% static 'js/lib/x2js/xml2json.min.js' %}" ></script>
 <script type="text/javascript" src="{% static 'js/checkout.js' %}"></script>
@@ -207,7 +206,7 @@ $(function(){
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12">
-                                            <button id="make_payment" class="subscribe btn btn-success btn-lg btn-block" type="button">Make Payment - $0.00</button>
+                                            <button id="make_payment" value="Send" class="subscribe btn btn-success btn-lg btn-block" type="button">Make Payment - $0.00</button>
                                         </div>
                                     </div>
                                     <div class="row" style="display:none;">

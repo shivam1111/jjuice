@@ -5,6 +5,7 @@
 {% load instagram_client %}
 {% load cache_image_url %}
 {% block site_header %} 
+<script type="text/javascript" src="{% static 'js/registration.js' %}"></script>
 <header id="header" class="awe-menubar-header">
 	<nav class="awemenu-nav headroom" data-responsive-width="1200">
 		<div class="container">
@@ -35,6 +36,11 @@
                                                 <h4><a href="#">{{ odoo_user.partner_id.name }}</a></h4>
                                             </div>
                                             <ul>
+			                                	<li>
+			                                		<a href="{% url 'checkout:order_history' %}" class="awe-button product-quick-view" data-toggle="tooltip" title="" data-original-title="Order History">
+									                     Order History
+							                        </a>
+								                </li>                                                                                        
                                                 <li><a href="{% url 'auth:logout' %}?next=/">Logout</a></li>
                                             </ul>
                                         </div>
@@ -235,8 +241,14 @@
                 		<div class="widget">
                         	<h3 class="widget-title">Shopping</h3>
                             <ul>
-                                <li><a href="/cart/" title="">My Cart</a></li>
-                                <li><a href="#" title="">Your Orders</a></li>
+                                <li><a href="/cart/" title=""><i class="icon icon-shopping-bag"></i> My Cart</a></li>
+                                {% if request.user.is_authenticated %}
+                                	<li>
+                                		<a href="{% url 'checkout:order_history' %}" class="awe-button product-quick-view" data-toggle="tooltip" title="" data-original-title="Order History">
+						                     <i class="fa fa-history"></i> Order History
+				                        </a>
+					                </li>
+                                {% endif %}
                             </ul>
                         </div><!-- /.widget -->
                 	</div>
@@ -256,7 +268,7 @@
                             <ul class="list-socials">
                                 <li>
                                     <a href="#" title="">
-                                        <i class="fa fa-cc-paypal"></i>
+                                        <i class="fa fa-cc-mastercard"></i>
                                     </a>
                                 </li>
 
@@ -286,7 +298,7 @@
                        <div class="widget widget_tag_cloud">
                             <h3 class="widget-title text-center">Instagram</h3>
                                 <!-- <span>{{ media.caption }}</span>  you can use this also -->
-<!--                             <ul class="instagram-widget">
+                             <ul class="instagram-widget">
                                 {% instagram_user_recent_media vapejjuice %}
                                 {% for media in recent_media %}
                                 <li>
@@ -296,7 +308,7 @@
                                     </a>
                                 </li>
                                 {% endfor %}
-                            </ul> -->
+                            </ul>
                         </div><!-- /.widget -->                        
                     </div>
                 </div>
@@ -358,42 +370,145 @@
         <small>Back to top</small>
     </a>
 </footer>
-<div id = "registration-popup" class="white-popup login-popup mfp-hide">
+<div id = "forgot-password-popup" class="white-popup mfp-hide">
+    <div role="tabpanel">
+        <ul class="nav text-center" role="tablist">
+                <h3 href="#account-login"  aria-controls="account-login" role="tab" data-toggle="tab">Forgot Password</h3>
+        </ul><!-- /.nav -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="account-register">
+            	<form action="{% url 'odoo_auth:forgot_password' %}" method="POST" id = "forgot_password_form" >
+            		<div class = "row text-center">
+	                    <div class="form-group col-md-offset-2 col-md-8">
+	                        <label for="name">Email ID<sup>*</sup></label>
+	                        <input style="text-align: center;" required placeholder= "Reset link will be sent on this email ID" type="email" class="form-control" id="email" name="email">
+	                    </div><!-- /.form-group -->                
+            		</div>
+            	</form>
+           	</div>
+       	</div>
+   	</div>
+</div>
+<div id = "registration-popup" class="white-popup mfp-hide" style="max-width:1000px!important;">
     <div role="tabpanel">
         <ul class="nav nav-tabs text-center" role="tablist">
                 <h3 href="#account-login"  aria-controls="account-login" role="tab" data-toggle="tab">Signup</h3>
         </ul><!-- /.nav -->
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="account-register">
-                <form action="index.html" method="POST" >
-                    <div class="form-group">
-                        <label for="register-username">Username <sup>*</sup></label>
-                        <input type="text" class="form-control" id="register-username">
-                    </div><!-- /.form-group -->
-
-                    <div class="form-group">
-                        <label for="register-email">Email <sup>*</sup></label>
-                        <input type="text" class="form-control" id="register-email">
-                    </div><!-- /.form-group -->
-
-                    <div class="form-group">
-                        <label for="register-password">Password <sup>*</sup></label>
-                        <input type="password" class="form-control" id="register-password">
-                    </div><!-- /.form-group -->
-
-                    <div class="form-group">
-                        <label for="register-confirm-password">Confirm Password <sup>*</sup></label>
-                        <input type="password" class="form-control" id="register-confirm-password">
-                    </div><!-- /.form-group -->
-
-                    <div class="form-button">
-                        <button type="submit" class="btn btn-lg btn-warning btn-block">Register</button>
-                    </div><!-- /.form-button -->
-                    <div class="forgot-passwd">
-                        <a href="#login-popup" title="">
-                            <i class="fa fa-sign-in" aria-hidden="true"></i>
-                            <span>Signin</span>
-                        </a>                    
+                <form action="index.html" method="POST" id = "registration_form" >
+					<div class = "row">
+						<div class = "col-md-6">
+							<h3 class =  "text-center" style = "padding: 20px 0;font-size: 19px;font-weight: 300;" >Personal Details</h3>
+		                    <div class="form-group">
+		                        <label for="name">Name <sup>*</sup></label>
+		                        <input required type="text" class="form-control" id="name" name="name">
+		                    </div><!-- /.form-group -->                
+		                    <div class="form-group">
+		                        <label for="email">Email <sup>*</sup></label>
+		                        <input required type="email" class="form-control" id="register-email" name = "email">
+		                    </div><!-- /.form-group -->
+		
+		                    <div class="form-group">
+		                        <label for="register-password">Password <sup>*</sup></label>
+		                        <input  required type="password" name ="register-password" class="form-control" id="register-password">
+		                    </div><!-- /.form-group -->
+		                    <div class="form-group">
+		                        <label for="register-confirm-password">Confirm Password <sup>*</sup></label>
+		                        <input required type="password" name = "register-confirm-password" class="form-control" id="register-confirm-password">
+		                    </div><!-- /.form-group -->
+							<div class="form-group">
+				                <label class="checkbox-inline">
+				                	<input  type="checkbox" name="is_wholesale" id = "is_wholesale">
+				                    <span>Are you registering as a wholesale Account ?</span>
+				                </label>
+			                </div>
+			                <fieldset id = "is_wholesale" >
+								<div class="alert alert-info">
+			                        <strong class="upper">Note (For Wholesale Accounts Only)</strong><hr>
+			                        <p>We will first verify your account and then activate it. This may take 24 hours after the registration is completed.</p>
+			                    </div>			                
+			                    <div class="form-group">
+			                        <label for="vat">State Issued Resale Number <sup>*</sup></label>
+			                        <input type="text" name = "vat" class="form-control" id="vat">
+			                    </div><!-- /.form-group -->	
+		                        <div class="form-group">
+		                            <label for="type_account" >Type of Account <sup>*</sup></label>
+		                            <select name="type_account" placeholder="Type of Account" id="type_account" class="form-control dark">
+										<option disabled selected value> -- Type of Account -- </option>
+										<option value="retailer">Retailer</option>
+										<option value="wholesale">Wholesale</option>
+										<option value="private_label">Private Label</option>
+		                            </select>
+		                        </div><!-- /.form-group -->
+			                </fieldset>
+	                    </div>
+	                    <div class = "col-md-6">
+		                    <h3 class="text-center" style = "padding: 20px 0;font-size: 19px;font-weight: 300;" >Shipping Details</h3>
+		                    <div class="form-group">
+		                        <label for="street">Address Line 1 <sup>*</sup></label>
+		                        <input required type="text" name="street" class="form-control" id="street">
+		                    </div><!-- /.form-group -->
+		                    <div class="form-group">
+		                        <label for="street2">Address Line 2</label>
+		                        <input  type="text" name="street2" class="form-control" id="street2">
+		                    </div><!-- /.form-group -->                    
+		                    <div class = "row">
+			                    <div class= "col-md-4">
+			                        <div class="form-group">
+			                            <label for="city">City <sup>*</sup></label>
+			                            <input type="text" required class="form-control dark" name="city" id="city" placeholder="City" />
+			                        </div><!-- /.form-group -->
+								</div>
+			                    <div class= "col-md-4">
+			                        <div class="form-group">
+			                            <label for="state_id" >State <sup>*</sup></label>
+			                            <select name="state_id" required placeholder="Select State" id="state_id" class="form-control dark">\
+											<option disabled selected value> -- select a state -- </option>
+			                            </select>
+			                        </div><!-- /.form-group -->
+								</div>
+			                    <div class= "col-md-4">
+			                        <div class="form-group">
+			                            <label for="zip" >Zip <sup>*</sup></label>
+			                            <input type="text" class="form-control dark" required name="zip"  id="zip" placeholder="Zip" />
+			                        </div><!-- /.form-group -->
+								</div>
+		                    </div>
+		                    <div class="form-group">
+		                        <label for="phone">Phone Number</label>
+		                        <input  type="text" required name="phone" class="form-control" id="phone">
+		                    </div><!-- /.form-group -->
+	                        <div class="form-group">
+	                            <label for="country_id" >Country <sup>*</sup></label>
+	                            <select name="country_id" required placeholder="Select Country" id="country_id" class="form-control dark">\
+									<option disabled selected value> -- select a country -- </option>
+									{% for country in request.country_ids %}
+										<option   value="{{ country.id }}" name="{{country.code}}">{{ country.name }}</option>
+									{% endfor %}
+	                            </select>
+	                        </div><!-- /.form-group -->
+							<div class="form-group">
+				                <label class="checkbox-inline">
+				                	<input required checked type="checkbox" name="po_box" id = "po_box">
+				                    <span>I understand that I cannot ship to a PO box.</span>
+				                </label>
+			                </div>
+	                        <div class="form-group">	                    		                
+		                    		<div class="g-recaptcha col-md-offset-2" data-sitekey="6LeXTxsUAAAAADxL3Ff2lwTXi15QvfU1_oWsa37h"></div>
+	                    		</div>			                
+		                    <div class="form-button">
+		                        <button type="submit" class="btn btn-lg btn-primary btn-block has-spinner"><span class="spinner"><img src="/static/img/ajax-loader.gif/" width="10" height="10"></span>Create Account</button>
+		                    </div><!-- /.form-button -->
+		                    <div class="form-button text-center" >
+		                    		<button type="button" class="btn btn-link">
+			                        <a href="#login-popup" title="Signin">
+			                            <i class="fa fa-sign-in" aria-hidden="true"></i>
+			                            <span>Signin</span>
+			                        </a>                    		                    		
+		                    		</button>
+		                    </div>                                                           	                   				                    		                    			                
+	                    </div>
                     </div>
                 </form>
             </div><!-- /.tab-pane -->        
@@ -418,12 +533,12 @@
             }
             var size_mb = parseFloat((inputFile.size/1048576).toFixed(2)) //inputFile.size is in bytes
             if (size_mb > 1){
-                $.notify("Sorry! Only 5 MB filesize allowed",'warning','error')
+                toastr.warning("Sorry! Only 5 MB filesize allowed")
                 return                  
             }
 
             if (profile_image_allowed.indexOf(inputFile.type) < 0 ){
-                $.notify("Sorry! Only png / jpg / gif format allowed",'error')
+            	toastr.error("Sorry! Only png / jpg / gif format allowed")
                 return
             }
             data.append('image', inputFile);
@@ -462,7 +577,6 @@
         <ul class="nav nav-tabs text-center" role="tablist">
             <h3 >Account Login</h3>
         </ul><!-- /.nav -->
-
         <!-- Tab panes -->
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="account-login">
@@ -486,13 +600,13 @@
                     </div><!-- /.form-group -->
 
                     <div class="forgot-passwd">
-                        <a href="#" title="">
-                            <i class="icon icon-key"></i>
+                        <a href="#forgot-password-popup" title="Forgot Password">
+                            <i class="icon icon-key" aria-hidden="true"></i>
                             <span>Forgot your password?</span>
                         </a>
                     </div><!-- /.forgot-passwd -->
                     <div class="forgot-passwd">
-                        <a href="#registration-popup" title="">
+                        <a href="#registration-popup" title="Signup">
                             <i class="fa fa-user-plus" aria-hidden="true"></i>
                             <span>New to JJuice? Signup</span>
                         </a>
@@ -509,7 +623,7 @@
 
 <script>
     $(function() {
-        $('a[href="#login-popup"],a[href="#registration-popup"]').magnificPopup({
+        $('a[href="#login-popup"],a[href="#registration-popup"],a[href="#forgot-password-popup"]').magnificPopup({
             type:'inline',
             midClick: false,
             closeOnBgClick: false
@@ -534,13 +648,13 @@
                 },                
                 success:function(data){
                     if (data['auth'] == true){
-                        $.notify("Login Successful",'success')
+                        toastr.success("Login Successful")
                         $(form).find('div#auth_failed').addClass('hidden');
                         location.reload();    
                     }else{
                         console.log($(form).find('div#auth_failed'))
                         $(form).find('div#auth_failed').removeClass('hidden')
-                        $.notify("Login Failed")
+                        toastr.error("Login Failed")
                     }
                     
                 },

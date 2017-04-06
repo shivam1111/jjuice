@@ -4,23 +4,6 @@ $(function(){
 		Views : {},
 		Events:{},
 	}
-	// using jQuery
-	function getCookie(name) {
-	    var cookieValue = null;
-	    if (document.cookie && document.cookie !== '') {
-	        var cookies = document.cookie.split(';');
-	        for (var i = 0; i < cookies.length; i++) {
-	            var cookie = jQuery.trim(cookies[i]);
-	            // Does this cookie string begin with the name we want?
-	            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-	                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-	                break;
-	            }
-	        }
-	    }
-	    return cookieValue;
-	}
-	
 	$(document).ready(function(){
 		var order_total = $("td#order_total");
 		var shipping_total = $("td#shipping_total");
@@ -318,13 +301,13 @@ $(function(){
 					},						
 					type:'POST',
 					error:function(){
-						$.notify("We faced error saving your address")
+						toastr.error("We faced error saving your address")
 						self.model.set({'next':false})
 						return false
 					},
 					success:function(dt){
 						if (loud){
-							$.notify("Address Updated Successully",'success')
+							toastr.success("Address Updated Successully",'success')
 						}
 						self.$el.empty()
 						self.render();
@@ -495,7 +478,7 @@ $(function(){
 				if (!self.is_allowed_shipping){
 					valid=false
 					self.model.set({'next':false})
-					$.notify("We only ship to 48 states of United States. Please contact us for further support. Your cart is saved with us")
+					toastr.error("We only ship to 48 states of United States. Please contact us for further support. Your cart is saved with us")
 				}
 				return valid
 			},
@@ -519,13 +502,13 @@ $(function(){
 					},						
 					type:'POST',
 					error:function(){
-						$.notify("We faced error saving your address")
+						toastr.error("We faced error saving your address")
 						self.model.set({'next':false})
 						return false
 					},
 					success:function(dt){
 						if (loud){
-							$.notify("Address Updated Successully",'success')
+							toastr.success("Address Updated Successully",'success')
 						}
 						self.$el.empty()
 						self.render();
@@ -570,7 +553,7 @@ $(function(){
 							$("a[href='#billing']").trigger('click')
 							payment_box.show();
 						}else{
-							$.notify("Please calculate the shipping cost first and then proceed to Billing Details")
+							toastr.warning("Please calculate the shipping cost first and then proceed to Billing Details")
 						}						
 					})
 				})
@@ -612,16 +595,16 @@ $(function(){
 					        'Content-Type': 'application/x-www-form-urlencoded' ,
 						},			
 						beforeSend:function(){
-							$.notify("Request for Shipping Rates Sent.Please Wait .....",'info')
+							toastr.info("Request for Shipping Rates Sent.Please Wait .....")
 						},
 						success:function(dt){
 							if (dt.error){
-								$.notify(dt.msg,'warning');
+								toastr.warning(dt.msg);
 								self.model.set({'next':false});
 								return
 							}else{
 								if (dt.msg){
-									$.notify(dt.msg,'success');
+									toastr.success(dt.msg);
 								}
 								self.model.set({'next':true});
 								self.model.set({'shipping_cost':dt.rate});
@@ -630,7 +613,7 @@ $(function(){
 							}
 						},
 						complete:function(){
-							$.notify("Received Shipping Rates Info.",'success')
+							toastr.success("Received Shipping Rates Info.")
 						},
 					})											
 				})
@@ -744,7 +727,8 @@ $(function(){
 				self.model.on('change:order_total',function(){
 					self.$el.find("button#make_payment").text("Make Payment - $"+self.model.get('order_total'));
 				})
-				self.$el.find("button#make_payment").on('click',function(){
+				self.$el.find("button#make_payment").on('click',function(event){
+					event.preventDefault();
 					event.stopImmediatePropagation();
 					var valid = self.billing_tab.validate_billing()
 					if (!valid){
@@ -763,8 +747,9 @@ $(function(){
 			execute_step2:function(){
 				var self = this;
 				if (self.paymentFormReady()){
-					this.$el.attr("action",self.model.get('form-url'))
-					this.$el.submit();
+					self.$el.attr("action",self.model.get('form-url'))
+					self.$el.submit();
+					console.log(self.$el.serialize());
 				}
 			},
 			execute_step1:function(){
@@ -783,7 +768,7 @@ $(function(){
 					},
 					error:function(dt){
 						//error
-						$.notify("Sorry we were unable to process the request")
+						toastr.error("Sorry we were unable to process the request")
 					},
 					success:function(dt){
 						//success
@@ -799,7 +784,7 @@ $(function(){
 							});
 							self.execute_step2();							
 						}else{
-							$.notify(response['result-text'])
+							toastr.error(response['result-text'])
 							return;
 						}
 					},
