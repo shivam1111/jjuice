@@ -1,48 +1,13 @@
 {% extends "catalog.html" %}
 {% load static %}
 {% load flavor_grid_view %}
-{% block site_main %}
-<!-- <section>
-    <link href='http://fonts.googleapis.com/css?family=Buenard:700' rel='stylesheet' type='text/css'>
-    <script src="http://pupunzi.com/mb.components/mb.YTPlayer/demo/inc/jquery.mb.YTPlayer.js"></script>
-	<div class="container">
-		<div class="margin-vertical-30">
-			<div class="main-slider-wrapper">
-				<div class="main-slider owl-carousel owl-carousel-inset">
-					{% for i in banners %}
-		            <div class="main-slider-item">
-		                <div class="main-slider-image">
-		                    <img src="{{ i.get_image_url }}" alt="">
-		                </div>
-		                <div class="main-slider-text">
-		                    <div class="fp-table">
-		                        <div class="fp-table-cell center">
-		                            <div class="container">
-		                                <h3>The Shoes For Summer</h3>
-		                                <h2>Shoes Vans<br>$160.00</h2>
-		
-		                                <div class="button">
-		                                    <a href="#" class="btn btn-lg btn-primary margin-right-15">Shop now</a>
-		                                    <a href="#" class="btn btn-lg btn-white btn-outline">Browse category</a>
-		                                </div>
-		                            </div>
-		                        </div>
-		                    </div>
-		                </div>
-		            </div>
-		            {% endfor %}
-				</div>
-			</div>
-			<script>
-				$(function() {  aweMainSlider({}); });
-			</script>
-		</div>
-	</div>
-</section> -->
+{% block headers %}
+    <script src="{% static 'js/plugins/jquery.mb.YTPlayer.js' %}"></script>
+{% endblock %}
 
+{% block site_main %}
 <!--Video Section-->
 <link href='http://fonts.googleapis.com/css?family=Buenard:700' rel='stylesheet' type='text/css'>
-<script src="{% static 'js/plugins/jquery.mb.YTPlayer.js' %}"></script>
 <section class="content-section video-section">
     <div class="pattern-overlay">
         <a id="bgndVideo" class="player" data-property="{videoURL:'https://www.youtube.com/watch?v=3LTJXcvz2ro',containment:'.video-section', quality:'large', autoPlay:true, mute:true, opacity:1}">bg</a>
