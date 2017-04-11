@@ -93,7 +93,9 @@
 	                			<td><strong><span class="amount">{{cart_total|currency}}</span></strong></td>
 	              			</tr>
 	              			<tr>
-	                			<td colspan="2"><a href="{% url 'checkout:checkout' %}?back_url={{back_url}}&back_url_name={{back_url_name}}" role="button" class="btn btn-primary"><span>Proceed to checkout</span></a></td>
+								{% if request.user.is_authenticated %}
+	                				<td colspan="2"><a href="{% url 'checkout:checkout' %}?back_url={{back_url}}&back_url_name={{back_url_name}}" role="button" class="btn btn-primary"><span>Proceed to checkout</span></a></td>
+								{% endif %}
 	              			</tr>
 	            		</tbody>
 	          		</table>

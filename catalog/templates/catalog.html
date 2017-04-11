@@ -117,7 +117,9 @@
                                         </div>
                                         <div class="cart-action">
                                             <a href="{% url 'cart:show_cart' %}" title="" class="btn btn-lg btn-dark btn-outline btn-block">View cart</a>
-                                            <a href="{% url 'checkout:checkout' %}" title="" class="btn btn-lg btn-primary btn-block">Proceed To Checkout</a>
+                                            {% if request.user.is_authenticated %}
+                                                <a href="{% url 'checkout:checkout' %}" title="" class="btn btn-lg btn-primary btn-block">Proceed To Checkout</a>
+                                            {% endif %}
                                         </div>
                                     </div>
                                 </li>                                    
