@@ -177,7 +177,7 @@ class ResUsers(models.Model):
     id = models.IntegerField(primary_key=True)
     login  = models.CharField(verbose_name="Login",max_length = 64,blank=False)
     partner_id = models.ForeignKey(Partner,db_column = "partner_id",blank=False,verbose_name = "Partner") 
-
+    
     _DATABASE = "odoo"    
     
     class Meta:

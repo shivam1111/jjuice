@@ -5,12 +5,13 @@ from django.views.decorators.cache import never_cache
 from django.views import View
 from django.conf import settings
 from django.http import JsonResponse
-from django.shortcuts import HttpResponse
+from django.shortcuts import HttpResponse,render
 from odoo.models import Partner,ResUsers
 from odoo_helpers import OdooAdapter
 from helper import login
 import base64,requests
 from odoo_helpers import OdooAdapter
+from datetime import datetime, timedelta
 
 
 
@@ -24,8 +25,67 @@ def get_client_ip(request):
 
 class ForgotPassword(View):
     def post(self,request):
+        from django.contrib.auth import get_user_model
+        User = get_user_model()        
         status = 200
-        return JsonResponse(data={},status=status,safe=False)
+        params = request.POST.copy()
+        data = {
+                'error':False,
+            }
+        if params.get('piNewPass',False) and params.get('token',False):
+            from django.contrib.auth import get_user_model
+            User = get_user_model()
+            try:
+                name = "Reset Password"
+                user = User.objects.get(token_expiration__gte=datetime.now(),token_password=params.get('token',False))
+                odoo_adapter = OdooAdapter()
+                odoo_adapter.execute_method('res.users', 'update_password', params_list=[user.odoo_user.id,params.get('piNewPass',False)])
+                user.token_password = None
+                user.save()
+            except User.DoesNotExist:
+                data.update({
+                    'error':True,
+                    'msg':"Sorry! The link has expired. Please generate the link again"
+                })
+            return JsonResponse(data=data, status=status, safe=False)
+
+        if params.get('email',False):
+            try:
+                odoo_user = ResUsers.objects.get(login=params.get('email',False))
+                user = User.objects.get(odoo_id=odoo_user.id)
+                user.send_reset_password_mail(request) 
+            except ResUsers.DoesNotExist:
+                data.update({
+                        'error':True,
+                        'msg':"Sorry! We do not have this email ID registered with us"
+                    })
+            except User.DoesNotExist:
+                data.update({
+                        'error':True,
+                        'msg':"Sorry! We do not have this email ID registered with us"
+                    })
+        else:
+            data.update({
+                'error':True,
+                'msg':"Please enter a valid Email ID."
+            })
+        return JsonResponse(data=data, status=status, safe=False)
+
+    def get(self,request):
+        token = request.GET.get('token',False)
+        if token:
+            from django.contrib.auth import get_user_model
+            User = get_user_model()
+            try:
+                name = "Reset Password"
+                user = User.objects.get(token_expiration__gte=datetime.now(),token_password=token)
+                return render(request,'change_password.html',locals())
+            except User.DoesNotExist:
+                exception = "Sorry! The link has expired. Please generate again"
+                return render(request, "404.html", locals())
+        else:
+            exception = "Sorry this link is invalid"
+            return render(request,"404.html",locals())
         
 
 class ValidateUserName(View):

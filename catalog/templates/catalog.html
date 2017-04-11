@@ -382,7 +382,13 @@
 	                    <div class="form-group col-md-offset-2 col-md-8">
 	                        <label for="name">Email ID<sup>*</sup></label>
 	                        <input style="text-align: center;" required placeholder= "Reset link will be sent on this email ID" type="email" class="form-control" id="email" name="email">
-	                    </div><!-- /.form-group -->                
+	                    </div><!-- /.form-group -->
+                        <button type="button" class="btn btn-link">
+                            <a href="#login-popup" title="Signin">
+                                <i class="fa fa-sign-in" aria-hidden="true"></i>
+                                <span>Signin</span>
+                            </a>
+                        </button>
             		</div>
             	</form>
            	</div>
@@ -501,12 +507,12 @@
 		                        <button type="submit" class="btn btn-lg btn-primary btn-block has-spinner"><span class="spinner"><img src="/static/img/ajax-loader.gif/" width="10" height="10"></span>Create Account</button>
 		                    </div><!-- /.form-button -->
 		                    <div class="form-button text-center" >
-		                    		<button type="button" class="btn btn-link">
-			                        <a href="#login-popup" title="Signin">
-			                            <i class="fa fa-sign-in" aria-hidden="true"></i>
-			                            <span>Signin</span>
-			                        </a>                    		                    		
-		                    		</button>
+                                <button type="button" class="btn btn-link">
+                                    <a href="#login-popup" title="Signin">
+                                        <i class="fa fa-sign-in" aria-hidden="true"></i>
+                                        <span>Signin</span>
+                                    </a>
+                                </button>
 		                    </div>                                                           	                   				                    		                    			                
 	                    </div>
                     </div>
@@ -620,7 +626,37 @@
         </div><!-- /.tab-content -->
     </div>
 </div><!-- /.login-popup -->
-
+<script>
+	$(function(){
+		var forgot_password_form = $("form#forgot_password_form");
+		forgot_password_form.submit(function(e){
+			e.preventDefault();
+            $.ajax({
+                type: "POST",
+                beforeSend:function(){
+                    forgot_password_form.find("input").prop('disabled',true)
+                },
+                url: "{% url 'odoo_auth:forgot_password' %}",
+                data: forgot_password_form.serialize(),
+                error:function(data){
+                    toastr.error("Due to some reason we were unable to process the request")
+                },
+                success:function(data){
+                    if (data.error){
+                    	toastr.error(data.msg)
+                    	return
+                    }else{
+                    	toastr.success("Password reset email has been mailed to your Email ID")
+                    	$.magnificPopup.close();
+                    }
+                },
+                complete:function(){
+                    forgot_password_form.find("input").prop('disabled',false)
+                },
+            });			
+		});
+	});
+</script>
 <script>
     $(function() {
         $('a[href="#login-popup"],a[href="#registration-popup"],a[href="#forgot-password-popup"]').magnificPopup({
