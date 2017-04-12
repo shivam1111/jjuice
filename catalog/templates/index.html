@@ -1,10 +1,6 @@
 {% extends "catalog.html" %}
 {% load static %}
 {% load flavor_grid_view %}
-{% block headers %}
-    <script src="{% static 'js/plugins/jquery.mb.YTPlayer.js' %}"></script>
-{% endblock %}
-
 {% block site_main %}
 <!--Video Section-->
 <link href='http://fonts.googleapis.com/css?family=Buenard:700' rel='stylesheet' type='text/css'>
@@ -171,11 +167,12 @@
         </div>
     </div><!-- /.container -->
 </section><!-- /section -->
-
-<script>
-$(document).ready(function () {
-    $(".player").mb_YTPlayer();
-});
-</script>
-
+{% endblock %}
+{% block footer_script %}
+    <script type = "text/javascript" src="{% static 'js/plugins/jquery.mb.YTPlayer.js' %}"></script>
+    <script type = "text/javascript" >
+    $(document).ready(function () {
+        $(".player").mb_YTPlayer();
+    });
+    </script>
 {% endblock %}

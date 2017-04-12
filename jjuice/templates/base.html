@@ -118,6 +118,8 @@
 	    <script src="{% static 'js/docs.js' %}"></script>
 	    <script src="{% static 'js/lib/toastr/toastr.min.js' %}"></script>
         <script src="{% static 'js/jquery.validate.min.js' %}"></script>
+        {% block footer_script %}
+        {% endblock %}
 	    <!-- endbuild -->
     </body>
 </html>
