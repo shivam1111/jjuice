@@ -112,7 +112,9 @@ class S3Object(models.Model):
     checkout_banner = models.NullBooleanField(verbose_name = "Is Checkout Page Banner?")
     create_date = models.DateTimeField(verbose_name = "Create Date")
     shipping_returns_policy_banner = models.NullBooleanField(verbose_name = "Is Shipping & Returns Policy Page Banner?")
-    _DATABASE = "odoo"    
+    contactus_banner_500340 = models.NullBooleanField(verbose_name = "Is contact us page 500x340 image ?")
+
+    _DATABASE = "odoo"
     class Meta:
         managed=False
         db_table = "s3_object"   

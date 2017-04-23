@@ -40,10 +40,13 @@ class ContactUs(View):
     def get(self,request,template_name="contactus.html"):
         banner_url = os.path.join(settings.STATIC_URL,settings.PLACEHOLDER_BANNER_IMAGE)
         banner_record =  S3Object.objects.filter(contactus_banner=True)[:1]
+        banner_record_500340 = S3Object.objects.filter(contactus_banner_500340=True)[:1]
         name = "Contact Us"
         if banner_record.exists():
             banner_url = create_aws_url(banner_record[0]._meta.db_table,str(banner_record[0].id))         
-        return render(request,template_name,locals())    
+        if banner_record_500340.exists():
+            banner_url_500340 = create_aws_url(banner_record_500340[0]._meta.db_table, str(banner_record_500340[0].id))
+        return render(request,template_name,locals())
 
     def post(self,request,template_name="contactus.html"):
         url =  reverse('misc:contactus',args=[])
