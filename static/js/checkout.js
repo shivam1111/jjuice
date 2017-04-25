@@ -584,6 +584,10 @@ $(function(){
 					if (!valid){
 						return
 					}
+					if (!getCookie("ac_custom_verified")){
+					    toastr.error("Please refresh page and try again without bypassing age test")
+					    return
+					}
 					var zip = self.form_address.find('form').find('input#zip')
 					$.ajax({
 						url:'/checkout/get_shipping_rates/',

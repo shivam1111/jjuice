@@ -103,6 +103,7 @@ class GetShippingRates(View):
     _name = "Get Shipping Rates"
     
     def get(self,request):
+        print "===============================request",request.GET
         address = {
             'country_id':int(request.GET.get('country_id',False)),
             'zip':request.GET.get('zip',False),
