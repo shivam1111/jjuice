@@ -384,13 +384,19 @@
 	                    <div class="form-group col-md-offset-2 col-md-8">
 	                        <label for="name">Email ID<sup>*</sup></label>
 	                        <input style="text-align: center;" required placeholder= "Reset link will be sent on this email ID" type="email" class="form-control" id="email" name="email">
-	                    </div><!-- /.form-group -->
-                        <button type="button" class="btn btn-link">
-                            <a href="#login-popup" title="Signin">
-                                <i class="fa fa-sign-in" aria-hidden="true"></i>
-                                <span>Signin</span>
-                            </a>
-                        </button>
+						</div><!-- /.form-group -->
+						<div class="form-group col-md-offset-2 col-md-8">
+							<button type="button" class="btn btn-primary">
+								<a href="#login-popup" title="Signin">
+									<i class="fa fa-sign-in padding" aria-hidden="true"></i>
+									<span>Signin</span>
+								</a>
+							</button>
+							<button type="submit" class="btn btn-primary">
+								<i class="fa fa-paper-plane padding" aria-hidden="true"></i>
+								<span>Send Reset Email</span>
+							</button>
+						</div>
             		</div>
             	</form>
            	</div>
@@ -637,11 +643,13 @@
                 type: "POST",
                 beforeSend:function(){
                     forgot_password_form.find("input").prop('disabled',true)
+                    toastr.success("Password reset email requests is being sent!")
+                    $.magnificPopup.close();
                 },
                 url: "{% url 'odoo_auth:forgot_password' %}",
                 data: forgot_password_form.serialize(),
                 error:function(data){
-                    toastr.error("Due to some reason we were unable to process the request")
+                    toastr.error("Due to some reason we were unable to process the request.Please try again")
                 },
                 success:function(data){
                     if (data.error){
