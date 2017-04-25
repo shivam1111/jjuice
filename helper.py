@@ -12,7 +12,6 @@ def login(request):
     cart_id = ''
     if request.session.get(CART_ID_SESSION_KEY,False):
         cart_id = request.session[CART_ID_SESSION_KEY]
-        
     else:
         cart_id = _generate_cart_id()
     form = AuthenticationForm(request, data=request.POST)

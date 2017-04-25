@@ -2,10 +2,12 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.cache import never_cache
+from django.contrib.auth.decorators import login_required
 from django.views import View
 from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import HttpResponse,render
+from django.contrib.auth import authenticate
 from odoo.models import Partner,ResUsers
 from odoo_helpers import OdooAdapter
 from helper import login
@@ -22,6 +24,8 @@ def get_client_ip(request):
     else:
         ip = request.META.get('REMOTE_ADDR')
     return ip
+
+
 
 class ForgotPassword(View):
     def post(self,request):
@@ -144,7 +148,34 @@ class Registration(View):
                 }
             })            
         return JsonResponse(data=data,status=status,safe=False)
-        
+
+
+class OdooSignup(View):
+
+    def post(self,request):
+        status = 200
+        from django.contrib.auth import get_user_model
+        from odoo.models import ResUsers
+        User = get_user_model()
+        res = {
+            'error':True
+        }
+        # < QueryDict: {u'signup_enabled': [u'True'], u'name': [u'SanDeep'], u'db': [u'jjuice'],
+        #               u'token': [u'HuSivPfjNgWwOIA8Ni7m'], u'reset_password_enabled': [u'False'],
+        #               u'login': [u'shivam1111@gmail.com']} >
+        data = request.POST.copy()
+        authorize = authenticate(username = data.get('website_username'),password = data.get('website_password'))
+        if authorize:
+            # this means the request is authorized to create a new user
+            try:
+                res_user = ResUsers.objects.get(login=data.get('login', False))
+                User.objects.create_user(username=data.get('login', False), email=data.get('login', False), odoo_id=res_user.id)
+                res = {
+                    'error':False
+                }
+            except Exception as e:
+                pass
+        return JsonResponse(data=res, status=status, safe=False)
 
 class CheckReCaptcha(View):
     
@@ -169,8 +200,8 @@ class Login(View):
     @method_decorator(never_cache)
     def post(self,request):
 #        request.POST -:
-#         <QueryDict: {u'username': [u'hello@vapejjuice.com'], 
-#         u'csrfmiddlewaretoken': [u'SM696oXH1A9cep0zp21RZgaomQa2eP6cJyf8fQZAnMc81JIpVVZW4Wjq7YyI9VT7'], 
+#         <QueryDict: {u'username': [u'hello@vapejjuice.com'],
+#         u'csrfmiddlewaretoken': [u'SM696oXH1A9cep0zp21RZgaomQa2eP6cJyf8fQZAnMc81JIpVVZW4Wjq7YyI9VT7'],
 #         u'password': [u'shivam'], u'next': [u'']}>
         return login(request)        
 
