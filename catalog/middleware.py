@@ -1,5 +1,6 @@
 from helper import create_aws_url
 from django.utils.deprecation import MiddlewareMixin
+from django.conf import settings
 from collections import OrderedDict
 
 class CatalogMiddleware(MiddlewareMixin):
@@ -26,3 +27,7 @@ class CatalogMiddleware(MiddlewareMixin):
         request.volumes_data = volumes_data
         request.volumes_available_ids = volumes_available_ids
         request.country_ids = country_ids
+        request.agechecker = {
+            'key':settings.AGECHECKER_KEY,
+            'name':settings.AGECHECKER_NAME
+        }

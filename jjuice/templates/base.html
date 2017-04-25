@@ -49,6 +49,28 @@
         <script src='https://www.google.com/recaptcha/api.js'></script>
         <!-- endbuild -->
         <script>window.SHOW_LOADING = false;</script>
+
+        <noscript><meta http-equiv="refresh" content="0;url=https://agechecker.net/noscript"></noscript>
+        <script>
+        (function(w,d) {
+          if (getCookie("ac_custom_verified")) return;
+          var config = {
+            mode: "manual",
+            key: "{{ request.agechecker.key }}",
+            name: "{{ request.agechecker.name }}",
+            onready: function() {
+              AgeCheckerAPI.show();
+            },
+            onclosed: function() {
+              setCookie("ac_custom_verified", true);
+            }
+          };
+
+          w.AgeCheckerConfig=config;if(config.path&&(w.location.pathname+w.location.search).indexOf(config.path)) return;
+          var h=d.getElementsByTagName("head")[0];var a=d.createElement("script");a.src="https://api.agechecker.net/v1/static/index.js";a.crossOrigin="anonymous";
+          a.onerror=function(a){w.location.href="https://agechecker.net/loaderror";};h.insertBefore(a,h.firstChild);
+        })(window, document);
+        </script>
         {% block headers %} {% endblock %}
     </head>
     <body>

@@ -4,7 +4,7 @@
 {% load catalog_filters %}
 {% load instagram_client %}
 {% load cache_image_url %}
-{% block site_header %} 
+{% block site_header %}
 <script type="text/javascript" src="{% static 'js/registration.js' %}"></script>
 <header id="header" class="awe-menubar-header">
 	<nav class="awemenu-nav headroom" data-responsive-width="1200">
@@ -118,7 +118,7 @@
                                         <div class="cart-action">
                                             <a href="{% url 'cart:show_cart' %}" title="" class="btn btn-lg btn-dark btn-outline btn-block">View cart</a>
                                             {% if request.user.is_authenticated %}
-                                                <a href="{% url 'checkout:checkout' %}" title="" class="btn btn-lg btn-primary btn-block">Proceed To Checkout</a>
+                                                <a href="{% url 'checkout:checkout' %}" id = "proceed_to_checkout" title="Proceed to Checkout" class="btn btn-lg btn-primary btn-block">Proceed To Checkout</a>
                                             {% endif %}
                                         </div>
                                     </div>

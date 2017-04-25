@@ -94,7 +94,7 @@
 	              			</tr>
 	              			<tr>
 								{% if request.user.is_authenticated %}
-	                				<td colspan="2"><a href="{% url 'checkout:checkout' %}?back_url={{back_url}}&back_url_name={{back_url_name}}" role="button" class="btn btn-primary"><span>Proceed to checkout</span></a></td>
+	                				<td colspan="2"><a id = "proceed_to_checkout" href="{% url 'checkout:checkout' %}?back_url={{back_url}}&back_url_name={{back_url_name}}" role="button" class="btn btn-primary"><span>Proceed to checkout</span></a></td>
 								{% endif %}
 	              			</tr>
 	            		</tbody>
