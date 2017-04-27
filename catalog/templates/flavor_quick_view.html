@@ -120,12 +120,14 @@
 
 <script type="text/javascript">
     $(function() {
-        $('.product-quickview-slider').owlCarousel({
-            items: 1,
-            nav: true,
-            dots: true,
-            autoplay: true,
-            loop: true,            
-        });
+        $(document).ready(function(){
+            $('.product-quickview-slider').owlCarousel({
+                items: 1,
+                nav: true,
+                dots: true,
+                autoplay: true,
+                loop: true,
+            });
+        })
     });
 </script>
