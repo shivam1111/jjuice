@@ -39,6 +39,7 @@ class Index(View):
         banner_record =  S3Object.objects.filter(customerreview_banner=True)[:1]
         featured_lines = S3Object.objects.filter(is_featured_item=True,attribute_id__in=request.volumes_available_ids)
         if is_user_business(request.user):
+
             promo_ids = eval(IrConfigParameters.objects.get_param('promo_business_ids','[]'))
         else :
             promo_ids = eval(IrConfigParameters.objects.get_param('promo_non_business_ids','[]'))
