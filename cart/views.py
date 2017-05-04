@@ -41,6 +41,7 @@ class Cart(View):
 class QuickCart(View):
     
     def get(self,request,id,template_name="flavor_quick_cart.html"):
+        back_url = request.get_full_path()
         flavor_id = int(id) # TypeError and ValueError handled by the decorator
         volume_id = request.GET.get('volume_id',False)
         volume_id = int(volume_id)

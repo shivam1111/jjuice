@@ -39,9 +39,9 @@ class Index(View):
         banner_record =  S3Object.objects.filter(customerreview_banner=True)[:1]
         featured_lines = S3Object.objects.filter(is_featured_item=True,attribute_id__in=request.volumes_available_ids)
         if is_user_business(request.user):
-            promo_ids = eval(IrConfigParameters.objects.get_param('promo_non_business_ids','[]'))
-        else :
             promo_ids = eval(IrConfigParameters.objects.get_param('promo_business_ids','[]'))
+        else :
+            promo_ids = eval(IrConfigParameters.objects.get_param('promo_non_business_ids','[]'))
         policies = WebsitePolicy.objects.filter(id__in=promo_ids).order_by('sequence')[:3]
         lines_list = []
         if featured_lines.exists():
@@ -159,7 +159,7 @@ class FlavorQuickView(View):
         current_volume = get_object_or_404(ProductAttributeValue, pk=volume_id)   
         price  = 0 
         assert volume_id and (volume_id in request.volumes_data.keys()) , "You are not allowed to access this page" 
-        products = flavor.flavor_product_variant_ids.filter(vol_id=volume_id).distinct('conc_id__id')
+        products = get_product_variants(flavor,volume_id)
         price = flavor.get_price(request.user,current_volume)
         old_price = current_volume.old_price
         return render(request,template_name,locals())         
