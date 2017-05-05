@@ -212,8 +212,10 @@ $(function(){
 					'is_allowed_shipping':self.data['is_allowed_shipping'],
 					'name':self.name,
 					'adr_key':self.adr_key,
-				})) 
-				this.$el.append(this.saved_address)
+				}))
+				if (self.address.get("name")){
+				    this.$el.append(this.saved_address)
+				}
 				this.form_address = $(form_address_template({
 					'user':self.data['user'],
 					'address':self.address.attributes,
@@ -355,8 +357,9 @@ $(function(){
 					}
 					if (_.has(self.data['states_list'],country_id)){
 						_onchange_country_id(self.data.states_list[country_id])
+						return $.Deferred().resolve()
 					}else{
-						$.ajax({
+						return $.ajax({
 							url:'/checkout/get_data/',
 							data:{'states_list':$(this).val()}, // Send the country_id for the states_list
 							cache:false,
@@ -570,12 +573,16 @@ $(function(){
 					form.find('input[name="street2"]').val(self.address.get('steet2') || '');
 					form.find('input[name="city"]').val(self.address.get('city') || '');
 					form.find('input[name="zip"]').val(self.address.get('zip') || '');
-					if (self.address.get('state_id')){
-						form.find('select[name="state_id"]').val(self.address.get('state_id'));
-					}
 					if (self.address.get('country_id')){
 						form.find('select[name="country_id"]').val(self.address.get('country_id'));
-					}					
+					}
+					$.when(form.find("select#country").triggerHandler("change")).done(function(def){
+					    $.when(def).done(function(){
+                            if (self.address.get('state_id')){
+                                form.find('select[name="state_id"]').val(self.address.get('state_id'));
+                            }
+					    })
+					})
 				})
 				self.form_address.find("button#calculate_shipping").on('click',function(){
 					var country_id = self.form_address.find('form').find('select#country')
@@ -633,8 +640,9 @@ $(function(){
 					}
 					if (_.has(self.data['states_list'],country_id)){
 						_onchange_country_id(self.data.states_list[country_id])
+						return $.Deferred().resolve()
 					}else{
-						$.ajax({
+						return $.ajax({
 							url:'/checkout/get_data/',
 							data:{'states_list':$(this).val()}, // Send the country_id for the states_list
 							cache:false,

@@ -103,7 +103,6 @@ class GetShippingRates(View):
     _name = "Get Shipping Rates"
     
     def get(self,request):
-        print "===============================request",request.GET
         address = {
             'country_id':int(request.GET.get('country_id',False)),
             'zip':request.GET.get('zip',False),
@@ -196,7 +195,7 @@ class GetData(View):
             states_list = Country.objects.get(pk=request.GET.get('states_list',False)).country_state_ids.all()
             states_list =  map(lambda x: (x.id,x.name),states_list)
             return JsonResponse(data={request.GET.get('states_list',False):states_list},status=200,safe=True)
-        if request.user.is_authenticated:            
+        if request.user.is_authenticated:
             response = {
                 'user':False,
                 'states_list':{},
@@ -222,17 +221,18 @@ class GetData(View):
                 billing_partner = billing_partner[0]                
             user = get_user_detail(request.user)
             response['user']=user
-            if partner and partner.country_id:
+            if shipping_partner and shipping_partner.country_id:
                 response['state_ids'][shipping_partner.country_id.id] = {}
                 states_list = get_states_list(shipping_partner.country_id)
-                for i in states_list: 
+                for i in states_list:
                     response['state_ids'][shipping_partner.country_id.id].update({i.id:i.name})
                 response['country_ids'].update({shipping_partner.country_id.id : {
                                                             'name': shipping_partner.country_id.name,
                                                             'is_allowed_shipping':response['is_allowed_shipping']
                                                         }})                    
                 response['is_allowed_shipping'] = is_allowed_shipping(shipping_partner.country_id) #
-                
+
+            if billing_partner and billing_partner.country_id:
                 if not (billing_partner.country_id.id == shipping_partner.country_id.id):
                     states_list = get_states_list(billing_partner.country_id)
                     response['state_ids'][billing_partner.country_id.id] = {}
