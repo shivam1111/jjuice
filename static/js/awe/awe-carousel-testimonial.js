@@ -1,5 +1,4 @@
-;(function($) {
-    'use strict';
+require(['jquery','owlcarousel'],function(){
 
     // Check owlCarousel
     if (! $.fn.owlCarousel) {
@@ -24,4 +23,4 @@
         $carousel.owlCarousel($.extend(sDefault, data));
     });
 
-})(jQuery);
+});

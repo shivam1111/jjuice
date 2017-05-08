@@ -168,11 +168,10 @@
     </div><!-- /.container -->
 </section><!-- /section -->
 {% endblock %}
-{% block footer_script %}
-    <script type = "text/javascript" src="{% static 'js/plugins/jquery.mb.YTPlayer.js' %}"></script>
-    <script type = "text/javascript" >
-    $(document).ready(function () {
-        $(".player").mb_YTPlayer();
-    });
-    </script>
+{% block load_javascript %}
+    require(['YTPlayer'],function(){
+        $(document).ready(function () {
+            $(".player").mb_YTPlayer();
+        });
+    })
 {% endblock %}

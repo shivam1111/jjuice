@@ -15,7 +15,6 @@
 		<link rel="shortcut icon" href="{% static 'img/favicon.png' %}">
         <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Montserrat:400,700">
         <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,700,400italic,700italic&amp;subset=latin,vietnamese">
-
 		<!-- custom.css -->
 		<link rel="stylesheet" href="{% static 'css/custom.css' %}">
 		
@@ -42,35 +41,9 @@
         <!-- endbuild -->
 
         <!-- build:js js/vendor.js -->
-        <script src="{% static 'js/vendor/modernizr-2.8.3.min.js' %}"></script>
-        <script src="{% static 'js/vendor/jquery-1.11.3.min.js' %}"></script>
-        <script type="text/javascript" src="{% static 'js/lib/underscore/underscore.js' %}" ></script>
-        <script type="text/javascript" src="{% static 'js/utils.js' %}" ></script>
-        <script src='https://www.google.com/recaptcha/api.js'></script>
+        <script src="{% static 'js/require.js' %}"></script>
         <!-- endbuild -->
         <script>window.SHOW_LOADING = false;</script>
-        <noscript><meta http-equiv="refresh" content="0;url=https://agechecker.net/noscript"></noscript>
-        <script>
-        (function(w,d) {
-          if (getCookie("ac_custom_verified")) return;
-          var config = {
-            mode: "manual",
-            key: "{{ request.agechecker.key }}",
-            name: "{{ request.agechecker.name }}",
-            onready: function() {
-              AgeCheckerAPI.show();
-            },
-            onclosed: function() {
-              setCookie("ac_custom_verified", true);
-              location.reload();
-            }
-          };
-
-          w.AgeCheckerConfig=config;if(config.path&&(w.location.pathname+w.location.search).indexOf(config.path)) return;
-          var h=d.getElementsByTagName("head")[0];var a=d.createElement("script");a.src="https://api.agechecker.net/v1/static/index.js";a.crossOrigin="anonymous";
-          a.onerror=function(a){w.location.href="https://agechecker.net/loaderror";};h.insertBefore(a,h.firstChild);
-        })(window, document);
-        </script>
         {% block headers %} {% endblock %}
     </head>
     <body>
@@ -97,51 +70,49 @@
         	</div>
         	{% block site_footer %}{% endblock %}
         </div><!-- /#wrapper -->
-	    
-        <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyD_sEmqaqFH-4uA74CLIVllbsEHt1iVQaQ"></script>
-	
-	    <script src="{% static 'js/vendor/jquery-ui.min.js' %}"></script>
-	    <script>$.widget.bridge('uitooltip', $.ui.tooltip);</script>
-	
-	    <!-- build:js js/plugins.js -->
-	    <script src="{% static 'js/plugins/bootstrap.min.js' %}"></script>
-	
-	    <script src="{% static 'js/plugins/awemenu.min.js' %}"></script>
-	    <script src="{% static 'js/plugins/headroom.min.js' %}"></script>
-	    <script src="{% static 'js/plugins/hideshowpassword.min.js' %}"></script>
-	    <script src="{% static 'js/plugins/jquery.parallax-1.1.3.min.js' %}"></script>
-	    <script src="{% static 'js/plugins/jquery.magnific-popup.min.js' %}"></script>
-	    <script src="{% static 'js/plugins/jquery.nanoscroller.min.js' %}"></script>
-	
-	    <script src="{% static 'js/plugins/swiper.min.js' %}"></script>
-	    <script src="{% static 'js/plugins/owl.carousel.min.js' %}"></script>
-	    <script src="{% static 'js/plugins/jquery.countdown.min.js' %}"></script>
-	    <script src="{% static 'js/plugins/easyzoom.js' %}"></script>
-	
-	    <script src="{% static 'js/plugins/masonry.pkgd.min.js' %}"></script>
-	    <script src="{% static 'js/plugins/isotope.pkgd.min.js' %}"></script>
-	    <script src="{% static 'js/plugins/imagesloaded.pkgd.min.js' %}"></script>
-	
-	    <script src="{% static 'js/plugins/gmaps.min.js' %}"></script>
-	    <!-- endbuild -->
-	
-	    <!-- build:js js/main.js -->
-	    <script src="{% static 'js/awe/awe-carousel-branch.js' %}"></script>
-	    <script src="{% static 'js/awe/awe-carousel-blog.js' %}"></script>
-	    <script src="{% static 'js/awe/awe-carousel-products.js' %}"></script>
-	    <script src="{% static 'js/awe/awe-carousel-testimonial.js' %}"></script>
-	
-	    <script src="{% static 'js/awe-hosoren.js' %}"></script>
-	    <script src="{% static 'js/main.js' %}"></script>
-	    <!-- endbuild -->
-	
-	    <!-- build:js js/docs.js -->
-	    <script src="{% static 'js/plugins/list.min.js' %}"></script>
-	    <script src="{% static 'js/docs.js' %}"></script>
-	    <script src="{% static 'js/lib/toastr/toastr.min.js' %}"></script>
-        <script src="{% static 'js/jquery.validate.min.js' %}"></script>
-        {% block footer_script %}
-        {% endblock %}
-	    <!-- endbuild -->
+
+        <noscript><meta http-equiv="refresh" content="0;url=https://agechecker.net/noscript"></noscript>
+        <script>
+            require(['{% static 'js/app.js' %}'],function(){
+                require(['toastr','main','modrnizer','underscore','utils','awemenu','owlcarousel','jquery_ui',
+                       'hidepwd','parallax','swiper','nanoscroller','jquery_countdown',
+                       'easyzoom','masonry','imagesloaded',
+                       'isotope','gmaps','list','doc','validate','awe_horosen','bootstrap'
+                       ],function(toastr,main){
+                    require(['awe_carousel_branch','awe_carousel_blog','awe_carousel_products','awe_carousel_testimonial'],function(){
+                        {% block load_javascript %}
+                        {% endblock %}
+                        {% block footer_script %}
+                        {% endblock %}
+                        {% block catalog_script  %}
+                        {% endblock %}
+                        if (!getCookie("ac_custom_verified")){
+                            var config = {
+                                mode: "manual",
+                                key: "{{ request.agechecker.key }}",
+                                name: "{{ request.agechecker.name }}",
+                                onready: function() {
+                                    AgeCheckerAPI.show();
+                                },
+                                onclosed: function() {
+                                    setCookie("ac_custom_verified", true);
+                                    location.reload();
+                                }
+                            };
+                            window.AgeCheckerConfig=config;
+                            if(config.path&&(window.location.pathname+window.location.search).indexOf(config.path)) return;
+                            var h=document.getElementsByTagName("head")[0];
+                            var a=document.createElement("script");
+                            a.src="https://api.agechecker.net/v1/static/index.js";
+                            a.crossOrigin="anonymous";
+                            a.onerror=function(a){
+                                window.location.href="https://agechecker.net/loaderror";
+                            };
+                            h.insertBefore(a,h.firstChild);
+                        }
+                    })
+                })
+            })
+        </script>
     </body>
 </html>

@@ -4,18 +4,13 @@
 {% load static %}
 {% load thumbnail %}
 {% load flavor_grid_view %}
+
+{% block load_javascript %}
+    require(['checkout'])
+    $('a[title]').tooltip();
+{% endblock %}
 {% block site_main %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/checkout.css' %}">.
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.payment/1.2.3/jquery.payment.min.js"></script>
-<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
-<script type="text/javascript" src="{% static 'js/lib/backbone/backbone-min.js' %}" ></script>
-<script type="text/javascript" src="{% static 'js/lib/x2js/xml2json.min.js' %}" ></script>
-<script type="text/javascript" src="{% static 'js/checkout.js' %}"></script>
-<script type="text/javascript">
-$(function(){
-	$('a[title]').tooltip();
-});
-</script>
 <div class="main-header background background-image-heading-checkout" style="background-image: url({{checkout_banner_url}});">
     <div class="container">
         <h1>Checkout</h1>

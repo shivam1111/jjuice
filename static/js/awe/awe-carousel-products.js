@@ -1,6 +1,4 @@
-;(function($) {
-    'use strict';
-
+require(['jquery','owlcarousel'],function(){
     // Check owlCarousel
     if (! $.fn.owlCarousel) {
         throw 'jQuery owlCarousel must loaded before the script.';
@@ -48,4 +46,4 @@
         $carousel.owlCarousel($.extend(sDefault, data));
     });
 
-})(jQuery);
+})

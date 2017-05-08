@@ -1,0 +1,145 @@
+// contents of main.js:
+require.config({
+    baseUrl: '/static/js',
+    paths: {
+        'jquery': 'vendor/jquery-1.11.3.min',
+        'modrnizer':'vendor/modernizr-2.8.3.min',
+        'underscore':'lib/underscore/underscore',
+        'utils':'utils',
+        'registration':'registration',
+        'jquery_ui':'vendor/jquery-ui.min',
+        'bootstrap':'plugins/bootstrap.min',
+        'recaptcha':'https://www.google.com/recaptcha/api',
+        'main':'main',
+        'awemenu':'plugins/awemenu.min',
+        'backbone':'lib/backbone/backbone-min',
+        'payment_ui':'https://cdnjs.cloudflare.com/ajax/libs/jquery.payment/1.2.3/jquery.payment.min',
+        'checkout':'checkout',
+        'stripe':'https://js.stripe.com/v2?1',
+        'xml2json':'lib/x2js/xml2json.min',
+        'headroom':'plugins/headroom.min',
+        'hidepwd':'plugins/hideshowpassword.min',
+        'parallax':'plugins/jquery.parallax-1.1.3.min',
+        'magnific_popup':'plugins/jquery.magnific-popup.min',
+        'swiper':'plugins/swiper.min',
+        'nanoscroller':'plugins/jquery.nanoscroller.min',
+        'owlcarousel':'plugins/owl.carousel.min',
+        'jquery_countdown':'plugins/jquery.countdown.min',
+        'easyzoom':'plugins/easyzoom',
+        'awe_carousel_branch':'awe/awe-carousel-branch',
+        'awe_carousel_blog':'awe/awe-carousel-blog',
+        'awe_carousel_products':'awe/awe-carousel-products',
+        'awe_carousel_testimonial':'awe/awe-carousel-testimonial',
+        'masonry':'plugins/masonry.pkgd.min',
+        'isotope':'plugins/isotope.pkgd.min',
+        'imagesloaded':'plugins/imagesloaded.pkgd.min',
+        'gmaps':'plugins/gmaps.min',
+        'gmaps_api':'https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyD_sEmqaqFH-4uA74CLIVllbsEHt1iVQaQ',
+        'list':'plugins/list.min',
+        'doc':'docs',
+        'toastr':'lib/toastr/toastr.min',
+        'validate':'jquery.validate.min',
+        'awe_horosen':'awe-hosoren',
+        'bootstrap':'plugins/bootstrap.min',
+        'YTPlayer':'plugins/jquery.mb.YTPlayer',
+    },
+    shim:{
+        YTPlayer:{
+            'deps':['jquery'],
+        },
+        'stripe': {
+              exports: 'Stripe'
+        },
+        owlcarousel:{
+            deps:['jquery'],
+        },
+        bootstrap:{
+            'deps':['jquery'],
+        },
+        magnific_popup:{
+            'deps':['jquery'],
+        },
+        awe_carousel_branch:{
+            'deps':['jquery','owlcarousel'],
+        },
+        awe_carousel_blog:{
+            'deps':['jquery','owlcarousel'],
+        },
+        awe_carousel_products:{
+            'deps':['jquery','owlcarousel'],
+        },
+        awe_carousel_testimonial:{
+            'deps':['jquery','owlcarousel'],
+        },
+        gmaps:{
+            deps:['gmaps_api']
+        },
+        headroom:{
+            deps:['jquery']
+        },
+        awe_horosen:{
+            'deps':['headroom','bootstrap'],
+        },
+        validate:{
+            'deps':['jquery'],
+        },
+        list:{
+            'deps':['jquery'],
+        },
+        awe_carousel_testimonial:{
+            'deps':['jquery'],
+        },
+        awe_carousel_products:{
+            'deps':['jquery'],
+        },
+        awe_carousel_blog:{
+            'deps':['jquery'],
+        },
+        awe_carousel_branch:{
+            'deps':['jquery'],
+        },
+        easyzoom:{
+            'deps':['jquery'],
+        },
+        jquery_countdown:{
+            'deps':['jquery'],
+        },
+        payment_ui:{
+            'deps':['jquery']
+        },
+        parallax:{
+            'deps':['jquery'],
+        },
+        jquery_ui:{
+            deps:['jquery']
+        },
+        stripe:{
+            deps:['jquery']
+        },
+        underscore : {
+            exports : '_'
+        },
+        backbone:{
+            deps:['jquery','underscore']
+        },
+        utils:{
+            'deps':['jquery'],
+        },
+        main:{
+            'deps':['awe_horosen','magnific_popup','modrnizer','jquery_ui'],
+        },
+        registration:{
+            'deps':['jquery'],
+        },
+        awemenu:{
+            'deps':['jquery'],
+        },
+        bootstrap:{
+            'deps':['jquery'],
+        }
+    }
+});
+
+require(['jquery'],function(){
+	return jQuery
+})

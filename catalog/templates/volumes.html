@@ -99,11 +99,10 @@
                 <i class="fa fa-filter"></i>
                 <span>Filter</span>
             </div>			
-		</div>		
-		<script>
-		    $(function() { aweProductSidebar(); });
-		</script>
+		</div>
 	</div>
 </div>
-	
 {% endblock %}
+{% block footer_script %}
+	aweProductSidebar();
+{%  endblock %}
