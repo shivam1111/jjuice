@@ -81,6 +81,7 @@
                        'isotope','gmaps','list','doc','validate','awe_horosen','bootstrap'
                        ],function(toastr,main){
                     require(['awe_carousel_branch','awe_carousel_blog','awe_carousel_products','awe_carousel_testimonial'],function(){
+                        $.widget.bridge('uitooltip', $.ui.tooltip);
                         {% block load_javascript %}
                         {% endblock %}
                         {% block footer_script %}
