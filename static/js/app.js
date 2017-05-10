@@ -126,7 +126,7 @@ require.config({
             'deps':['jquery'],
         },
         main:{
-            'deps':['awe_horosen','magnific_popup','modrnizer','jquery_ui'],
+            'deps':['awe_horosen','magnific_popup','modrnizer','jquery_ui','nanoscroller'],
         },
         registration:{
             'deps':['jquery'],
