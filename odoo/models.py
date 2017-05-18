@@ -143,6 +143,7 @@ class Partner(models.Model):
     phone = models.CharField(verbose_name="Phone",blank=True,max_length = 50)
     customer = models.NullBooleanField("Customer")
     supplier = models.NullBooleanField("Supplier")
+    website_customer = models.NullBooleanField("Website Guest Customer")
     parent_id = models.ForeignKey('self',verbose_name = "Company",blank=True,related_name="child_ids",db_column = "parent_id",null=True)
     city = models.CharField(verbose_name="City",blank=True,max_length = 60)
     country_id = models.ForeignKey(Country,verbose_name = "Country",db_column = "country_id",null=True)

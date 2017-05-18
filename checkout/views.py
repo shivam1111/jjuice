@@ -64,7 +64,7 @@ class RunPayments(View):
                 odoo_adapter = OdooAdapter()
                 partner = odoo_adapter.create('res.partner',{
                                                                     'name':shipping_address.get('name',"No Name"),
-                                                                    'customer':True,
+                                                                    'website_customer':True,
                                                                     'classify_finance':'website',
                                                                     'acccount_type':'website',
                                                                     'type':'contact',
@@ -82,7 +82,7 @@ class RunPayments(View):
                                             'street2': shipping_address.get('street2', False),
                                             'zip': shipping_address.get('zip', False),
                                             'city': shipping_address.get('city', False),
-                                            'customer':True,
+                                            'website_customer':True,
                                             'notify_email': 'none',
                                             'active':True,
                                             'parent_id':partner
@@ -97,7 +97,7 @@ class RunPayments(View):
                                             'street2': billing_address.get('street2', False),
                                             'zip': billing_address.get('zip', False),
                                             'city': billing_address.get('city', False),
-                                            'customer':True,
+                                            'website_customer':True,
                                             'notify_email': 'none',
                                             'active':True,
                                             'email':billing_address.get('email',False),
