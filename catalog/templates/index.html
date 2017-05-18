@@ -42,6 +42,7 @@
 
 <section>
     <div class="container">
+        {% if request.volumes_data|length > 3 %}
         <div class="padding-vertical-50 border-bottom">
             <div class = "arrivals">
                 <div class="section-header center">
@@ -66,9 +67,62 @@
                             </div><!-- /.awe-media-body -->
                         </div><!-- /.awe-media -->
                     {% endfor %}
-                </div><!-- /.products -->            
-            </div><!-- /.home-trending -->                
+                </div><!-- /.products -->
+            </div>
         </div>
+        {% else %}
+        <div class="home-products padding-vertical-60">
+            <div class="row">
+                <div class="col-md-3 col-sm-4">
+                    <div class="awe-media home-cate-media">
+                        <div class="awe-media-header">
+                            <div class="awe-media-image">
+                                <img src="{% static  'img/shop.jpg' %}" alt="">
+                            </div><!-- /.awe-media-image -->
+                            <div class="awe-media-overlay overlay-dark-50 fullpage">
+                                <div class="content">
+
+                                    <div class="fp-table text-left">
+                                        <div class="fp-table-cell">
+
+                                            <h2 class="upper">SHOP</h2>
+                                            <p class="margin-bottom-50">Size Does Matter</p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div><!-- /.awe-media-overlay -->
+
+                        </div><!-- /.awe-media-header -->
+                    </div><!-- /.awe-media -->
+                </div>
+                <div class="col-md-9 col-sm-8">
+                    <div class="products owl-carousel" data-items="{{ request.volumes_data|length }}">
+                        {% for key,value in request.volumes_data.items %}
+                            <div class="product product-grid">
+                                <div class="product-media">
+                                    <div class="product-thumbnail">
+                                        <a href="{% url 'catalog:volume' id=key view='form'  %}" title="">
+                                            {% if value.category_url %}
+                                                <img src="{{ value.category_url }}" alt="" class = "current">
+                                            {% else %}
+                                                <img src="{% static 'img/270x200.jpg' %}" class = "current" alt="">
+                                            {% endif %}
+                                        </a>
+                                    </div><!-- /.product-thumbnail -->
+                                    <div class="product-body">
+                                        <h2 class="product-name">
+                                            <a href="{% url 'catalog:volume' id=key view='form'  %}" title="{{value.name}}">{{value.name}}</a>
+                                        </h2><!-- /.product-product -->
+                                    </div><!-- /.product-body -->
+                                </div><!-- /.awe-media -->
+                            </div>
+                        {% endfor %}
+                    </div><!-- ./products -->
+                </div>
+            </div>
+        </div>
+        {% endif %}
     </div><!-- /.container -->
 </section><!-- /section -->
 

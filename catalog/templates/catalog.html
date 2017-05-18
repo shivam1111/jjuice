@@ -2,6 +2,7 @@
 {% load static %}
 {% load thumbnail %}
 {% load catalog_filters %}
+{% load get_class_responsive %}
 {% load instagram_client %}
 {% load cache_image_url %}
 {% block site_header %}
@@ -177,7 +178,7 @@
 	                   			<div class="container-fluid">
 	                   				<div class="row">
 										{% for key,value in request.volumes_data.items %}
-	                                    <div class="col-lg-2">
+	                                    <div class="col-lg-{% get_class_responsive request.volumes_data|length  %}">
 	                                        <div class="awe-media inline margin-bottom-25">
 	                                            <div class="awe-media-image">
 	                                                <a href="{% url 'catalog:volume' id=key view='form'  %}" title="{{ value.name }}">
