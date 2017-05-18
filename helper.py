@@ -3,6 +3,15 @@ import os
 from django.http import Http404
 from django.http import JsonResponse
 
+def get_prices(user,volume):
+    if user and (not user.is_anonymous()):
+        price_line = user.odoo_user.partner_id.volume_price_line_ids.filter(product_attribute_id=volume.id)[:1]
+        if price_line.exists():
+            return price_line[0].price
+        elif user.odoo_user.partner_id.classify_finance in ['wholesale', 'private_label']:
+            return volume.wholesale_price
+    return volume.msrp
+
 def login(request):
     from cart.cart import _generate_cart_id,CART_ID_SESSION_KEY
     from django.contrib.auth.forms import (

@@ -2,15 +2,15 @@ from django.shortcuts import render,get_object_or_404,redirect
 from django.views import View
 from helper import safe_cast
 from urllib import quote
-import os,requests
+import os,requests,json
 from django.conf import settings
 from catalog.models import S3Object,SaleOrder
-from odoo.models import country_allowed_shipping,country_ids,Country,State,Partner,IrConfigParameters
+from odoo.models import country_allowed_shipping,country_ids,Country,State,Partner,IrConfigParameters,Partner
 from helper import create_aws_url,get_user_detail,get_states_list,is_allowed_shipping,is_user_business
 from django.http import JsonResponse,HttpResponse,HttpResponseNotFound
 from django.core.urlresolvers import reverse
 from odoo_helpers import OdooAdapter
-from cart.cart import _cart_id,get_cart_items,get_cart_total,create_sale_order_from_cart
+from cart.cart import _cart_id,get_cart_items,get_cart_total,create_sale_order_from_cart,get_net_total
 from cart.models import CartNote
 import xml.etree.ElementTree as ET
 
@@ -36,33 +36,82 @@ class OrderHistory(View):
 
 class RunPayments(View):
     def post(self,request,format=None):
-        if request.user.is_authenticated():
-            step = request.POST.get('step',False)
-            assert step , "Step value is required"
-            headers = {'Content-Type': 'text/xml'}
-            next_step = False
-            api_key = IrConfigParameters.objects.get_param('nmi_key','No key')
-            note,created = CartNote.objects.get_or_create(cart_id=_cart_id(request))
-            note.note = request.POST.get('note','')
-            note.shipping_cost = request.POST.get('shipping_cost',0.00)
-            note.save()
-            if step == "step1":
-                total = request.POST.get('total',0.00)
-                redirect_uri = request.build_absolute_uri(reverse('checkout:make_payment', args=[]))
-                xml_string = '''
-                            <sale>
-                                <api-key>%s</api-key>
-                                <redirect-url>%s</redirect-url>
-                                <amount>%s</amount>
-                            </sale>
-                '''%(api_key,redirect_uri,total)
-                result = requests.post('https://secure.nmi.com/api/v2/three-step', data=xml_string, headers=headers)
-                next_step = 'step2'
-            
-            return JsonResponse(data={
-                    'xml_string':result.text,
-                    'next_step':next_step,
-                },status=int(result.status_code),safe=True)
+        params = json.loads(request.body)
+        step = params.get('step',False)
+        assert step , "Step value is required"
+        headers = {'Content-Type': 'text/xml'}
+        next_step = False
+        api_key = IrConfigParameters.objects.get_param('nmi_key','No key')
+        note,created = CartNote.objects.get_or_create(cart_id=_cart_id(request))
+        note.note = params.get('note','')
+        note.shipping_cost = params.get('shipping_cost',0.00)
+        note.save()
+        if step == "step1":
+            total = params.get('total',0.00)
+            redirect_uri = request.build_absolute_uri(reverse('checkout:make_payment', args=[]))
+            xml_string = '''
+                        <sale>
+                            <api-key>%s</api-key>
+                            <redirect-url>%s</redirect-url>
+                            <amount>%s</amount>
+                        </sale>
+            '''%(api_key,redirect_uri,total)
+            result = requests.post('https://secure.nmi.com/api/v2/three-step', data=xml_string, headers=headers)
+            next_step = 'step2'
+            if not request.user.is_authenticated():
+                shipping_address = params.get('shipping_address',False)
+                billing_address = params.get('billing_address',False)
+                odoo_adapter = OdooAdapter()
+                partner = odoo_adapter.create('res.partner',{
+                                                                    'name':shipping_address.get('name',"No Name"),
+                                                                    'customer':True,
+                                                                    'classify_finance':'website',
+                                                                    'acccount_type':'website',
+                                                                    'type':'contact',
+                                                                    'email':billing_address.get('email',False),
+                                                                    'phone':billing_address.get('phone',False),
+                                                                    'notify_email':'none',
+                                                                })
+                shipping_partner = odoo_adapter.create('res.partner',{
+                                            'name':shipping_address.get('name',"No Name"),
+                                            'type':'delivery',
+                                            'notify_email':'none',
+                                            'country_id':shipping_address.get('country_id',0),
+                                            'state_id':shipping_address.get('state_id',0),
+                                            'street':shipping_address.get('street',False),
+                                            'street2': shipping_address.get('street2', False),
+                                            'zip': shipping_address.get('zip', False),
+                                            'city': shipping_address.get('city', False),
+                                            'customer':True,
+                                            'notify_email': 'none',
+                                            'active':True,
+                                            'parent_id':partner
+                                        })
+                billing_partner = odoo_adapter.create('res.partner',{
+                                            'name':billing_address.get('name',"No Name"),
+                                            'type':'invoice',
+                                            'notify_email':'none',
+                                            'country_id':billing_address.get('country_id',0),
+                                            'state_id':billing_address.get('state_id',0),
+                                            'street':billing_address.get('street',False),
+                                            'street2': billing_address.get('street2', False),
+                                            'zip': billing_address.get('zip', False),
+                                            'city': billing_address.get('city', False),
+                                            'customer':True,
+                                            'notify_email': 'none',
+                                            'active':True,
+                                            'email':billing_address.get('email',False),
+                                            'phone':billing_address.get('phone',False),
+                                            'parent_id':partner,
+                                        })
+                cart_items = get_cart_items(request)
+                for i in cart_items:
+                    i.partner_id = partner
+                    i.save()
+        return JsonResponse(data={
+                'xml_string':result.text,
+                'next_step':next_step,
+            },status=int(result.status_code),safe=True)
     
     def get(self,request):
         token_id  = request.GET.get('token-id',False)
@@ -76,9 +125,9 @@ class RunPayments(View):
                 </complete-action>
             '''%(api_key,token_id)
             result = requests.post('https://secure.nmi.com/api/v2/three-step', data=xml_string, headers=headers)
-            print result.text
             tree = ET.fromstring(result.text)
             result_code = tree.find('result-code').text
+            print tree
             if result_code == "100":
                 # Transaction Was Successfull and now redirect the user to acknowledgement page
                 amount = tree.find('amount').text
@@ -193,21 +242,22 @@ class GetData(View):
         name = self._name
         if request.GET.get('states_list',False):
             states_list = Country.objects.get(pk=request.GET.get('states_list',False)).country_state_ids.all()
-            states_list =  map(lambda x: (x.id,x.name),states_list)
+            states_list =  dict(map(lambda x: (x.id,x.name),states_list))
             return JsonResponse(data={request.GET.get('states_list',False):states_list},status=200,safe=True)
+        response = {
+            'user': False,
+            'states_list': {},
+            'is_allowed_shipping': True,
+            'payment_redirect_url': reverse('checkout:make_payment', args=[]),
+            'country_ids': {},
+            'state_ids': {},
+        }
+        for i in country_allowed_shipping:
+            response['country_ids'].update(
+                {i.id: {'name': i.name, 'is_allowed_shipping': True}})  # Name , is shipping allowed
+        response['subtotal'] = get_cart_total(request)
+        response['gross_total'] = get_net_total(request)
         if request.user.is_authenticated:
-            response = {
-                'user':False,
-                'states_list':{},
-                'is_allowed_shipping':True,
-                'payment_redirect_url':reverse('checkout:make_payment',args=[]),
-                'country_ids':{},
-                'state_ids':{}
-            }
-            for i in country_allowed_shipping:
-                response['country_ids'].update({i.id : {'name': i.name,'is_allowed_shipping':True}}) # Name , is shipping allowed
-                
-            response['subtotal'] = get_cart_total(request)
             partner = request.user.odoo_user.partner_id
             shipping_partner = partner.child_ids.filter(type='delivery')[:1]
             billing_partner = partner.child_ids.filter(type='invoice')[:1]
@@ -244,26 +294,28 @@ class GetData(View):
                                                         }})                                            
             return JsonResponse(data=response,status=200,safe=True)#json_dumps_params are the **kwargs that will be passd to json.dumps
         else:
-            return HttpResponseNotFound('Please sign in first, to checkout!')
+            response.update({'signin_login':reverse('odoo_auth:login',args=[])})
+            return JsonResponse(data=response,status=200,safe=True)
         
 class Checkout(View):
     _name = "Checkout"
     
     def get(self,request,template_name="checkout.html"):
         name = self._name
+        back_url = request.GET.get('back_url', False)
+        back_url_name = request.GET.get('back_url_name', 'No Name')
+        if back_url:
+            back_url = quote(back_url.encode('utf-8'))
+        checkout_banner_url = os.path.join(settings.STATIC_URL, settings.PLACEHOLDER_BANNER_IMAGE)
+        banner_record = S3Object.objects.filter(checkout_banner=True)[:1]
+        if banner_record.exists():
+            checkout_banner_url = create_aws_url(banner_record[0]._meta.db_table, str(banner_record[0].id))
+        country_allowed_shipping = country_ids.filter(is_shipping_allowed=True)
+        countries_list = map(lambda x: (x.id, x.name), country_allowed_shipping)
+        address = False
+        shipping_allowed = True
         if request.user.is_authenticated:
-            back_url = request.GET.get('back_url',False)
-            back_url_name = request.GET.get('back_url_name','No Name')
-            if back_url: 
-                back_url = quote(back_url.encode('utf-8'))
-            checkout_banner_url = os.path.join(settings.STATIC_URL,settings.PLACEHOLDER_BANNER_IMAGE)
-            banner_record =  S3Object.objects.filter(checkout_banner=True)[:1]
-            address = False
             states_list = []
-            shipping_allowed = True
-            country_allowed_shipping = country_ids.filter(is_shipping_allowed=True)
-            if banner_record.exists():
-                checkout_banner_url = create_aws_url(banner_record[0]._meta.db_table,str(banner_record[0].id))
             partner = request.user.odoo_user.partner_id
             address = {
                     'name':partner.name,
@@ -281,9 +333,6 @@ class Checkout(View):
                 states_list = partner.country_id.country_state_ids.all()
             if partner.country_id:
                 shipping_allowed = partner.country_id in country_allowed_shipping
-            countries_list  = map(lambda x:(x.id,x.name),country_allowed_shipping)
-            return render(request,template_name,locals())
-        else:
-            return HttpResponseNotFound('Please sign in first, to checkout!')
-        
+        return render(request,template_name,locals())
+
         

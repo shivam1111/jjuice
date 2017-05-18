@@ -5,6 +5,7 @@ from helper import get_price
 import uuid
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from odoo.models import Partner
 
 class CartItem(models.Model):
     id = models.AutoField(primary_key=True)
@@ -13,6 +14,7 @@ class CartItem(models.Model):
     write_date = models.DateTimeField(auto_now=True)
     quantity = models.IntegerField(default=1)
     product_id = models.IntegerField(verbose_name="Product",blank=False)
+    partner_id = models.IntegerField("Partner ID",default=0)
     user_id = models.ForeignKey(settings.AUTH_USER_MODEL,verbose_name="User",blank=True,
                                 db_column="user_id",
                                 related_name="user_cart_item_ids",null=True)

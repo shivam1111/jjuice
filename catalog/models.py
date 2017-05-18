@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 from odoo.models import ProductAttributeValue,Partner
 from django.db import models
-from helper import create_aws_url
+from helper import create_aws_url,get_prices
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.utils.six.moves.urllib.parse import urlencode
@@ -66,13 +66,7 @@ class ProductFlavors(models.Model):
         return reverse('catalog:flavor',args=[self.id])
         
     def get_price(self,user,volume):
-        if user and (not user.is_anonymous()):
-            price_line = user.odoo_user.partner_id.volume_price_line_ids.filter(product_attribute_id=volume.id)[:1]
-            if price_line.exists():
-                return price_line[0].price
-            elif user.odoo_user.partner_id.classify_finance in ['wholesale','private_label']:
-                return volume.wholesale_price
-        return volume.msrp
+        return get_prices(user,volume)
 
     def get_image_url(self,volume_id):
         image_line = self.flavor_attribute_image_ids.filter(attribute_id=volume_id)[:1]

@@ -110,10 +110,19 @@
                                             </li>                                                
                                             {% endfor %}
                                         </ul>
-                                        <div class="menu-cart-total">
-                                            <span>Total</span>
+                                        <div class="menu-cart-total" style = "border-bottom:none;">
+                                            <span>Gross Total</span>
                                             <span class="price">{{ cart_total|currency }}</span>                                            
                                         </div>
+                                        <div class="menu-cart-total" style = "border-bottom:none;">
+                                            <span >Discount (%) <i data-toggle="tooltip" data-original-title="3+1=4" class="fa fa-question-circle" aria-hidden="true"></i></span>
+                                            <span class="price">{{ discount_percentage}}</span>
+                                        </div>
+                                        <div class="menu-cart-total">
+                                            <span data-toggle="tooltip" data-original-title="3+1=4" >Grand Total </span>
+                                            <span class="price">{{ net_total|currency }}</span>
+                                        </div>
+
                                         <div class="cart-action">
                                             <a href="{% url 'cart:show_cart' %}" title="" class="btn btn-lg btn-dark btn-outline btn-block">View cart</a>
                                             {% if request.user.is_authenticated %}
@@ -167,7 +176,7 @@
 	                   		<li class="awemenu-megamenu-item">
 	                   			<div class="container-fluid">
 	                   				<div class="row">
-	                                    {% for key,value in request.volumes_data.items %}
+										{% for key,value in request.volumes_data.items %}
 	                                    <div class="col-lg-2">
 	                                        <div class="awe-media inline margin-bottom-25">
 	                                            <div class="awe-media-image">
@@ -227,7 +236,7 @@
                 	</div>
                 	<div class="col-md-3">
                     	<div class="widget">
-            	            <h3 class="widget-title">WE CAN HELP YOU?</h3>
+            	            <h3 class="widget-title">WE CAN HELP YOU</h3>
                             <div class="widget-content">
                                 <p><i class="icon icon-telephone" style="color:white;padding-right:10px;"></i>(801) 331-8919</p>
 								<p><i class="glyphicon glyphicon-map-marker" style="color:white;padding-right:10px;"></i>12411 South 265 West Ste C</p>
@@ -256,16 +265,16 @@
                 	<!-- Are You like me widget -->
                 	<div class = "col-md-3">
 						<div class="widget">
-                	        <h3 class="widget-title">Are You Like Me</h3>
+                	        <h3 class="widget-title">@vapejjuice</h3>
                             <ul class="list-socials">
-                                <li><a href="https://twitter.com/vapejjuice" title=""><i class="icon icon-twitter"></i></a></li>
-                                <li><a href="http://facebook.com/vapejjuice" title=""><i class="icon icon-facebook"></i></a></li>
-                                <li><a href="http://instagram.com/vapejjuice" title=""><i class="fa fa-instagram"></i></a></li>
-                                <li><a href="http://vapejjuice.tumblr.com/" title=""><i class="fa fa-tumblr"></i></a></li>
+                                <li><a href="https://twitter.com/vapejjuice" target="_blank" title=""><i class="icon icon-twitter"></i></a></li>
+                                <li><a href="http://facebook.com/vapejjuice" target="_blank" title=""><i class="icon icon-facebook"></i></a></li>
+                                <li><a href="http://instagram.com/vapejjuice" target="_blank" title=""><i class="fa fa-instagram"></i></a></li>
+                                <li><a href="http://vapejjuice.tumblr.com/" target="_blank" title=""><i class="fa fa-tumblr"></i></a></li>
                             </ul>
                         </div>
                         <div class="widget">
-	                        <h3 class="widget-title">PAYMENT ACCEPT</h3>
+	                        <h3 class="widget-title">PAYMENT ACCEPTED</h3>
                             <ul class="list-socials">
                                 <li>
                                     <a href="#" title="">

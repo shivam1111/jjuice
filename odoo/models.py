@@ -159,7 +159,10 @@ class Partner(models.Model):
                                                                                      ('delivery','Shipping'),('contact','Contact'),
                                                                                      ('other','Other'),
                                                                                  ])
-    
+    acccount_type = models.CharField(max_length=20,verbose_name="Type",blank=True, choices = [
+                                                                                     ('smoke_shop','Smoke Shop'),('vape_shop','Vape Shop'),
+                                                                                     ('website','Online Store'),('convenient_gas_store','Convenient Store/Gas Store'),
+                                                                                 ])
     def save(self,*args,**kwargs):
         current_partner = self 
         while not current_partner.is_company and current_partner.parent_id:

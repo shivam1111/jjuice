@@ -88,14 +88,16 @@
 	                			<th>Subtotal</th>
 	                			<td><span class="amount">{{ cart_total|currency }}</span></td>
 				            </tr>
+	            			<tr class="cart-subtotal">
+	                			<th>Discount(%) <i data-toggle="tooltip" data-original-title="3+1=4" class="fa fa-question-circle" aria-hidden="true"></i></th>
+	                			<td><span class="amount">{{ discount_percentage}}</span></td>
+				            </tr>
 	              			<tr class="order-total">
 	                			<th>GRAND TOTAL</th>
-	                			<td><strong><span class="amount">{{cart_total|currency}}</span></strong></td>
+	                			<td><strong><span class="amount">{{net_total|currency}}</span></strong></td>
 	              			</tr>
 	              			<tr>
-								{% if request.user.is_authenticated %}
-	                				<td colspan="2"><a id = "proceed_to_checkout" href="{% url 'checkout:checkout' %}?back_url={{back_url}}&back_url_name={{back_url_name}}" role="button" class="btn btn-primary"><span>Proceed to checkout</span></a></td>
-								{% endif %}
+								<td colspan="2"><a id = "proceed_to_checkout" href="{% url 'checkout:checkout' %}?back_url={{back_url}}&back_url_name={{back_url_name}}" role="button" class="btn btn-primary"><span>Proceed to checkout</span></a></td>
 	              			</tr>
 	            		</tbody>
 	          		</table>

@@ -1,5 +1,4 @@
-require(['recaptcha'],function(){
-   $(function(){
+require(['toastr','recaptcha'],function(toastr){
         var registration_form = $('form#registration_form');
         var states_list = {};
         var csrftoken = getCookie('csrftoken');
@@ -245,5 +244,4 @@ require(['recaptcha'],function(){
             }
         }
     });
-    })
 })

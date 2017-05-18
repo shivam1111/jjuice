@@ -10,6 +10,7 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
             var shipping_total = $("td#shipping_total");
             var csrftoken = getCookie('csrftoken');
             var payment_box = $("div#payment_box");
+            var left_side = $("div#left_side");
             var address_defaults = {
                     'name':'',
                     'street':'',
@@ -24,9 +25,74 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
             Checkout.Models.Address = Backbone.Model.extend({
                 defaults:address_defaults,
             })
+            var signin_box = 
+            _.template('\
+                    <div class="card card-container">\
+                        <!-- <img class="profile-img-card" src="//lh3.googleusercontent.com/-6V8xOA6M7BA/AAAAAAAAAAI/AAAAAAAAAAA/rzlHcD0KYwo/photo.jpg?sz=120" alt="" /> -->\
+                        <img id="profile-img" class="profile-img-card" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" />\
+                        <p id="profile-name" class="profile-name-card"></p>\
+                        <form class="form-signin">\
+                            <span id="reauth-email" class="reauth-email"></span>\
+                            <input type="email" name="username" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>\
+                            <input type="password" id="inputPassword" class="form-control" name="password" placeholder="Password" required>\
+                            <div id="remember" class="checkbox">\
+                                <label>\
+                                    <input type="checkbox" value="remember-me"> Remember me\
+                                </label>\
+                            </div>\
+                            <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Sign in</button>\
+                        </form><!-- /form -->\
+                        <button class="btn btn-lg btn-success btn-block btn-signin" id = "checkout_as_guest" type="submit">Checkout as Guest</button>\
+                        <button href="#forgot-password-popup" class="forgot-password btn-link">\
+                            Forgot password?\
+                        </button>\
+                    </div><!-- /card-container -->\
+            ')
+            var checkout_box =
+            _.template('\
+            <div class="board" style = "height:100%;">\
+                <!-- <h2>Welcome to IGHALO!<sup>™</sup></h2>-->\
+                    <div class="board-inner">\
+	                    <ul class="nav nav-tabs" id="myTab">\
+		                    <div class="liner"></div>\
+		                    <li class="active">\
+		                    	<a href="#shipping" data-toggle="tab" title="Shipping Information">\
+				                    <span class="round-tabs two">\
+				                        <i class="glyphicon glyphicon-user"></i>\
+				                    </span>\
+					           </a>\
+		                	</li>\
+		                 	<li>\
+			                 	<a href="#billing" data-toggle="tab" title="Billing Information">\
+				                    <span class="round-tabs three">\
+				                          <i class="glyphicon glyphicon-credit-card"></i>\
+				                    </span>\
+			                    </a>\
+		                     </li>\
+		                    <li><a href="#doner" data-toggle="tab" title="completed">\
+		                        <span class="round-tabs five">\
+		                              <i class="glyphicon glyphicon-ok"></i>\
+		                        </span></a>\
+		                    </li>\
+	                    </ul>\
+                    </div>\
+                    <div class="tab-content">\
+                    	<div class="tab-pane fade in active" id="shipping">\
+                        </div>\
+	                    <div class="tab-pane fade" id="billing">\
+	                    </div>\
+	                    <div class="tab-pane fade" id="doner">\
+					  		<div class="text-center">\
+					    		<i class="img-intro icon-checkmark-circle"></i>\
+							</div>\
+						</div>\
+						<div class="clearfix"></div>\
+					</div>\
+				</div>\
+            ')
             var form_address_template =
             _.template('\
-                <% if (adr_key == "billing_address" && user) { %>\
+                <% if (adr_key == "billing_address") { %>\
                     <div class="form-group">\
                         <label class="checkbox-inline">\
                             <input type="checkbox" name="shipping_billing_same">\
@@ -120,9 +186,6 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                             <% if (adr_key == "billing_address") { %>\
                                 <button type="button" id = "go_to_shipping" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i>    Go Back to Shipping</a></button>\
                             <% } %>\
-                            <% if (user) { %>\
-                                <button type="submit" class="btn btn-danger">Update/Save address</a></button>\
-                            <% } %>\
                             <% if (adr_key == "shipping_address") { %>\
                                 <button type="button" id = "calculate_shipping" class="btn btn-primary">Calculate Shipping</button>\
                                 <button type="button" id = "go_to_billing" class="btn btn-success">Next    <i class="fa fa-arrow-right" aria-hidden="true"></i></a></button>\
@@ -141,7 +204,7 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                                     <strong>Sorry!</strong><span> We currently only ship to 48 states of United States of America. Please <a href="/misc/contactus"><strong style="text-decoration: underline;">CONTACT US</strong></a> for further assistance. Your cart data is saved with us.</span>\
                                 </div>\
                             <% } %>\
-                            <div class = "row" style="border: 1px solid black;padding: 11px;">\
+                            <div class = "row" style="padding: 11px;">\
                                 <div class="col-sm-12">\
                                     <div class="card" >\
                                         <div class="card-block" id = "saved_shipping_details">\
@@ -310,7 +373,7 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                         },
                         success:function(dt){
                             if (loud){
-                                toastr.success("Address Updated Successully",'success')
+                                toastr.success("Address Updated Successully",'Success')
                             }
                             self.$el.empty()
                             self.render();
@@ -336,8 +399,9 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                         self.address.set(data)
                     })
                     self.form_address.find("input[name='shipping_billing_same']").on('click',function(){
+                        event.stopImmediatePropagation();
                         var checked = $(this).is(":checked");
-                        if (checked && self.data.user ){
+                        if (checked){
                             var form = self.form_address.find("form");
                             Checkout.Events.Checkout.trigger('same_address_billing',form)
                         }
@@ -350,16 +414,17 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                         var country_id = $(this).val();
                         function _onchange_country_id(states){
                             self.form_address.find('select#state_id').empty();
-                            var template = _.template('<option value="<%=state[0]%>" ><%=state[1]%></option>')
+                            var template = _.template('<option value="<%=name%>" ><%=value%></option>')
                             self.form_address.find('select#state_id').append($("<option disabled selected value> -- select a state -- </option>"))
-                            _.each(states,function(state,index){
-                                self.form_address.find('select#state_id').append($(template({'state':state})))
+                            _.each(states,function(key,val){
+                                self.form_address.find('select#state_id').append($(template({'name':val,'value':key})))
                             });
                         }
-                        if (_.has(self.data['states_list'],country_id)){
-                            _onchange_country_id(self.data.states_list[country_id])
+                        if (_.has(self.data['state_ids'],country_id)){
+                            _onchange_country_id(self.data.state_ids[country_id])
                             return $.Deferred().resolve()
                         }else{
+                            var country_id = $(this).val();
                             return $.ajax({
                                 url:'/checkout/get_data/',
                                 data:{'states_list':$(this).val()}, // Send the country_id for the states_list
@@ -370,7 +435,7 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                                     'Content-Type': 'application/x-www-form-urlencoded' ,
                                 },
                                 success:function(dt){
-                                    $.extend(self.data['states_list'],dt);
+                                    $.extend(self.data['state_ids'],dt);
                                     _onchange_country_id(dt[country_id])
                                 },
                             })
@@ -398,7 +463,6 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                 render:function(){
                     var self = this;
                     this.$el = $(this.selector)
-                    payment_box.hide();
                     this.saved_address =$(saved_address_template({
                         'user':self.data['user'],
                         'address':self.address.attributes,
@@ -489,14 +553,17 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                 calculate_total:function(){
                     var self=this;
                     var total = 0.00;
-                    total = this.data['subtotal'] + self.model.get('shipping_cost')
+                    total = this.data['gross_total'] + self.model.get('shipping_cost');
+                    total = total.toFixed(2);
                     self.model.set({'order_total':total})
                     order_total.find('span').text('$'+self.model.get('order_total'));
-                    console.log("calculate_total")
                     Checkout.Events.Checkout.trigger('order_total_changed',total)
                 },
                 update_address:function(loud){
                     var self = this;
+                    if (!self.data.user){
+                        return $.Deferred().resolve();
+                    }
                     return $.ajax({
                         url:'/checkout/get_data/',
                         data:_.extend(self.address.attributes,{adr_key:self.adr_key}),
@@ -569,18 +636,19 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                         self.render_next_button();
                     })
                     this.listenTo(Checkout.Events.Checkout,'same_address_billing',function(form){
-                        form.find('input[name="name"]').val(self.address.get('name') || '');
-                        form.find('input[name="street"]').val(self.address.get('street') || '');
-                        form.find('input[name="street2"]').val(self.address.get('steet2') || '');
-                        form.find('input[name="city"]').val(self.address.get('city') || '');
-                        form.find('input[name="zip"]').val(self.address.get('zip') || '');
+                        event.stopImmediatePropagation();
+                        form.find('input[name="name"]').val(self.address.get('name') || '').change();
+                        form.find('input[name="street"]').val(self.address.get('street') || '').change();
+                        form.find('input[name="street2"]').val(self.address.get('street2') || '').change();
+                        form.find('input[name="city"]').val(self.address.get('city') || '').change();
+                        form.find('input[name="zip"]').val(self.address.get('zip') || '').change();
                         if (self.address.get('country_id')){
-                            form.find('select[name="country_id"]').val(self.address.get('country_id'));
+                            form.find('select[name="country_id"]').val(self.address.get('country_id')).change();
                         }
                         $.when(form.find("select#country").triggerHandler("change")).done(function(def){
                             $.when(def).done(function(){
                                 if (self.address.get('state_id')){
-                                    form.find('select[name="state_id"]').val(self.address.get('state_id'));
+                                    form.find('select[name="state_id"]').val(self.address.get('state_id')).change();
                                 }
                             })
                         })
@@ -633,16 +701,17 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                         var country_id = $(this).val();
                         function _onchange_country_id(states){
                             self.form_address.find('select#state_id').empty();
-                            var template = _.template('<option value="<%=state[0]%>" ><%=state[1]%></option>')
+                            var template = _.template('<option value="<%=name%>" ><%=value%></option>')
                             self.form_address.find('select#state_id').append($("<option disabled selected value> -- select a state -- </option>"))
-                            _.each(states,function(state,index){
-                                self.form_address.find('select#state_id').append($(template({'state':state})))
+                            _.each(states,function(key,val){
+                                self.form_address.find('select#state_id').append($(template({'name':val,'value':key})))
                             });
                         }
-                        if (_.has(self.data['states_list'],country_id)){
-                            _onchange_country_id(self.data.states_list[country_id])
+                        if (_.has(self.data['state_ids'],country_id)){
+                            _onchange_country_id(self.data.state_ids[country_id])
                             return $.Deferred().resolve()
                         }else{
+                            var country_id = $(this).val();
                             return $.ajax({
                                 url:'/checkout/get_data/',
                                 data:{'states_list':$(this).val()}, // Send the country_id for the states_list
@@ -653,7 +722,7 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                                     'Content-Type': 'application/x-www-form-urlencoded' ,
                                 },
                                 success:function(dt){
-                                    $.extend(self.data['states_list'],dt);
+                                    $.extend(self.data['state_ids'],dt);
                                     _onchange_country_id(dt[country_id])
                                 },
                             })
@@ -749,9 +818,13 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                         }
                         clearInterval(self.readyInterval);
                         self.$el.find('.subscribe').prop('disabled', true);
-                        self.billing_tab.update_address(true);
+                        if (self.data.user){
+                            self.billing_tab.update_address(true);
+                        }
                         switch(self.model.get('step')){
                             case 'step1':
+                                console.log("Billing Address:",self.billing_tab.address)
+                                console.log("Shipping  Address:",self.shipping_tab.address)
                                 self.execute_step1();
                                 break;
                         }
@@ -762,19 +835,21 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                     if (self.paymentFormReady()){
                         self.$el.attr("action",self.model.get('form-url'))
                         self.$el.submit();
-                        console.log(self.$el.serialize());
                     }
                 },
                 execute_step1:function(){
                     var self = this;
                     $.ajax({
                         url:data['payment_redirect_url'],
-                        data:{
+                        contentType:"application/json; charset=utf-8",
+                        data:JSON.stringify({
                             'step':self.model.get('step'),
                             'total':self.model.get('order_total'),
                             'note':self.billing_tab.address.get('note') || '',
                             'shipping_cost':parseFloat(self.shipping_tab.model.get('shipping_cost')) || 0.00,
-                        },
+                            'shipping_address':self.shipping_tab.address.attributes,
+                            'billing_address':self.billing_tab.address.attributes,
+                        }),
                         type:'POST',
                         headers:{
                             'X-CSRFToken':csrftoken,
@@ -818,9 +893,121 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                     data = dt;
                 },
             }).done(function(){
-                var saved_shipping_address = new Checkout.Views.SavedAddress(data,'div#shipping.tab-pane','Shipping Details','shipping_address')
-                var saved_billing_address = new Checkout.Views.SavedBillingAddress(data,'div#billing.tab-pane','Billing Details','billing_address')
-                var payment_form = new Checkout.Views.PaymentForm(saved_shipping_address,saved_billing_address,data);
+                payment_box.hide();
+                if (data.user){
+                    left_side.append($(checkout_box({})))
+                    var saved_shipping_address = new Checkout.Views.SavedAddress(data,'div#shipping.tab-pane','Shipping Details','shipping_address')
+                    var saved_billing_address = new Checkout.Views.SavedBillingAddress(data,'div#billing.tab-pane','Billing Details','billing_address')
+                    var payment_form = new Checkout.Views.PaymentForm(saved_shipping_address,saved_billing_address,data);
+                }else{
+                    var signin_form = left_side.append($(signin_box({})))
+                    signin_form.find("button#checkout_as_guest").on('click',function(){
+                        event.preventDefault();
+                        left_side.empty();
+                        left_side.append($(checkout_box({})))
+                        var saved_shipping_address = new Checkout.Views.SavedAddress(data,'div#shipping.tab-pane','Shipping Details','shipping_address')
+                        var saved_billing_address = new Checkout.Views.SavedBillingAddress(data,'div#billing.tab-pane','Billing Details','billing_address')
+                        var payment_form = new Checkout.Views.PaymentForm(saved_shipping_address,saved_billing_address,data);
+                    })
+                    signin_form.find('form').on('submit',function(){
+                        event.preventDefault();
+                        var form = this;
+                        var url = $(form).attr('action');
+                        $.ajax({
+                            type: "POST",
+                            url: data.signin_login,
+                            beforeSend:function(){
+                                $(form).find("button[type='submit']").addClass('active')
+                            },
+                            headers:{
+                                'X-CSRFToken':csrftoken,
+                            },                            
+                            data: $(form).serializeArray(),
+                            error:function(data){
+                                console.log("error",data)
+                            },
+                            complete:function(){
+                                $(form).find("button[type='submit']").removeClass('active')
+                            },
+                            success:function(data){
+                                if (data['auth'] == true){
+                                    toastr.success("Login Successful")
+                                    $(form).find('div#auth_failed').addClass('hidden');
+                                    location.reload();
+                                }else{
+                                    console.log($(form).find('div#auth_failed'))
+                                    $(form).find('div#auth_failed').removeClass('hidden')
+                                    toastr.error("Login Failed")
+                                }
+
+                            },
+                        });
+                    })
+                    $('button[href="#forgot-password-popup"]').magnificPopup({
+                        type:'inline',
+                        midClick: false,
+                        closeOnBgClick: false
+                    });
+                    loadProfile();
+                    function getLocalProfile(callback){
+                        var profileImgSrc      = localStorage.getItem("PROFILE_IMG_SRC");
+                        var profileName        = localStorage.getItem("PROFILE_NAME");
+                        var profileReAuthEmail = localStorage.getItem("PROFILE_REAUTH_EMAIL");
+
+                        if(profileName !== null
+                                && profileReAuthEmail !== null
+                                && profileImgSrc !== null) {
+                            callback(profileImgSrc, profileName, profileReAuthEmail);
+                        }
+                    }
+
+                    /**
+                     * Main function that load the profile if exists
+                     * in localstorage
+                     */
+                    function loadProfile() {
+                        if(!supportsHTML5Storage()) { return false; }
+                        // we have to provide to the callback the basic
+                        // information to set the profile
+                        getLocalProfile(function(profileImgSrc, profileName, profileReAuthEmail) {
+                            //changes in the UI
+                            $("#profile-img").attr("src",profileImgSrc);
+                            $("#profile-name").html(profileName);
+                            $("#reauth-email").html(profileReAuthEmail);
+                            $("#inputEmail").hide();
+                            $("#remember").hide();
+                        });
+                    }
+
+                    /**
+                     * function that checks if the browser supports HTML5
+                     * local storage
+                     *
+                     * @returns {boolean}
+                     */
+                    function supportsHTML5Storage() {
+                        try {
+                            return 'localStorage' in window && window['localStorage'] !== null;
+                        } catch (e) {
+                            return false;
+                        }
+                    }
+
+                    /**
+                     * Test data. This data will be safe by the web app
+                     * in the first successful login of a auth user.
+                     * To Test the scripts, delete the localstorage data
+                     * and comment this call.
+                     *
+                     * @returns {boolean}
+                     */
+                    function testLocalStorageData() {
+                        if(!supportsHTML5Storage()) { return false; }
+                        localStorage.setItem("PROFILE_IMG_SRC", "//lh3.googleusercontent.com/-6V8xOA6M7BA/AAAAAAAAAAI/AAAAAAAAAAA/rzlHcD0KYwo/photo.jpg?sz=120" );
+                        localStorage.setItem("PROFILE_NAME", "César Izquierdo Tello");
+                        localStorage.setItem("PROFILE_REAUTH_EMAIL", "oneaccount@gmail.com");
+                    }                    
+                }
             })
         })
     })

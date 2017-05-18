@@ -140,6 +140,6 @@ require.config({
     }
 });
 
-require(['jquery'],function(){
-	return jQuery
-})
+//require(['jquery'],function(){
+//	return jQuery
+//})
