@@ -109,7 +109,6 @@ require(['toastr','recaptcha'],function(toastr){
             var country_id = $(this).val();
             var code = $(this).find('option:selected').attr('name');
             if (code != 'US'){
-                console.log("Not US")
                 registration_form.find("select#state_id").replaceWith('<input type="text" class="form-control dark" required name="state_id"\
                                                                        id="state_id" placeholder="State" />')
                 return
@@ -120,14 +119,15 @@ require(['toastr','recaptcha'],function(toastr){
             }
             function _onchange_country_id(states){
                 registration_form.find('select#state_id').empty();
-                var template = _.template('<option value="<%=state[0]%>" ><%=state[1]%></option>')
+                var template = _.template('<option value="<%=name%>" ><%=value%></option>')
                 registration_form.find('select#state_id').append($("<option disabled selected value> -- select a state -- </option>"))
-                _.each(states,function(state,index){
-                    registration_form.find('select#state_id').append($(template({'state':state})))
+                _.each(states,function(key,val){
+                    registration_form.find('select#state_id').append($(template({'name':val,'value':key})))
                 });
             }
             if (_.has(states_list,country_id)){
-                _onchange_country_id(states_list[country_id])
+                _onchange_country_id(self.data.state_ids[country_id])
+                return $.Deferred().resolve()
             }else{
                 $.ajax({
                     url:'/checkout/get_data/',
@@ -213,7 +213,7 @@ require(['toastr','recaptcha'],function(toastr){
                                                                     <div class="alert alert-info">\
                                                                         <strong class="upper">Registration Successfull!</strong><hr>\
                                                                         <p>Since it is a wholesale account, It will take upto 24 hours for the account to get activated</p>\
-                                                                        <p>To activate it sooner, Please contact JJuice directly</p>\
+                                                                        <p>To activate it sooner, Please contact JJuice directly.Phone:801-331-8919</p>\
                                                                     </div>\
                                                                 </div>\
                                                             </div>'
