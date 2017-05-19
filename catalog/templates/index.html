@@ -30,7 +30,7 @@
                         </div>
                         <div class="policy-text" style="text-align:center;padding-top: 15px">
                             <h4>{{ x.name }}</h4>
-                            <p>{{ x.description }}</p>
+                            <p>{{ x.description|default_if_none:"" }}</p>
                         </div>						
                     </div>
                 </div>
