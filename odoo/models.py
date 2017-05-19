@@ -199,6 +199,6 @@ class VolumePricesLine(models.Model):
         managed=False
         db_table = "volume_prices_line"
 
-country_ids = Country.objects.all()
+country_ids = Country.objects.all().order_by('name').reverse()
 country_allowed_shipping = country_ids.filter(is_shipping_allowed=True)
                         
