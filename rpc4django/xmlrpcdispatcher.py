@@ -1,6 +1,10 @@
 """
 Implements an XMLRPC dispatcher
 """
+import logging
+
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
 
 try:
     # Python2
@@ -63,7 +67,7 @@ class XMLRPCDispatcher(SimpleXMLRPCDispatcher):
                              encoding=self.encoding)
         except Exception as e:
             response = dumps(
-                Fault(1, e),
+                Fault(1, e.msg),
                 encoding=self.encoding, allow_none=self.allow_none,
             )
 
