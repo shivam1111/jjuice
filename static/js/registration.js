@@ -63,6 +63,9 @@ require(['toastr','recaptcha'],function(toastr){
                 type_account:{
                     wholesale:true,
                 },
+                company_name:{
+                    wholesale:true,
+                }
             },
             messages:{
                 name:{
@@ -77,7 +80,7 @@ require(['toastr','recaptcha'],function(toastr){
                     required:"*Phone is required",
                 },
                 street:{
-                    required:"*Adress is required",
+                    required:"*Address is required",
                 },
                 zip:{
                     required:"*Zip code is required",
@@ -102,6 +105,9 @@ require(['toastr','recaptcha'],function(toastr){
                 },
                 type_account:{
                     wholesale:"Account Type is Required",
+                },
+                company_name:{
+                    wholesale:"Company Name Required",
                 },
             }
         })
@@ -213,7 +219,7 @@ require(['toastr','recaptcha'],function(toastr){
                                                                     <div class="alert alert-info">\
                                                                         <strong class="upper">Registration Successfull!</strong><hr>\
                                                                         <p>Since it is a wholesale account, It will take upto 24 hours for the account to get activated</p>\
-                                                                        <p>To activate it sooner, Please contact JJuice directly.Phone:801-331-8919</p>\
+                                                                        <p>To activate it sooner, Please contact JJuice directly. Phone: 801-331-8919</p>\
                                                                     </div>\
                                                                 </div>\
                                                             </div>'

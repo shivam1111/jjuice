@@ -19,6 +19,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls import include
 from django.shortcuts import render
+from rpc4django.views import serve_rpc_request
 admin.autodiscover()
 
 
@@ -30,6 +31,8 @@ urlpatterns = [
     url(r'^accounts/', include('odoo_auth.urls',namespace="odoo_auth")),
     url(r'^accounts/', include('django.contrib.auth.urls',namespace="auth")),
     url(r'^checkout/', include('checkout.urls',namespace="checkout")),
+    # rpc4django will need to be in your Python path
+    url(r'^RPC2$', serve_rpc_request),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 def handler404(request):

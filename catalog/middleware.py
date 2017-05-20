@@ -2,17 +2,17 @@ from helper import create_aws_url
 from django.utils.deprecation import MiddlewareMixin
 from django.conf import settings
 from collections import OrderedDict
+from helper import is_user_business
 
 class CatalogMiddleware(MiddlewareMixin):
     
     def process_request(self,request):
         from odoo.models import IrConfigParameters,ProductAttributeValue,country_ids
         volumes_available_ids = []
-        if (not request.user.is_authenticated) or (not request.user.odoo_user.partner_id.classify_finance) or (request.user.odoo_user.partner_id.classify_finance == 'website'):
-#             eval(IrConfigParameters.objects.get_param('attributes_available_ids','[]'))
-            volumes_available_ids = eval(IrConfigParameters.objects.get_param('attribute_value_ids','[]'))
-        else :
+        if is_user_business(request.user) :
             volumes_available_ids = eval(IrConfigParameters.objects.get_param('attributes_available_ids','[]'))
+        else:
+            volumes_available_ids = eval(IrConfigParameters.objects.get_param('attribute_value_ids', '[]'))
         volume_objects = ProductAttributeValue.objects.filter(id__in=volumes_available_ids).order_by('sequence')
         volumes_data = OrderedDict()
         for i in volume_objects:

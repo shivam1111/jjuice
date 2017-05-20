@@ -127,7 +127,6 @@ class RunPayments(View):
             result = requests.post('https://secure.nmi.com/api/v2/three-step', data=xml_string, headers=headers)
             tree = ET.fromstring(result.text)
             result_code = tree.find('result-code').text
-            print tree
             if result_code == "100":
                 # Transaction Was Successfull and now redirect the user to acknowledgement page
                 amount = tree.find('amount').text
@@ -164,28 +163,23 @@ class GetShippingRates(View):
         if cart.exists():
             cart_items = map(lambda x:(x.product_id,x.quantity),cart)
             cart_total = get_cart_total(request)
-            type = None
-            if request.user.is_authenticated():
-                type = request.user.odoo_user.partner_id.classify_finance
             is_business = is_user_business(request.user)
-            if (is_business and cart_total > 500 and type in ['retailer','website']) or (not is_business and cart_total > 55):
+            if not is_business:
+                if cart_total > 55:
+                    response['error'] = False
+                    response['rate'] = 0.00
+                    response['msg'] = "Free Shipping"
+                    return JsonResponse(data=response,status=200,safe=True)
+            # odoo_adapter = OdooAdapter()
+            # resp = odoo_adapter.execute_method('rate.fedex.request','calculate_rates_for_address',params_list=[address,cart_items])
+            # rate = resp.get('rate',False)
+            if rate:
                 response['error'] = False
-                response['rate'] = 0.00
-                response['msg'] = "Free Shipping"
-            elif (is_business and cart_total < 500) or (type in ['wholesale','private_label']):
-                odoo_adapter = OdooAdapter()
-                resp = odoo_adapter.execute_method('rate.fedex.request','calculate_rates_for_address',params_list=[address,cart_items])
-                rate = resp.get('rate',False)
-                response['error'] = False
-                response['rate'] = rate
-                response['msg'] = ""
-            elif (not is_business and cart_total < 55):
-                response['error'] = False
-                response['rate'] = 2.95
+                # response['rate'] = rate
+                # For now we
                 response['msg'] = ""
             else:
-                response['msg'] = "We had some problem getting the rates for you"
-
+                response['msg'] = request_id.response
             return JsonResponse(data=response,status=200,safe=True)
         else:
             return HttpResponseNotFound('Sorry! Cart is Empty')
