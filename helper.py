@@ -111,6 +111,9 @@ def is_user_business(user):
     try:
         if (not user.is_authenticated):
             return False
+        elif not user.odoo_user.partner_id.is_company:
+            return False
+        # Now we are sure we have authenticated user which is a company at the backend
         elif (not user.odoo_user.partner_id.classify_finance) or (user.odoo_user.partner_id.classify_finance == 'website'):
             return False
         else :
@@ -127,6 +130,7 @@ def get_price(authenticated,volume,user=None,flavor=None):
 
 def create_aws_url(key,fname):
     return os.path.join(settings.AWS_BASE_URL,settings.BUCKET,key,fname)
+
 
 def safe_cast(func):
     def wrapper(self,request,id,template_name):
