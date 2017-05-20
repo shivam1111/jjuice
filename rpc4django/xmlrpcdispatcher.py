@@ -61,9 +61,9 @@ class XMLRPCDispatcher(SimpleXMLRPCDispatcher):
         except Fault as fault:
             response = dumps(fault, allow_none=self.allow_none,
                              encoding=self.encoding)
-        except Exception:
+        except Exception as e:
             response = dumps(
-                Fault(1, 'Unknown error'),
+                Fault(1, e),
                 encoding=self.encoding, allow_none=self.allow_none,
             )
 
