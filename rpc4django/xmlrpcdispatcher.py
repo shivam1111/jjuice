@@ -66,7 +66,6 @@ class XMLRPCDispatcher(SimpleXMLRPCDispatcher):
             response = dumps(fault, allow_none=self.allow_none,
                              encoding=self.encoding)
         except Exception as e:
-            print "========================dir",dir(e)
             response = dumps(
                 Fault(1, e.message),
                 encoding=self.encoding, allow_none=self.allow_none,
