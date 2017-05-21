@@ -281,7 +281,7 @@
 </div>
 {% endblock %}
 {% block load_javascript %}
-    require(['add_to_cart','tooltip'],function(AddToCart){
+    require(['add_to_cart'],function(AddToCart){
         aweProductRender(true);
         var add_to_cart_form = $("form#add_to_cart")
         var add_to_cart_view = new AddToCart.Views.Main(add_to_cart_form)

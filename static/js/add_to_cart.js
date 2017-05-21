@@ -75,8 +75,8 @@ define(['jquery','underscore','backbone','toastr','utils'],function($,_,Backbone
         render_template:function(){
             var self = this;
             var data = self.data
-            console.log(data)
-            self.menubar_cart.find('span.cart-number').text(data.cart_item_count)
+            self.menubar_cart.find('span.cart-number').remove()
+            self.menubar_cart.find('a.awemenu-icon.menu-shopping-cart').append($(_.template('<span class="cart-number"><%= cart_item_count %></span>')({'cart_item_count':data.cart_item_count})))
             self.menubar_cart.find("ul.submenu.megamenu").empty().append($(cart_menubar_template(data)))
         },
         start:function(){
