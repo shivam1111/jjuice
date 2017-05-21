@@ -33,7 +33,7 @@
                         <li>Section 1.10.33 of "de Finibus Bonorum et Malorum</li>
                     </ul>
                 </div><!-- /.product-features -->
-                <form action="{% url 'catalog:flavor' id=flavor.id %} " method="POST">
+                <form action="{% url 'catalog:flavor' id=flavor.id %}" id = "add_to_cart" method="POST">
                     {% csrf_token %}
                     <div class="row">
                         <div class="col-md-4">
@@ -135,13 +135,16 @@
 </div>
 
 <script>
-    $(function() {
+    require(['add_to_cart'],function(AddToCart){
         $('.product-quickview-slider').owlCarousel({
             items: 1,
             nav: true,
             dots: true,
             autoplay: true,
-            loop: true,            
+            loop: true,
         });
+        var add_to_cart_form = $("form#add_to_cart")
+        console.log(add_to_cart_form)
+        var add_to_cart_view = new AddToCart.Views.Main(add_to_cart_form)
     });
 </script>

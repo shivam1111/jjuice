@@ -100,7 +100,7 @@
                     </div>                                            
                     {% endif %}                
                     </div>
-                    <form action="{% url 'catalog:flavor' id=flavor.id %} " method="POST">
+                    <form action="{% url 'catalog:flavor' id=flavor.id %}" id = "add_to_cart" method="POST">
                         {% csrf_token %}
                         <div class="row">
                             <div class="col-md-4">
@@ -140,7 +140,7 @@
                                 {% endif %}
                             </span><!-- /.product-price -->
 
-                            <button class="btn btn-lg btn-primary" type="submit" >Add to cart</button>
+                            <button class="btn btn-lg btn-primary" id = "add_to_cart" type="submit" >Add to cart</button>
                         </div><!-- /.product-list-actions -->
                     </form>
                 </div><!-- /.product-actions-wrapper -->				                            
@@ -281,5 +281,10 @@
 </div>
 {% endblock %}
 {% block load_javascript %}
-    $(function() { aweProductRender(true); });
+    require(['add_to_cart','tooltip'],function(AddToCart){
+        aweProductRender(true);
+        var add_to_cart_form = $("form#add_to_cart")
+        var add_to_cart_view = new AddToCart.Views.Main(add_to_cart_form)
+    });
+
 {% endblock %}

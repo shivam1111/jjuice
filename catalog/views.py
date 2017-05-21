@@ -96,7 +96,6 @@ class Volume(View):
         return render(request,template_name,locals())
 
 class Flavor(View):
-    
     @safe_cast
     def get(self,request,id,template_name="flavors.html"):
         flavor_id = int(id) # TypeError and ValueError handled by the decorator
@@ -118,37 +117,6 @@ class Flavor(View):
         old_price = current_volume.old_price or 0
         return render(request,template_name,locals())
     
-    @safe_cast
-    def post(self,request,id,template_name="flavors.html"): 
-        from cart.forms import ProductAddToCartForm
-        # add to cart...create the bound form
-        postdata = request.POST.copy()
-        form = ProductAddToCartForm(request, postdata)
-        #check if posted data is valid
-        if form.is_valid():
-            #add to cart and redirect to cart page
-            cart.add_to_cart(request)
-            # if test cookie worked, get rid of it
-            if request.session.test_cookie_worked():
-                request.session.delete_test_cookie()
-            url = urlresolvers.reverse('cart:show_cart')
-            return HttpResponseRedirect(url)
-        flavor_id = int(postdata.get('flavor_id',False)) # TypeError and ValueError handled by the decorator
-        volume_id = int(postdata.get('volume_id',False))
-        conc_id = postdata.get('conc_id',False)
-        flavor = get_object_or_404(ProductFlavors, pk=flavor_id)
-        current_volume = get_object_or_404(ProductAttributeValue, pk=volume_id)
-        price = old_price = 0
-        name = flavor.name
-        assert volume_id and (volume_id in request.volumes_data.keys()) , "You are not allowed to access this page"        
-        products = get_product_variants(flavor,volume_id)
-        price = flavor.get_price(request.user,current_volume) 
-        old_price = current_volume.old_price        
-        request.session.set_test_cookie()
-        back_url = request.GET.get('back',"/")
-        back_url = unquote(back_url.encode('utf-8'))
-        return render(request,template_name,locals())
-
 class FlavorQuickView(View):
     
     @safe_cast

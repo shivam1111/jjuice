@@ -6,7 +6,7 @@ def carts_context(request):
     cart_item_count = cart.cart_distinct_item_count(request)
     cart_total = cart.get_cart_total(request)
     discount_percentage = cart.get_discount_percentage(request)
-    net_total = cart.get_net_total(request)
+    net_total = round(cart.get_net_total(request),2)
     return {
             'cart_items': cart_items,
             'cart_item_count':cart_item_count,
