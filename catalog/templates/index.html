@@ -70,28 +70,6 @@
 <!--Video Section Ends Here-->
 <section>
     <div class="container">
-        <div class="policy-wrapper border-bottom">
-            <div class="row">
-            	{% for x in policies %}
-                <div class="col-md-4 col-sm-4 col-xs-8">
-                    <div class="policy">
-                        <div class="policy-icon">
-                            <img src="{{ x.get_image_url }}" />
-                        </div>
-                        <div class="policy-text" style="text-align:center;padding-top: 15px">
-                            <h4>{{ x.name }}</h4>
-                            <p>{{ x.description|default_if_none:"" }}</p>
-                        </div>						
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-</section>
-
-<section>
-    <div class="container">
         {% if request.volumes_data|length > 3 %}
         <div class="padding-vertical-50 border-bottom">
             <div class = "arrivals">
@@ -175,7 +153,27 @@
         {% endif %}
     </div><!-- /.container -->
 </section><!-- /section -->
-
+<section>
+    <div class="container">
+        <div class="policy-wrapper border-bottom">
+            <div class="row">
+            	{% for x in policies %}
+                <div class="col-md-4 col-sm-4 col-xs-8">
+                    <div class="policy">
+                        <div class="policy-icon">
+                            <img src="{{ x.get_image_url }}" />
+                        </div>
+                        <div class="policy-text" style="text-align:center;padding-top: 15px">
+                            <h4>{{ x.name }}</h4>
+                            <p>{{ x.description|default_if_none:"" }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
 <section>
     <div class="container">
         <div class="padding-vertical-50 border-bottom">
