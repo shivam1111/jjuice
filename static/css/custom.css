@@ -4,88 +4,40 @@
     display: none;
   }
 }
+
 .error{
-	color:red;
+        color:red;
 }
-/******************************** youtue vidoe player2 ******************************/
-@import url(//fonts.googleapis.com/css?family=Roboto+Slab:400);
-
-body {
-  background: #000;
+/******************************* youtube vidoe player *******************************/
+.video-section .pattern-overlay {
+background-color: rgba(71, 71, 71, 0.59);
+padding: 110px 0 32px;
+min-height: 496px;
+/* Incase of overlay problems just increase the min-height*/
 }
-
-a {
-  color: #ff0;
+.video-section h1, .video-section h3{
+text-align:center;
+color:#fff;
 }
-
-.cover {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 2;
-
-  width: 100%;
-  height: 100%;
-
-  .hi {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-
-    color: #fff;
-
-    font-family: 'Roboto Slab', serif;
-    font-size: 24px;
-    line-height: 26px;
-    text-align: center;
-
-    span {
-      color: #ff0;
-      cursor: pointer;
-      text-decoration: underline;
-    }
-
-    em {
-      font-style: normal;
-
-      &.hidden {
-        display: none;
-      }
-    }
-  }
+.video-section h1{
+font-size:110px;
+font-family: 'Buenard', serif;
+font-weight:bold;
+text-transform: uppercase;
+margin: 40px auto 0px;
+text-shadow: 1px 1px 1px #000;
+-webkit-text-shadow: 1px 1px 1px #000;
+-moz-text-shadow: 1px 1px 1px #000;
 }
-
-.tv {
-  /*position: absolute;*/
-  top: 0;
-  left: 0;
-  /*z-index: 2;*/
-
-  width: 100%;
-  height: 100%;
-
-  overflow: hidden;
-
-  .screen {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    /*z-index: 1;*/
-
-    margin: auto;
-
-    opacity: 0;
-    transition: opacity .5s;
-
-    &.active {
-      opacity: 1;
-    }
-  }
+.video-section h3{
+font-size: 25px;
+font-weight:lighter;
+margin: 0px auto 15px;
 }
-/******************************** youtue vidoe player2 ******************************/
+.video-section .buttonBar{display:none;}
+.player {font-size: 1px;}
+/******************************* youtube vidoe player *******************************/
+
 
 /******************************* spinner *******************************/
 .spinner {
