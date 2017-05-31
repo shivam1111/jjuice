@@ -161,34 +161,48 @@ class GetShippingRates(View):
         }
         cart = get_cart_items(request)
         if cart.exists():
-            cart_items = map(lambda x:(x.product_id,x.quantity),cart)
+            cart_items = map(lambda x: (x.product_id, x.quantity), cart)
             cart_total = get_cart_total(request)
             is_business = is_user_business(request.user)
-            if not is_business:
+            if is_business:
+                type = None
+                if request.user.is_authenticated():
+                    type = request.user.odoo_user.partner_id.classify_finance
+                if (cart_total > 500) and (type not in ["wholesale", 'private_label']):
+                    response['error'] = False
+                    response['rate'] = 0.00
+                    response['msg'] = "Free Shipping"
+                    return JsonResponse(data=response, status=200, safe=True)
+                else:
+                    try:
+                        odoo_adapter = OdooAdapter()
+                        resp = odoo_adapter.execute_method('rate.fedex.request', 'calculate_rates_for_address',
+                                                           params_list=[address, cart_items])
+                        rate = resp.get('rate', False)
+                        if rate:
+                            response['error'] = False
+                            response['rate'] = rate
+                            response['msg'] = ""
+                        else:
+                            response['msg'] = resp.get('msg',
+                                                       "We were unable to get the shipment rates. Please contact JJuice directly!")
+                    except Exception:
+                        response['msg'] = "We were unable to get the shipment rates. Please contact JJuice directly!"
+                    return JsonResponse(data=response, status=200, safe=True)
+            else:
                 if cart_total > 55:
                     response['error'] = False
                     response['rate'] = 0.00
                     response['msg'] = "Free Shipping"
-                    return JsonResponse(data=response,status=200,safe=True)
+                    return JsonResponse(data=response, status=200, safe=True)
                 else:
                     response['error'] = False
                     response['rate'] = 2.95
-                    response['msg'] = "Free Shipping"
-                    return JsonResponse(data=response,status=200,safe=True)
-
-            # odoo_adapter = OdooAdapter()
-            # resp = odoo_adapter.execute_method('rate.fedex.request','calculate_rates_for_address',params_list=[address,cart_items])
-            # rate = resp.get('rate',False)
-            if rate:
-                response['error'] = False
-                # response['rate'] = rate
-                # For now we
-                response['msg'] = ""
-            else:
-                response['msg'] = request_id.response
-            return JsonResponse(data=response,status=200,safe=True)
+                    response['msg'] = ""
+                    return JsonResponse(data=response, status=200, safe=True)
         else:
             return HttpResponseNotFound('Sorry! Cart is Empty')
+
 
 class GetData(View):
     _name = "Get User Details"
