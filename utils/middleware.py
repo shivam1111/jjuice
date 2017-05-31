@@ -19,7 +19,6 @@ class MobileDetectionMiddleware(MiddlewareMixin):
             is_tablet = agent.detectTierTablet()
             is_phone = agent.detectTierIphone()
             is_mobile = is_tablet or is_phone or agent.detectMobileQuick()
-        print "========================",is_mobile,is_tablet,is_phone
         request.is_mobile = is_mobile
         request.is_tablet = is_tablet
         request.is_phone = is_phone
