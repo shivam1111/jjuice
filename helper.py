@@ -8,7 +8,7 @@ def get_prices(user,volume):
         price_line = user.odoo_user.partner_id.volume_price_line_ids.filter(product_attribute_id=volume.id)[:1]
         if price_line.exists():
             return price_line[0].price
-        elif user.odoo_user.partner_id.classify_finance in ['wholesale', 'private_label']:
+        elif user.odoo_user.partner_id.is_company:
             return volume.wholesale_price
     return volume.msrp
 
@@ -111,13 +111,10 @@ def is_user_business(user):
     try:
         if (not user.is_authenticated):
             return False
-        elif not user.odoo_user.partner_id.is_company:
-            return False
-        # Now we are sure we have authenticated user which is a company at the backend
-        elif (not user.odoo_user.partner_id.classify_finance) or (user.odoo_user.partner_id.classify_finance == 'website'):
-            return False
-        else :
+        elif user.odoo_user.partner_id.is_company:
             return True
+        else :
+            return False
     except Exception as e:
         return False
 
