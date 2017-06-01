@@ -14,7 +14,7 @@
                      <i class="icon icon-shopping-bag"></i>
                  </a>
                 <a  class="awe-button product-quick-whistlist" data-toggle="tooltip" title="Price">
-                     ${% call_method flavor_id 'get_price' user=user volume=current_volume %}
+                     ${% call_method flavor_id 'get_price' user=request.user volume=current_volume %}
                 </a> 
  
                  <a href="{% url 'catalog:flavor_quick_view' id=flavor_id.id %}?volume_id={{ current_volume.id }}" class="awe-button product-quick-view" data-toggle="tooltip" title="Quickview">
