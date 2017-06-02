@@ -59,7 +59,7 @@ def get_user_detail(user):
                 'city':billing_partner[0].city or '',
                 'state_id':billing_partner[0].state_id and billing_partner[0].state_id.id or '',
                 'country_id':billing_partner[0].country_id and billing_partner[0].country_id.id or '',
-                'email':billing_partner[0].email or '',
+                'email':billing_partner[0].email or odoo_partner.email or '',
                 'zip':billing_partner[0].zip or '',
             }
     else:

@@ -113,7 +113,7 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                             </div><!-- /.form-group -->   \
                             <div class="form-group">\
                                 <label for="name">Contact No. <sup>*</sup></label>\
-                                <input type="text" class="form-control dark" name="phone"  required id="phone" value="<%=address.phone%>" placeholder="Contact Number.">\
+                                <input type="text" class="form-control dark" name="phone"  id="phone" value="<%=address.phone%>" placeholder="Contact Number.">\
                             </div><!-- /.form-group -->   \
                         <% } %>\
                         <div class="form-group">\
@@ -307,9 +307,6 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                                 required:true,
                                 email:true
                             },
-                            phone:{
-                                required:true,
-                            },
                             street:{
                                 required:true
                             },
@@ -333,9 +330,6 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                             email:{
                                 required:"*Email is required",
                                 email:"Please enter valid Email ID"
-                            },
-                            phone:{
-                                required:"*Phone is required",
                             },
                             street:{
                                 required:"*Adress is required",

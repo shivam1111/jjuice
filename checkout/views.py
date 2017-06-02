@@ -48,7 +48,7 @@ class RunPayments(View):
         note.save()
         if step == "step1":
             total = params.get('total',0.00)
-            redirect_uri = request.build_absolute_uri(reverse('z', args=[]))
+            redirect_uri = request.build_absolute_uri(reverse('checkout:make_payment'))
             xml_string = '''
                         <sale>
                             <api-key>%s</api-key>

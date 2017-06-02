@@ -174,7 +174,7 @@ body, html {
                                 <div class="cart-item">
                                     <div class="product-image">
                                         <a href="{{ item.get_product_url }}&back={{ back_url }}" title="{{item.product.get_name}}">
-                                            <img src="{{item.product.get_image_url}}" style="height:75px;width:75px;" alt="">
+                                            <img src="{{item.product.get_image_url}}" class="product-list-image" alt="">
                                         </a>
                                     </div>
 
@@ -267,7 +267,7 @@ body, html {
                                     <div class="row">
                                         <div class="col-xs-7 col-md-7">
                                             <div class="form-group">
-                                                <label for="billing-cc-exp"><span class="hidden-xs">EXPIRATION</span><span class="visible-xs-inline">EXP</span> DATE</label>
+                                                <label for="billing-cc-exp"><span class="hidden-xs">EXPIRATION</span><span class="visible-xs-inline">EXP</span> DATE (MM/YY)</label>
                                                 <input 
                                                     type="tel" 
                                                     class="form-control" 
