@@ -33,7 +33,11 @@ define(['jquery','underscore','backbone','toastr','utils'],function($,_,Backbone
                                 </div>\
                                 <div class="whishlist-quantity">\
                                     <span>Quantity:</span>\
-                                    <span><%=val.quantity%></span>\
+                                    <% if (val.quantity > val.qty.virtual_available) { %><span style="color:red"><strong><%=val.quantity%></strong></span><% } %>\
+                                    <% if (val.quantity <= val.qty.virtual_available) { %><span ><%=val.quantity%></span><% } %>\
+                                </div>\
+                                <div class="whishlist-quantity">\
+                                    <% if (val.quantity > val.qty.virtual_available) { %><span style="color:red"><strong>OUT OF STOCK</strong></span> <% } %>\
                                 </div>\
                             </div>\
                         </div>\
@@ -101,8 +105,16 @@ define(['jquery','underscore','backbone','toastr','utils'],function($,_,Backbone
                         if (dt.error){
                             toastr.error(dt.msg)
                         }else{
-                            toastr.success("Product added to cart. Please continue shopping!")
-                            self.form.find('input[name="quantity"]').val('');
+                            var qty = self.form.find('input[name="quantity"]').val()
+                            console.log(dt)
+                            if (dt.available_qty.virtual_available <= 0 ){
+                                toastr.warning("Sorry! this product is currently out of stock!");
+                            }else if (dt.available_qty.virtual_available < dt.cart_qty ){
+                                toastr.warning("Sorry! only "+dt.available_qty.virtual_available+" units are availbale and order quantity is "+dt.cart_qty);
+                            }else{
+                                toastr.success("Product added to cart. Please continue shopping!")
+                                self.form.find('input[name="quantity"]').val('');
+                            }
                             self.render_template()
                         }
                     },

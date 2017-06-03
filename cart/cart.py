@@ -2,7 +2,7 @@ from models import CartItem,CartNote
 from catalog.models import ProductVariant
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect,Http404
-from helper import safe_cast,is_user_business,get_prices
+from helper import safe_cast,is_user_business,get_prices,get_products_availability
 import decimal,uuid
 from odoo.models import ProductAttributeValue
 from odoo_helpers import OdooAdapter
@@ -53,40 +53,54 @@ def add_to_cart(request):
     cart_products = get_cart_items(request)
     # Check to see if item already in cart
     product_in_cart=False
+    available_qty = get_products_availability(p.id)[str(p.id)]
+    added = False
+    cart_quantity = 0
     for cart_item in cart_products:
         if cart_item.product_id == p.id:
             #upddate the quantity if found
-            cart_item.augment_quantity(quantity)
             product_in_cart = True
+            cart_quantity = cart_item.quantity+quantity
+            if cart_quantity <= available_qty.get('virtual_available',0):
+                cart_item.augment_quantity(quantity)
+                added=True
+
     if not product_in_cart:
-        #create and save a new cart item
-        ci = CartItem()
-        ci.product_id = p.id
-        ci.quantity = quantity
-        ci.cart_id = _cart_id(request)
-        if request.user.is_authenticated:
-            ci.user_id = request.user
-        ci.save()        
+        cart_quantity = quantity
+        if cart_quantity <= available_qty.get('virtual_available',0):
+            #create and save a new cart item
+            ci = CartItem()
+            ci.product_id = p.id
+            ci.quantity = quantity
+            ci.cart_id = _cart_id(request)
+            if request.user.is_authenticated:
+                ci.user_id = request.user
+            ci.save()
+            added = True
+
+    return available_qty,cart_quantity,added
+
+
 
 # return the total number of items in user's cart
-def cart_distinct_item_count(request):
-    return get_cart_items(request).count()
+def cart_distinct_item_count(cart_items=[]):
+    return len(cart_items)
     
 def get_cart_total(request):
     total = 0.00
     cart_items = get_cart_items(request)
     if cart_items.exists():
+
         try:
             total = round(sum(item.get_total for item in cart_items),2)
         except Exception as e:
             pass
     return total
 
-def get_cart_discount(request):
-    cart_items = get_cart_items(request)
+def get_cart_discount(cart_items,request):
     volume_dictionary_count = {}
     discount = 0.0
-    if cart_items.exists():
+    if len(cart_items) > 0:
         if request.user.is_authenticated():
             if is_user_business(request.user):
                 return discount
@@ -101,17 +115,13 @@ def get_cart_discount(request):
         discount = discount + (float(price) * item_count)
     return discount
 
-def get_discount_percentage(request):
-    discount = get_cart_discount(request)
-    cart_total = get_cart_total(request)
+def get_discount_percentage(cart_total,discount):
     discount_percentage = 0.00
     if cart_total > 0:
         discount_percentage = round((discount*100.00/cart_total),2)
     return discount_percentage
 
-def get_net_total(request):
-    discount_percentage = get_discount_percentage(request)
-    cart_total = get_cart_total(request)
+def get_net_total(discount_percentage,cart_total):
     net_total = ((100.00 - discount_percentage)/100.00)*cart_total
     return net_total
 

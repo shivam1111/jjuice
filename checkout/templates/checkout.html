@@ -169,35 +169,37 @@ body, html {
                     <!-- <h2>Your payment details</h2> -->
                     <div class="payment-detail-wrapper">
                         <ul class="cart-list">
-                        	{% for item in cart_items %}
+                        	{% for key,value in cart_items.items %}
+                            {% if value.quantity <= value.qty.virtual_available  %}
                             <li>
                                 <div class="cart-item">
                                     <div class="product-image">
-                                        <a href="{{ item.get_product_url }}&back={{ back_url }}" title="{{item.product.get_name}}">
-                                            <img src="{{item.product.get_image_url}}" class="product-list-image" alt="">
+                                        <a href="{{ value.flavor_url }}&back={{ back_url }}" title="{{value.name}}">
+                                            <img src="{{value.image_url}}" class="product-list-image" alt="">
                                         </a>
                                     </div>
 
                                     <div class="product-body">
                                         <div class="product-name">
                                             <h3>
-                                                <a href="#" title="{{item.product.get_name}}">{{item.product.get_name}}</a>
+                                                <a href="#" title="{{value.name}}">{{value.name}}</a>
                                             </h3>
                                         </div>
-                                    	<span>Qty:{{ item.quantity }}</span>
+                                    	<span>Qty:{{ value.quantity }}</span>
                                         <div class="product-price">
-                                            <span>{{item.get_total|currency}}</span>
+                                            <span>{{value.item_total |currency}}</span>
 
                                         </div>
                                     </div>
                                 </div><!-- /.cart-item -->
 								<form method="POST" action="{% url 'cart:show_cart' %}">
 									{% csrf_token %}
-									<input type="hidden" name="item_id" value="{{ item.id }}" />
+									<input type="hidden" name="item_id" value="{{ key }}" />
 									<input type="hidden" name="action" value="delete" />
 									<button type="submit"  class="remove-cart btn btn-default no-border" value=""><i class="fa fa-trash-o fa-2x"></i></button>
 								</form>
                             </li>
+                            {% endif %}
                             {% empty %}
                             <li><div class="cart-item">CART EMPTY</div></li>
                             {% endfor %}

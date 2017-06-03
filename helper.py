@@ -1,7 +1,58 @@
 from django.conf import settings
-import os
+import os,json
 from django.http import Http404
 from django.http import JsonResponse
+from odoo_helpers import OdooAdapter
+from django.core.urlresolvers import reverse
+
+def get_cart_data(request,context={}):
+    from cart import cart
+    # expand : boolean; if true then the cart items will returned in dictionary along with values, else direct browsed objects will be returned
+    cart_items = cart.get_cart_items(request)
+    cart_total = 0.00
+    item_ids = []
+    res = {'cart_items':{}}
+    for item in cart_items:
+        item_ids.append(item.product.id)
+        res['cart_items'].update({
+            item.id: {
+                'flavor_url': reverse('catalog:flavor', args=[item.product.flavor_id.id]) + "?volume_id=%s" % (item.product.vol_id.id),
+                'image_url': item.product.get_image_url(),
+                'price': item.get_price,
+                'quantity': item.quantity,
+                'name': item.product.get_name(),
+                'product_id':item.product_id,
+                'item_total':item.get_total,
+            }
+        })
+    result_quantities = get_products_availability(item_ids)
+    final_items_list = []
+    for item in cart_items:
+        available_qty = result_quantities.get(str(item.product_id),{'virtual_available':0})
+        res['cart_items'][item.id].update({'qty':available_qty})
+        if item.quantity <= available_qty.get('virtual_available'):
+            final_items_list.append(item)
+            cart_total= cart_total+item.get_total
+    discount = cart.get_cart_discount(final_items_list,request)
+    discount_percentage = cart.get_discount_percentage(cart_total,discount)
+    net_total = round(cart.get_net_total(discount_percentage,cart_total), 2)
+    cart_item_count = cart.cart_distinct_item_count(final_items_list)
+    res.update({
+        'cart_item_count': cart_item_count,
+        'discount_percentage': discount_percentage,
+        'discount':discount,
+        'net_total': net_total,
+        'cart_total': cart_total
+    })
+    return res
+
+
+def get_products_availability(ids):
+    if isinstance(ids,int):
+        ids = [ids]
+    odoo_adapter = OdooAdapter()
+    result = odoo_adapter.execute_method('product.product', 'get_product_availability',[ids])
+    return json.loads(result)
 
 def get_prices(user,volume):
     if user and (not user.is_anonymous()):

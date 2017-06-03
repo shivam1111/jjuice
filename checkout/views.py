@@ -6,11 +6,11 @@ import os,requests,json
 from django.conf import settings
 from catalog.models import S3Object,SaleOrder
 from odoo.models import country_allowed_shipping,country_ids,Country,State,Partner,IrConfigParameters,Partner
-from helper import create_aws_url,get_user_detail,get_states_list,is_allowed_shipping,is_user_business
+from helper import create_aws_url,get_user_detail,get_states_list,is_allowed_shipping,is_user_business,get_cart_data
 from django.http import JsonResponse,HttpResponse,HttpResponseNotFound
 from django.core.urlresolvers import reverse
 from odoo_helpers import OdooAdapter
-from cart.cart import _cart_id,get_cart_items,get_cart_total,create_sale_order_from_cart,get_net_total
+from cart.cart import _cart_id,get_cart_items,create_sale_order_from_cart
 from cart.models import CartNote
 import xml.etree.ElementTree as ET
 
@@ -48,6 +48,7 @@ class RunPayments(View):
         note.save()
         if step == "step1":
             total = params.get('total',0.00)
+            print "-------------total",total
             redirect_uri = request.build_absolute_uri(reverse('checkout:make_payment'))
             xml_string = '''
                         <sale>
@@ -126,7 +127,9 @@ class RunPayments(View):
             '''%(api_key,token_id)
             result = requests.post('https://secure.nmi.com/api/v2/three-step', data=xml_string, headers=headers)
             tree = ET.fromstring(result.text)
+            print "=================tree",tree
             result_code = tree.find('result-code').text
+            print "============",result_code
             if result_code == "100":
                 # Transaction Was Successfull and now redirect the user to acknowledgement page
                 amount = tree.find('amount').text
@@ -142,6 +145,7 @@ class RunPayments(View):
             else:
                 # Transaction Was UnSuccessfull and now redirect the user to unsuccessfull page
                 order=False
+                display_transaction_status = True
                 return render(request,'order_acknowledgement.html',locals())
         return JsonResponse(data={},status=404,safe=True)
         
@@ -162,7 +166,7 @@ class GetShippingRates(View):
         cart = get_cart_items(request)
         if cart.exists():
             cart_items = map(lambda x: (x.product_id, x.quantity), cart)
-            cart_total = get_cart_total(request)
+            cart_total = float(request.GET.get('cart_total',0))
             is_business = is_user_business(request.user)
             if is_business:
                 type = None
@@ -275,8 +279,9 @@ class GetData(View):
         for i in country_allowed_shipping:
             response['country_ids'].update(
                 {i.id: {'name': i.name, 'is_allowed_shipping': True}})  # Name , is shipping allowed
-        response['subtotal'] = get_cart_total(request)
-        response['gross_total'] = get_net_total(request)
+        cart_data = get_cart_data(request)
+        response['subtotal'] = cart_data.get('cart_total',0.00)
+        response['gross_total'] = cart_data.get('net_total',0.00)
         if request.user.is_authenticated:
             partner = request.user.odoo_user.partner_id
             shipping_partner = partner.child_ids.filter(type='delivery')[:1]

@@ -12,7 +12,6 @@ from odoo.models import Partner,ResUsers
 from odoo_helpers import OdooAdapter
 from helper import login
 import base64,requests
-from odoo_helpers import OdooAdapter
 from datetime import datetime, timedelta
 
 

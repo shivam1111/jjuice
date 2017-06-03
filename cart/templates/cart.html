@@ -24,30 +24,38 @@
 			        </tr>
 		        </thead>
 		        <tbody>
-	        	{% for item in cart_items %}
+	        	{% for key,value in cart_items.items %}
 				<tr>
 					<td class="cart-product">
-						<a href="{{ item.get_product_url }}&back={{ back_url }}" title="{{item.product.get_name}}" class="product-cart">
-							<img src="{{item.product.get_image_url}}" alt="" class="product-list-image"/>
-							<h3 class="product-title">{{item.product.get_name}}</h3>
+						<a href="{{ value.flavor_url }}&back={{ back_url }}" title="{{ value.name }}" class="product-cart">
+							<img src="{{ value.image_url }}" alt="" class="product-list-image"/>
+							<h3 class="product-title">{{ value.name }}</h3>
 						</a>
+						{% if value.quantity > value.qty.virtual_available  %}
+							<h5 style="color:red;" >(OUT OF STOCK)</h5>
+							{% if value.qty.virtual_available > 0 %}
+							<h5>Available : {{value.qty.virtual_available}}</h5>
+							{% endif %}
+						{% endif %}
 					</td>
 					<td>
 						<form method="post" action="." class="cart">
 							{% csrf_token %}
-							<input type="hidden" name="item_id" value="{{ item.id }}" />
+							<input type="hidden" name="item_id" value="{{ key }}" />
 							<input type="hidden" name="action" value="delete" />
 							<button type="submit"  class="btn btn-default no-border" value=""><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></button>
 						</form>
 					</td>
-					<td><span class="amount">{{ item.get_price|currency }}</span></td>
+					<td>
+						<span class="amount">{{ value.price|currency }}</span>
+					</td>
 					<form method="post" action="." class="cart">
 						{% csrf_token %}
-						<td><input name = "quantity" type="number" onchange="this.form.submit()" value="{{ item.quantity }}" style="width:70px!important;" class="qty"></td>
+						<td><input name = "quantity" type="number" onchange="this.form.submit()" value="{{ value.quantity }}" style="width:70px!important;" class="qty"></td>
 						<input type="hidden" name="action" value="update" />
-						<input type="hidden" name="item_id" value="{{ item.id }}" />	
+						<input type="hidden" name="item_id" value="{{ key }}" />
 					</form>
-					<td><span class="amount">{{item.get_total|currency}}</span></td>
+					<td><span class="amount">{{value.item_total|currency}}</span></td>
 				</tr>
 				{% empty %}
 					<tr>

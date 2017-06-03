@@ -1,6 +1,6 @@
 from xmlrpclib import ServerProxy
 from django.conf import settings
-import logging
+import logging,json
 
 db_logger = logging.getLogger('db')
 stdlogger = logging.getLogger('console')

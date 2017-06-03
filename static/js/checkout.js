@@ -661,7 +661,7 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                         var zip = self.form_address.find('form').find('input#zip')
                         $.ajax({
                             url:'/checkout/get_shipping_rates/',
-                            data:self.form_address.find('form').serialize(), // Send the country_id for the states_list
+                            data:self.form_address.find('form').serialize()+"&"+$.param({ 'cart_total': self.data['gross_total']}), // Send the country_id for the states_list
                             cache:false,
                             type:'GET',
                             headers: {

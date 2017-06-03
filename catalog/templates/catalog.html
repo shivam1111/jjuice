@@ -79,32 +79,39 @@
                                 <li>
                                     <div class="container-fluid">
                                         <ul class="whishlist">
-                                            {%  for item in cart_items %}
+                                            {%  for key,value in cart_items.items %}
                                             <li>
                                                 <div class="whishlist-item">
                                                     <div class="product-image">
-                                                        <a href="{% url 'catalog:flavor' id=item.product.flavor_id.id %}?volume_id={{ item.product.vol_id.id }}" title="">
-                                                            <img src="{{ item.product.get_image_url }}" alt="">
+                                                        <a href="item." title="">
+                                                            <img src="{{ value.image_url }}" alt="">
                                                         </a>
                                                     </div>
 
                                                     <div class="product-body">
                                                         <div class="whishlist-name">
-                                                            <h3><a href="{% url 'catalog:flavor' id=item.product.flavor_id.id %}?volume_id={{ item.product.vol_id.id }}" title="">{{ item.product.get_name }}</a></h3>
+                                                            <h3><a href="{{ value.flavor_url }}" title="">{{ value.name }}</a></h3>
                                                         </div>
 
                                                         <div class="whishlist-price">
                                                             <span>Price:</span>
-                                                            <strong>{{ item.get_price }}</strong>
+                                                            <strong>{{ value.price }}</strong>
                                                         </div>
-
                                                         <div class="whishlist-quantity">
                                                             <span>Quantity:</span>
-                                                            <span>{{ item.quantity }}</span>
+															{% if value.quantity > value.qty.virtual_available %}
+																<span style="color:red"><strong>{{ value.quantity }}</strong></span>
+															{% else %}
+																<span >{{ value.quantity }}</span>
+															{% endif %}
                                                         </div>
+                                                        <div class="whishlist-quantity">
+															{% if value.quantity > value.qty.virtual_available  %}
+																<span style="color:red"><strong>OUT OF STOCK</strong></span>
+															{% endif %}
+														</div>
                                                     </div>
                                                 </div>
-
 <!--                                                 <a href="#" title="" class="remove">
                                                     <i class="icon icon-remove"></i>
                                                 </a> -->
