@@ -13,7 +13,7 @@ require.config({
         'main':'main',
         'awemenu':'plugins/awemenu.min',
         'backbone':'lib/backbone/backbone-min',
-        'payment_ui':'https://cdnjs.cloudflare.com/ajax/libs/jquery.payment/1.2.3/jquery.payment.min',
+        'payment_ui':'plugins/jquery.payment.min',
         'checkout':'checkout',
         'stripe':'https://js.stripe.com/v2?1',
         'xml2json':'lib/x2js/xml2json.min',

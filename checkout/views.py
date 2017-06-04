@@ -126,7 +126,9 @@ class RunPayments(View):
             '''%(api_key,token_id)
             result = requests.post('https://secure.nmi.com/api/v2/three-step', data=xml_string, headers=headers)
             tree = ET.fromstring(result.text)
+            print result.text
             result_code = tree.find('result-code').text
+            print "=================result_code",result_code
             if result_code == "100":
                 # Transaction Was Successfull and now redirect the user to acknowledgement page
                 amount = tree.find('amount').text
