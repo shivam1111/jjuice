@@ -753,7 +753,7 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                     /* Fancy restrictive input formatting via jQuery.payment library*/
                     $('input[name=billing-cc-number]').payment('formatCardNumber');
                     $('input[name=billing-cvv]').payment('formatCardCVC');
-    //				$('input[name=billing-cc-exp]').payment('formatCardExpiry');
+    				$("input[name='billing-cc-exp']").payment('formatCardExpiry');
                     /* Form validation using Stripe client-side validation helpers */
                     jQuery.validator.addMethod("cardNumber", function(value, element) {
                         return this.optional(element) || Stripe.card.validateCardNumber(value);
