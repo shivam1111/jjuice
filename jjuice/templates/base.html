@@ -93,6 +93,7 @@
                            ],function(toastr,main){
                         require(['awe_carousel_branch','awe_carousel_blog','awe_carousel_products','awe_carousel_testimonial','registration'],function(){
                             $.widget.bridge('uitooltip', $.ui.tooltip);
+                            toastr.options = {"closeButton": true}
                             {% block load_javascript %}
                             {% endblock %}
                             {% block footer_script %}

@@ -162,47 +162,47 @@ body, html {
     <div class="container">
         <div class="row">
             <div class="col-md-7" id = "left_side">
-
             </div> <!-- col-md-7 end-->
-            <div class="col-md-5">
+            <div class="col-md-5" id="right_side">
                 <div class="payment-right">
                     <!-- <h2>Your payment details</h2> -->
                     <div class="payment-detail-wrapper">
                         <ul class="cart-list">
-                        	{% for key,value in cart_items.items %}
-                            {% if value.quantity <= value.qty.virtual_available  %}
+                            {% if request.CART_DATA.checkout_cart_items  %}
+                        	{% for item in request.CART_DATA.checkout_cart_items %}
                             <li>
                                 <div class="cart-item">
                                     <div class="product-image">
-                                        <a href="{{ value.flavor_url }}&back={{ back_url }}" title="{{value.name}}">
-                                            <img src="{{value.image_url}}" class="product-list-image" alt="">
+                                        <a href="{{ item.get_product_url }}&back={{ back_url }}" title="{{item.product.get_name}}">
+                                            <img src="{{item.product.get_image_url}}" class="product-list-image" alt="">
                                         </a>
                                     </div>
 
                                     <div class="product-body">
                                         <div class="product-name">
                                             <h3>
-                                                <a href="#" title="{{value.name}}">{{value.name}}</a>
+                                                <a href="#" title="{{item.product.get_name}}">{{item.product.get_name}}</a>
                                             </h3>
                                         </div>
-                                    	<span>Qty:{{ value.quantity }}</span>
+                                    	<span>Qty:{{ item.quantity }}</span>
                                         <div class="product-price">
-                                            <span>{{value.item_total |currency}}</span>
+                                            <span>{{item.get_total |currency}}</span>
 
                                         </div>
                                     </div>
                                 </div><!-- /.cart-item -->
 								<form method="POST" action="{% url 'cart:show_cart' %}">
 									{% csrf_token %}
-									<input type="hidden" name="item_id" value="{{ key }}" />
+									<input type="hidden" name="item_id" value="{{ item.id }}" />
 									<input type="hidden" name="action" value="delete" />
 									<button type="submit"  class="remove-cart btn btn-default no-border" value=""><i class="fa fa-trash-o fa-2x"></i></button>
 								</form>
                             </li>
-                            {% endif %}
-                            {% empty %}
-                            <li><div class="cart-item">CART EMPTY</div></li>
                             {% endfor %}
+                            {% else %}
+                            <li><div class="cart-item">CART EMPTY</div></li>
+                            {% endif %}
+
                         </ul> <!-- /.cart-list -->
                     </div><!-- /.payment-detail-wrapper -->
                     <div class="cart-total">
@@ -210,15 +210,15 @@ body, html {
                             <tbody>
                                 <tr class="cart-subtotal">
                                     <th>Cart Subtotal:</th>
-                                    <td><span class="amount">{{cart_total|currency}}</span></td>
+                                    <td><span class="amount">{{request.CART_DATA.cart_total|currency}}</span></td>
                                 </tr>
                                 <tr class="cart-subtotal">
                                     <th>Discount(%)<i data-toggle="tooltip" data-original-title="3+1=4" class="fa fa-question-circle" aria-hidden="true"></i> :</th>
-                                    <td><span class="amount">{{discount_percentage}}</span></td>
+                                    <td><span class="amount">{{request.CART_DATA.discount_percentage}}</span></td>
                                 </tr>
                                 <tr class="order-total">
                                     <th>Gross Total:</th>
-                                    <td id = "gross_total" ><span class="amount">{{net_total|currency}}</span></td>
+                                    <td id = "gross_total" ><span class="amount">{{request.CART_DATA.net_total|currency}}</span></td>
                                 </tr>
                                 <tr class="shipping">
                                     <th>Shipping:</th>
@@ -232,7 +232,7 @@ body, html {
                         </table>
                     </div><!-- /.cart-total -->
                 </div>
-                <div class="row" id = "payment_box" >
+                <div class="row" id = "payment_box" style="display:none;" >
                     <!-- You can make it whatever width you want. I'm making it full width
                          on <= small devices and 4/12 page width on >= medium devices -->
                     <div class="payment-right">

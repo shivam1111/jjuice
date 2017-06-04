@@ -106,14 +106,19 @@ define(['jquery','underscore','backbone','toastr','utils'],function($,_,Backbone
                             toastr.error(dt.msg)
                         }else{
                             var qty = self.form.find('input[name="quantity"]').val()
-                            console.log(dt)
                             if (dt.available_qty.virtual_available <= 0 ){
                                 toastr.warning("Sorry! this product is currently out of stock!");
                             }else if (dt.available_qty.virtual_available < dt.cart_qty ){
                                 toastr.warning("Sorry! only "+dt.available_qty.virtual_available+" units are availbale and order quantity is "+dt.cart_qty);
                             }else{
-                                toastr.success("Product added to cart. Please continue shopping!")
-                                self.form.find('input[name="quantity"]').val('');
+                                var notification = _.template('\
+                                    Product added to cart!\
+                                    <br /><br />\
+                                    <a href="<%=cart_url%>" style="color:black;" class="btn btn-primary">View Cart</a>\
+                                    <a href="<%=checkout_url%>" style="color:black;" class="btn btn-primary">Checkout</a>\
+                                ')
+                                toastr.success(notification({'cart_url':dt.data.cart_url,'checkout_url':dt.data.checkout_url}))
+                                self.form.find('input[name="quantity"]').val('0');
                             }
                             self.render_template()
                         }

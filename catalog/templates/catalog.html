@@ -64,12 +64,12 @@
 	 	                    <a href="#" title="" class="awemenu-icon menu-shopping-cart">
 	                          <i class="icon icon-shopping-bag"></i>
 	                          <span class="awe-hidden-text">Cart</span>
-                              {% if cart_item_count and cart_item_count > 0 %}
-                              <span class="cart-number">{{ cart_item_count }}</span>
+                              {% if request.CART_DATA.cart_item_count and request.CART_DATA.cart_item_count > 0 %}
+                              <span class="cart-number">{{ request.CART_DATA.cart_item_count }}</span>
                               {% endif %}
 	                      	</a>
                    			<ul class="submenu megamenu">
-                                {% if cart_item_count == 0 %}
+                                {% if request.CART_DATA.cart_item_count == 0 %}
                                 <li>
                                     <div class="container-fluid">
                                         <span class="text-muted">Cart is empty</span>
@@ -79,7 +79,7 @@
                                 <li>
                                     <div class="container-fluid">
                                         <ul class="whishlist">
-                                            {%  for key,value in cart_items.items %}
+                                            {%  for key,value in request.CART_DATA.cart_items.items %}
                                             <li>
                                                 <div class="whishlist-item">
                                                     <div class="product-image">
@@ -120,7 +120,7 @@
                                         </ul>
                                         <div class="menu-cart-total" style = "border-bottom:none;">
                                             <span>Gross Total</span>
-                                            <span class="price">{{ cart_total|currency }}</span>                                            
+                                            <span class="price">{{ request.CART_DATA.cart_total|currency }}</span>
                                         </div>
                                         <div class="menu-cart-total" style = "border-bottom:none;">
                                             <span >Discount (%) <i data-toggle="tooltip" data-original-title="3+1=4" class="fa fa-question-circle" aria-hidden="true"></i></span>

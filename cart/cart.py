@@ -86,15 +86,9 @@ def add_to_cart(request):
 def cart_distinct_item_count(cart_items=[]):
     return len(cart_items)
     
-def get_cart_total(request):
+def get_cart_total(cart_items):
     total = 0.00
-    cart_items = get_cart_items(request)
-    if cart_items.exists():
-
-        try:
-            total = round(sum(item.get_total for item in cart_items),2)
-        except Exception as e:
-            pass
+    total = round(sum([item.get_total for item in cart_items]),2)
     return total
 
 def get_cart_discount(cart_items,request):
@@ -130,9 +124,10 @@ def create_sale_order_from_cart(request,prtnr=False,**kwargs):
     vals = {}
     order = False
     order_lines = []
-    cart_items = get_cart_items(request)
+    cart_items = request.CART_DATA.get('actual_cart_items',[])
+    cart_items = cart_items.filter(checkedout=True)
     transaction_id = kwargs.get('transaction_id',None)
-    if cart_items.exists():
+    if len(cart_items) > 0:
         partner_id = False
         if prtnr:
             partner_id = prtnr.id
@@ -140,13 +135,15 @@ def create_sale_order_from_cart(request,prtnr=False,**kwargs):
             partner_id = request.user.odoo_user.partner_id.id
         note = get_cart_note(request)
         odoo_adapter = OdooAdapter()
-        discount = get_discount_percentage(request)
+        cart_total = get_cart_total(cart_items)
+        discount = get_cart_discount(cart_items, request)
+        discount_percentage = get_discount_percentage(cart_total,discount)
         for item in cart_items:
             order_lines.append((0,0,{
                     'product_id':item.product_id,
                     'product_uom_qty':item.quantity,
                     'price_unit':item.get_price,
-                    'discount':discount
+                    'discount':discount_percentage,
                 }))
         vals = {
             'partner_id':partner_id or item.partner_id,

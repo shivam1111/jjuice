@@ -18,6 +18,7 @@ class CartItem(models.Model):
     user_id = models.ForeignKey(settings.AUTH_USER_MODEL,verbose_name="User",blank=True,
                                 db_column="user_id",
                                 related_name="user_cart_item_ids",null=True)
+    checkedout = models.NullBooleanField(verbose_name = "Checkedout ?",blank=True)
     class Meta:
         db_table = "cart_items"
         ordering = ("create_date",)

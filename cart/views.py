@@ -15,7 +15,6 @@ class Cart(View):
         back_url = request.get_full_path()
         back_url = quote(back_url.encode('utf-8'))
         back_url_name = "Cart"
-        cart_data = get_cart_data(request,True)
         return render(request,template_name,locals())
     
     def post(self,request,template_name="cart.html"):
@@ -39,7 +38,7 @@ class Cart(View):
             if action == "empty_cart":
                 cart_items = get_cart_items(request)
                 cart_items.delete()
-        cart_data = get_cart_data(request, True)
+        request.CART_DATA = get_cart_data(request,True)
         return render(request,template_name,locals())
 
 class AddToCart(View):
@@ -62,7 +61,9 @@ class AddToCart(View):
                 request.session.set_test_cookie()
             # url = urlresolvers.reverse('cart:show_cart')
             response.update({'error': False})
-            cart_data = get_cart_data(request,True)
+            cart_data = get_cart_data(request)
+            cart_data.pop('actual_cart_items')# actual cart items are django objects which are not json serializable hence we remove it
+            cart_data.pop('checkout_cart_items')
             cart_data.update({
                 'checkout_url':reverse('checkout:checkout',args=[]),
                 'authenticated':request.user.is_authenticated(),

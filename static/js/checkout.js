@@ -682,7 +682,12 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                                     }
                                     self.model.set({'next':true});
                                     self.model.set({'shipping_cost':dt.rate});
-                                    shipping_total.text("$"+dt.rate);
+                                    if (dt.rate == 0){
+                                        shipping_total.text("Free Shipping").css('color','green')
+                                    }else{
+                                        shipping_total.text("$"+dt.rate);
+                                    }
+
                                     self.calculate_total();
                                 }
                             },
@@ -817,8 +822,6 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                         }
                         switch(self.model.get('step')){
                             case 'step1':
-                                console.log("Billing Address:",self.billing_tab.address)
-                                console.log("Shipping  Address:",self.shipping_tab.address)
                                 self.execute_step1();
                                 break;
                         }
@@ -887,7 +890,11 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                     data = dt;
                 },
             }).done(function(){
-                payment_box.hide();
+                if (data.item_ids.length <= 0){
+                    left_side.append($(checkout_box({})))
+                    left_side.append($('<div class="col-md-12"><div class="alert center alert-warning" ><p>Oops! there is nothing to checkout</p></div></div>'))
+                    return
+                }
                 if (data.user){
                     left_side.append($(checkout_box({})))
                     var saved_shipping_address = new Checkout.Views.SavedAddress(data,'div#shipping.tab-pane','Shipping Details','shipping_address')
