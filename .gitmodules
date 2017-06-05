@@ -1,0 +1,3 @@
+[submodule "dicttoxml"]
+	path = dicttoxml
+	url = https://github.com/quandyfactory/dicttoxml.git
