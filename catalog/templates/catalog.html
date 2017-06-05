@@ -128,7 +128,7 @@
                                         </div>
                                         <div class="menu-cart-total">
                                             <span data-toggle="tooltip" data-original-title="3+1=4" >Grand Total </span>
-                                            <span class="price">{{ net_total|currency }}</span>
+                                            <span class="price">{{ request.CART_DATA.net_total|currency }}</span>
                                         </div>
 
                                         <div class="cart-action">
