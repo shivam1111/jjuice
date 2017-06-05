@@ -26,7 +26,7 @@
 				<div class="swiper-container product-slider-main">
                 	<div class="swiper-wrapper">
                 	   {% for product in products %}
-                        <div class="swiper-slide">
+                        <div class="swiper-slide" data-value="{{ product.conc_id.id }}">
                             <div class="easyzoom easyzoom--overlay">
                                 <a href="{{ product.get_image_url }}" title="">
                                     <img src="{{ product.get_image_url }}" alt="">

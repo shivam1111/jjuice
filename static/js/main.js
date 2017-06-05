@@ -218,10 +218,8 @@
         if (Modernizr && ! Modernizr.touch) {
             $('.easyzoom').easyZoom();
         }
-
         var sMain = new Swiper('.product-slider-main', {
             loop: false,
-
             nextButton: '.swiper-button-next',
             prevButton: '.swiper-button-prev'
         });

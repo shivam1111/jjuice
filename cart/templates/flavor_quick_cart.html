@@ -5,7 +5,7 @@
         <div class="product-media">
             <div class="product-quickview-slider owl-carousel owl-carousel-inset">
                {% for product in products %}
-                <div>
+                <div data-value="{{ product.conc_id.id }}" >
                     <img src="{{ product.get_image_url }}" alt="">
                 </div>
                 {% endfor %}                

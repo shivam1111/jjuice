@@ -2,6 +2,9 @@ define(['jquery','underscore','backbone','toastr','utils'],function($,_,Backbone
     var AddToCart = {
         Views:{},
     }
+
+
+
     var cart_menubar_template = 
     _.template('\
         <% if (cart_item_count == 0) { %>\
@@ -85,6 +88,10 @@ define(['jquery','underscore','backbone','toastr','utils'],function($,_,Backbone
         },
         start:function(){
             var self = this;
+            // Change the nicotine strength when we click on the images in the slider
+            $("div.swiper-button-next,div.swiper-button-prev,div.swiper-container.product-slider-thumbs").bind('click',function(e){
+                self.form.find("select#p_size[name='conc_id']").val($("div.swiper-slide.swiper-slide-active").data('value'))
+            })
             self.form.on("submit",function(){
                 event.preventDefault()
                 $.ajax({
