@@ -1,6 +1,5 @@
 from django.shortcuts import render,get_object_or_404,redirect
 from django.views import View
-from helper import safe_cast
 from urllib import quote
 import os,requests,json
 from django.conf import settings
@@ -14,6 +13,7 @@ from cart.cart import _cart_id,get_cart_items,create_sale_order_from_cart
 from cart.models import CartNote
 import xml.etree.ElementTree as ET
 from django.db.models import Q
+from datetime import datetime
 
 class OrderHistory(View):
     def get(self,request,template_name = "order_history.html"):
@@ -127,7 +127,6 @@ class RunPayments(View):
             '''%(api_key,token_id)
             result = requests.post('https://secure.nmi.com/api/v2/three-step', data=xml_string, headers=headers)
             tree = ET.fromstring(result.text)
-            print result.text
             result_code = tree.find('result-code').text
             if result_code == "100":
                 # Transaction Was Successfull and now redirect the user to acknowledgement page
@@ -163,6 +162,9 @@ class GetShippingRates(View):
             'error':True,
             'msg':'The Cart is Empty.',
         }
+        dob = request.GET.get('dob',"0000-00-00")
+        dob_parse = datetime.strptime(dob, "%Y-%m-%d")
+        requests.post('https://api.agechecker.net/v1/create', data=xml_string, headers=headers)
         cart = get_cart_items(request)
         if cart.exists():
             cart_items = map(lambda x: (x.product_id, x.quantity), cart)
@@ -343,6 +345,7 @@ class Checkout(View):
         countries_list = map(lambda x: (x.id, x.name), country_allowed_shipping)
         address = False
         shipping_allowed = True
+        age_checked = False
         if request.user.is_authenticated:
             states_list = []
             partner = request.user.odoo_user.partner_id

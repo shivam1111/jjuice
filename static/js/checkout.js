@@ -116,6 +116,12 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                                 <input type="text" class="form-control dark" name="phone"  id="phone" value="<%=address.phone%>" placeholder="Contact Number.">\
                             </div><!-- /.form-group -->   \
                         <% } %>\
+                        <% if (adr_key == "shipping_address") { %>\
+                            <div class="form-group">\
+                                <label for="dob">DOB</label>\
+                                <input required type="date" id = "dob" name="dob" class="form-control" id="dob">\
+                            </div><!-- /.form-group -->\
+                        <% } %>\
                         <div class="form-group">\
                             <label for="street">Address*</label>\
                             <input type="text" class="form-control dark" value="<%=address.street%>" required id="street" placeholder="Street Address" name="street">\

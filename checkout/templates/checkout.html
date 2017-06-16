@@ -4,7 +4,6 @@
 {% load static %}
 {% load thumbnail %}
 {% load flavor_grid_view %}
-
 {% block load_javascript %}
     if (!getCookie("ac_custom_verified")){
         var config = {
@@ -34,8 +33,9 @@
     }
     $('a[title]').tooltip();
 {% endblock %}
+
 {% block site_main %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/checkout.css' %}">.
+<link rel="stylesheet" type="text/css" href="{% static 'css/checkout.css' %}">
 <style>
 body, html {
     height: 100%;
@@ -165,8 +165,23 @@ body, html {
 .forgot-password:focus{
     color: rgb(12, 97, 33);
 }
-
 </style>
+<!--<div id="dob-popup" class="white-popup login-popup mfp-hide">-->
+    <!--<div role="tabpanel">-->
+        <!--<ul class="nav nav-tabs text-center" role="tablist">-->
+            <!--<h3 >Date of Birth</h3>-->
+        <!--</ul>&lt;!&ndash; /.nav &ndash;&gt;-->
+    <!--</div>-->
+    <!--<div class="tab-content">-->
+        <!--<form action="{% url 'checkout:checkout' %}" method="GET" id="dob-popup-form">-->
+            <!--<div class="form-group">-->
+                <!--<label for="dob">Account</label>-->
+                <!--<input required type="date" name="dob" class="form-control" id="dob">-->
+            <!--</div>&lt;!&ndash; /.form-group &ndash;&gt;-->
+        <!--</form>-->
+    <!--</div>-->
+<!--</div>-->
+
 <div class="main-header background background-image-heading-checkout" style="background-image: url({{checkout_banner_url}});">
     <div class="container">
         <h1>Checkout</h1>

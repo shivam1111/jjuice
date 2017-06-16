@@ -2,6 +2,7 @@
 {% load static %}
 <div class="white-popup product-quickview-popup">
     <div class="product">
+        {% if not request.is_mobile or request.is_phone or request.is_table %}
         <div class="product-media">
             <div class="product-quickview-slider owl-carousel owl-carousel-inset">
                {% for product in products %}
@@ -11,7 +12,7 @@
                 {% endfor %}                
             </div>
         </div><!-- /.product-media -->
-
+        {% endif %}
         <div class="product-body">
             <h2 class="product-name">
                 <a href="{% url 'catalog:flavor' id=flavor.id %}?volume_id={{ volume_id }}" title="{{ flavor.name }}"> {{ flavor.name }}</a>

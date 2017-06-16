@@ -138,6 +138,7 @@ class State(models.Model):
 class Partner(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(verbose_name="Name",blank=False,max_length = 50)
+    birth_date = models.DateField(verbose_name = "DOB",blank=True,null=True)
     image = models.BinaryField(verbose_name = "Image",db_column="image")
     is_company = models.NullBooleanField("Is Company?")
     active = models.NullBooleanField("Active")
