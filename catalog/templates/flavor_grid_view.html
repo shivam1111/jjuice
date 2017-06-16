@@ -8,21 +8,22 @@
                  <!--<img src="{% static './img/samples/products/index/clothing/2.jpg' %}" alt=""> -->
              </a>
          </div><!-- /.product-thumbnail -->
+         {% if not request.is_mobile or request.is_phone or request.is_table %}
          <div class="product-hover">
              <div class="product-actions">
                  <a href="{% url 'cart:quick_show_cart' id=flavor_id.id %}?volume_id={{ current_volume.id }}" class="awe-button product-quick-view" data-toggle="tooltip" title="Add to cart">
                      <i class="icon icon-shopping-bag"></i>
                  </a>
-                 {% if not request.is_mobile or request.is_phone or request.is_table %}
+
                  <a  class="awe-button product-quick-whistlist" data-toggle="tooltip" title="Price">
                      ${% call_method flavor_id 'get_price' user=request.user volume=current_volume %}
                  </a>
-                 {% endif %}
                  <a href="{% url 'catalog:flavor_quick_view' id=flavor_id.id %}?volume_id={{ current_volume.id }}" class="awe-button product-quick-view" data-toggle="tooltip" title="Quickview">
                      <i class="icon icon-eye"></i>
                  </a>
         	    </div>
          </div><!-- /.product-hover -->
+         {% endif %}
 <!--              <span class="product-label hot">
              <span>hot</span>
          </span> -->
