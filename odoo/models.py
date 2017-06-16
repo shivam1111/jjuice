@@ -128,6 +128,7 @@ class State(models.Model):
                                      db_column="country_id",
                                      related_name="country_state_ids")
     id = models.IntegerField(primary_key=True)
+    is_banned = models.NullBooleanField(verbose_name="Is Banned")
     
     _DATABASE = "odoo"    
     class Meta:

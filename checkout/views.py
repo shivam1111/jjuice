@@ -13,6 +13,7 @@ from odoo_helpers import OdooAdapter
 from cart.cart import _cart_id,get_cart_items,create_sale_order_from_cart
 from cart.models import CartNote
 import xml.etree.ElementTree as ET
+from django.db.models import Q
 
 class OrderHistory(View):
     def get(self,request,template_name = "order_history.html"):
@@ -264,7 +265,7 @@ class GetData(View):
     def get(self,request):
         name = self._name
         if request.GET.get('states_list',False):
-            states_list = Country.objects.get(pk=request.GET.get('states_list',False)).country_state_ids.all()
+            states_list = Country.objects.get(pk=request.GET.get('states_list',False)).country_state_ids.filter(Q(is_banned__isnull=True) | Q(is_banned = False))
             states_list =  dict(map(lambda x: (x.id,x.name),states_list))
             return JsonResponse(data={request.GET.get('states_list',False):states_list},status=200,safe=True)
         response = {
