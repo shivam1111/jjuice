@@ -55,4 +55,5 @@ class CartNote(models.Model):
     cart_id = models.UUIDField(editable=False)
     note  = models.TextField(verbose_name="Note",blank=False)
     shipping_cost = models.FloatField(verbose_name = "Shipping Cost",default=0.00)
+    promotion_code = models.CharField(verbose_name = "Promotion Code",blank=True,null=True,max_length = 30)
     

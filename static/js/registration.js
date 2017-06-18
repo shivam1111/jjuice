@@ -131,7 +131,6 @@ require(['toastr','recaptcha'],function(toastr){
                     registration_form.find('select#state_id').append($(template({'name':val,'value':key})))
                 });
             }
-            console.log(states_list)
             if (_.has(states_list,country_id)){
                 _onchange_country_id(states_list[country_id])
                 return $.Deferred().resolve()

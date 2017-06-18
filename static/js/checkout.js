@@ -868,6 +868,7 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                             'shipping_cost':parseFloat(self.shipping_tab.model.get('shipping_cost')) || 0.00,
                             'shipping_address':self.shipping_tab.address.attributes,
                             'billing_address':self.billing_tab.address.attributes,
+                            'promotion_code':self.$el.find("input[name='couponCode']").val(),
                         }),
                         type:'POST',
                         headers:{

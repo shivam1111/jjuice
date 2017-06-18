@@ -190,7 +190,6 @@ class ResUsers(models.Model):
         managed=False
         db_table = "res_users"
     
-
 class VolumePricesLine(models.Model):
     id = models.IntegerField(primary_key=True)
     product_attribute = models.ForeignKey(ProductAttributeValue,db_column="product_attribute",verbose_name="Product Attribute",blank=False)
@@ -200,6 +199,17 @@ class VolumePricesLine(models.Model):
     class Meta:
         managed=False
         db_table = "volume_prices_line"
+
+class PromotionCodes(models.Model):
+    id = models.IntegerField(primary_key=True)
+    name = models.CharField(verbose_name = "Code",blank=False,max_length=30)
+    description = models.TextField(verbose_name = "Description")
+    _DATABASE = "odoo"
+
+    class Meta:
+        managed = False
+        db_table = "promotion_codes"
+
 
 country_ids = Country.objects.all().order_by('name').reverse()
 country_allowed_shipping = country_ids.filter(is_shipping_allowed=True)

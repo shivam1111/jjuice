@@ -46,6 +46,7 @@ class RunPayments(View):
         note,created = CartNote.objects.get_or_create(cart_id=_cart_id(request))
         note.note = params.get('note','')
         note.shipping_cost = params.get('shipping_cost',0.00)
+        note.promotion_code = params.get('promotion_code',"")
         note.save()
         if step == "step1":
             total = params.get('total',0.00)
@@ -116,6 +117,7 @@ class RunPayments(View):
     
     def get(self,request):
         token_id  = request.GET.get('token-id',False)
+        response = JsonResponse(data={},status=404,safe=True)
         if (token_id):
             headers = {'Content-Type': 'text/xml'}
             api_key = IrConfigParameters.objects.get_param('nmi_key','No key')
@@ -146,7 +148,11 @@ class RunPayments(View):
                 order=False
                 display_transaction_status = True
                 return render(request,'order_acknowledgement.html',locals())
-        return JsonResponse(data={},status=404,safe=True)
+
+        if not request.user.is_authenticated:
+            # Delete the age verification cookie if it is guest user checkout
+            response.delete_cookie('ac_custom_verified')
+        return response
         
         
 

@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect,Http404
 from helper import safe_cast,is_user_business,get_prices,get_products_availability
 import decimal,uuid
-from odoo.models import ProductAttributeValue
+from odoo.models import ProductAttributeValue,PromotionCodes
 from odoo_helpers import OdooAdapter
 from django.db.models import Q
 
@@ -134,6 +134,13 @@ def create_sale_order_from_cart(request,prtnr=False,**kwargs):
         elif request.user.is_authenticated():
             partner_id = request.user.odoo_user.partner_id.id
         note = get_cart_note(request)
+        promotion_id = False
+        if note:
+            try:
+                promotion_object = PromotionCodes.objects.get(name=note.promotion_code)
+                promotion_id  = promotion_object.id
+            except PromotionCodes.DoesNotExist:
+                pass
         odoo_adapter = OdooAdapter()
         cart_total = get_cart_total(cart_items)
         discount = get_cart_discount(cart_items, request)
@@ -151,6 +158,7 @@ def create_sale_order_from_cart(request,prtnr=False,**kwargs):
             'origin':transaction_id and  "Transaction ID - %s"%(transaction_id) or '',
             'note':note and note.note or '',
             'shipping_cost':note and note.shipping_cost or 0.00,
+            'promotion_id':promotion_id
         }
         order = odoo_adapter.execute_method('sale.order','create_sale_order_from_cart',[vals])
     return order
