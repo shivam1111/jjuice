@@ -114,15 +114,15 @@ require(['toastr','recaptcha'],function(toastr){
         registration_form.find("select#country_id").on("change",function(e){
             var country_id = $(this).val();
             var code = $(this).find('option:selected').attr('name');
-            if (code != 'US'){
-                registration_form.find("select#state_id").replaceWith('<input type="text" class="form-control dark" required name="state_id"\
-                                                                       id="state_id" placeholder="State" />')
-                return
-            }else{
-                registration_form.find("input#state_id").replaceWith('<select name="state_id" required placeholder="Select State" id="state_id" class="form-control dark">\
-                                                                        <option disabled selected value> -- select a state -- </option>\
-                                                                     </select>')
-            }
+//            if (code != 'US'){
+//                registration_form.find("select#state_id").replaceWith('<input type="text" class="form-control dark" required name="state_id"\
+//                                                                       id="state_id" placeholder="State" />')
+//                return
+//            }else{
+//                registration_form.find("input#state_id").replaceWith('<select name="state_id" required placeholder="Select State" id="state_id" class="form-control dark">\
+//                                                                        <option disabled selected value> -- select a state -- </option>\
+//                                                                     </select>')
+//            }
             function _onchange_country_id(states){
                 registration_form.find('select#state_id').empty();
                 var template = _.template('<option value="<%=name%>" ><%=value%></option>')
@@ -131,8 +131,9 @@ require(['toastr','recaptcha'],function(toastr){
                     registration_form.find('select#state_id').append($(template({'name':val,'value':key})))
                 });
             }
+            console.log(states_list)
             if (_.has(states_list,country_id)){
-                _onchange_country_id(self.data.state_ids[country_id])
+                _onchange_country_id(states_list[country_id])
                 return $.Deferred().resolve()
             }else{
                 $.ajax({

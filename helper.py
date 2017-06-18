@@ -91,10 +91,12 @@ def login(request):
     if form.is_valid():
         auth_login(request, form.get_user())
         auth = True
-    request.session[CART_ID_SESSION_KEY] = cart_id
-    return JsonResponse(data={
+    response = JsonResponse(data={
             'auth':auth
-        },status=200)    
+        },status=200)
+    response.set_cookie(CART_ID_SESSION_KEY,cart_id)
+    response.delete_cookie('as_custom_verified')
+    return response
 
 def get_states_list(country):
     from odoo.models import Country

@@ -167,11 +167,11 @@ class Partner(models.Model):
                                                                                      ('website','Online Store'),('convenient_gas_store','Convenient Store/Gas Store'),
                                                                                  ])
     def save(self,*args,**kwargs):
-        current_partner = self 
+        current_partner = self
         while not current_partner.is_company and current_partner.parent_id:
             current_partner = current_partner.parent_id
         self.commercial_partner_id = current_partner
-        super(Partner, self).save(*args, **kwargs)        
+        super(Partner, self).save(*args, **kwargs)
     
     _DATABASE = "odoo"    
     

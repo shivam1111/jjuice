@@ -154,22 +154,62 @@ class GetShippingRates(View):
     _name = "Get Shipping Rates"
     
     def get(self,request):
+        country_id = int(request.GET.get('country_id',False))
+        state_id = int(request.GET.get('state_id',False))
         address = {
-            'country_id':int(request.GET.get('country_id',False)),
+            'country_id':country_id,
             'zip':request.GET.get('zip',False),
         }
         response = {
             'error':True,
             'msg':'The Cart is Empty.',
         }
-        dob = request.GET.get('dob',"0000-00-00")
+        dob = request.GET.get('dob', "0000-00-00")
         dob_parse = datetime.strptime(dob, "%Y-%m-%d")
-        requests.post('https://api.agechecker.net/v1/create', data=xml_string, headers=headers)
+        if not request.COOKIES.get('ac_custom_verified'):
+            country = Country.objects.get(pk=country_id)
+            state = State.objects.get(pk=state_id)
+            data_verify = {
+                "key": request.agechecker.get('key',""),
+                "data": {
+                    "address": request.GET.get('street','No Address'),
+                    "city": request.GET.get('city','No City'),
+                    "country": country.code,
+                    "dob_day": dob_parse.day,
+                    "dob_month": dob_parse.month,
+                    "dob_year": dob_parse.year,
+                    "first_name": request.GET.get('name','No Name'),
+                    "last_name": "",
+                    "state": state.code, # Accepts only two characters
+                    "zip": request.GET.get('zip','No zip')
+                }
+            }
+            headers = {'Content-Type': 'application/json'}
+            res = requests.post('https://api.agechecker.net/v1/create', data=json.dumps(data_verify), headers=headers)
+            res = res.json()
+            response.update({
+                'agechecker':{
+                    'data':data_verify,
+                    'response':res,
+                }
+            })
+        else:
+            response.update({
+                'agechecker':{
+                    'response':{'status':'accepted'},
+                }
+            })
+        # {"uuid": "MnZFkxUiOjgC1tZVkzn7XcfX6Tmhs2S6", "status": "photo_id"}
+        # {u'error': {u'message': u'Invalid data length.', u'code': u'invalid_data_length'}}
+        # {u'error': {u'message': u'DOB is below the minimum age of 18', u'code': u'user_underage'}}
+        # {u'status': u'accepted', u'uuid': u'lT2jwXSlIDvGSyc4bbGK38W0TbshkN2C'}
         cart = get_cart_items(request)
         if cart.exists():
             cart_items = map(lambda x: (x.product_id, x.quantity), cart)
             cart_total = float(request.GET.get('cart_total',0))
             is_business = is_user_business(request.user)
+            if request.user.is_authenticated:
+                Partner.objects.filter(id=request.user.odoo_user.partner_id.id).update(birth_date=dob_parse)
             if is_business:
                 type = None
                 if request.user.is_authenticated():
@@ -278,6 +318,8 @@ class GetData(View):
             'country_ids': {},
             'state_ids': {},
             'item_ids':[],
+            'age_checked':request.COOKIES.get('ac_custom_verified',False),
+            'dob':False,
         }
         for i in country_allowed_shipping:
             response['country_ids'].update(
@@ -292,6 +334,9 @@ class GetData(View):
             partner = request.user.odoo_user.partner_id
             shipping_partner = partner.child_ids.filter(type='delivery')[:1]
             billing_partner = partner.child_ids.filter(type='invoice')[:1]
+            response.update({
+              'dob':partner.birth_date,
+            })
             if not shipping_partner.exists():
                 shipping_partner = partner 
             else:
@@ -345,7 +390,7 @@ class Checkout(View):
         countries_list = map(lambda x: (x.id, x.name), country_allowed_shipping)
         address = False
         shipping_allowed = True
-        age_checked = False
+        age_checked = request.COOKIES.get('ac_custom_verified',False)
         if request.user.is_authenticated:
             states_list = []
             partner = request.user.odoo_user.partner_id

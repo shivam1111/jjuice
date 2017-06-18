@@ -4,33 +4,35 @@
 {% load static %}
 {% load thumbnail %}
 {% load flavor_grid_view %}
+{% block headers %}
+<noscript><meta http-equiv="refresh" content="0;url=https://agechecker.net/noscript"></noscript>
+<script>
+(function(w,d) {
+  var config = {
+        key: "{{ request.agechecker.key }}",
+        name: "{{ request.agechecker.name }}",
+        mode:"manual",
+        onclosed: function() {
+            setCookie("ac_custom_verified", true);
+            location.reload();
+        }
+  };
+    window.AgeCheckerConfig=config;
+    if(config.path&&(window.location.pathname+window.location.search).indexOf(config.path)) return;
+    var h=document.getElementsByTagName("head")[0];
+    var a=document.createElement("script");
+    a.src="https://api.agechecker.net/v1/static/index.js";
+    a.crossOrigin="anonymous";
+    a.onerror=function(a){
+        window.location.href="https://agechecker.net/loaderror";
+    };
+    h.insertBefore(a,h.firstChild);
+})(window, document);
+</script>
+{% endblock %}
+
 {% block load_javascript %}
-    if (!getCookie("ac_custom_verified")){
-        var config = {
-            mode: "manual",
-            key: "{{ request.agechecker.key }}",
-            name: "{{ request.agechecker.name }}",
-            onready: function() {
-                AgeCheckerAPI.show();
-            },
-            onclosed: function() {
-                setCookie("ac_custom_verified", true);
-                location.reload();
-            }
-        };
-        window.AgeCheckerConfig=config;
-        if(config.path&&(window.location.pathname+window.location.search).indexOf(config.path)) return;
-        var h=document.getElementsByTagName("head")[0];
-        var a=document.createElement("script");
-        a.src="https://api.agechecker.net/v1/static/index.js";
-        a.crossOrigin="anonymous";
-        a.onerror=function(a){
-            window.location.href="https://agechecker.net/loaderror";
-        };
-        h.insertBefore(a,h.firstChild);
-    }else{
-        require(['checkout'])
-    }
+    require(['checkout']);
     $('a[title]').tooltip();
 {% endblock %}
 

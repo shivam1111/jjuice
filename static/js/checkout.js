@@ -119,7 +119,7 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                         <% if (adr_key == "shipping_address") { %>\
                             <div class="form-group">\
                                 <label for="dob">DOB</label>\
-                                <input required type="date" id = "dob" name="dob" class="form-control" id="dob">\
+                                <input required type="date" id = "dob" name="dob" <%if(dob){%>value="<%=dob%>"<%}%> class="form-control" id="dob">\
                             </div><!-- /.form-group -->\
                         <% } %>\
                         <div class="form-group">\
@@ -296,10 +296,12 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                         'adr_key':self.adr_key,
                         'csrftoken':csrftoken,
                     }))
-                    this.$el.append(this.form_address)
-                    this.start()
+
                     this.$el.append(this.form_address);
                     self.start();
+                    if ($("input[type='date']").prop('type') !== 'date') {
+                        $("input[type='date']").datepicker({dateFormat:"yy-mm-dd"});
+                    }
                 },
                 validate_billing:function(country_id){
                     var self = this;
@@ -482,6 +484,7 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                         'country_ids':data['country_ids'],
                         'adr_key':self.adr_key,
                         'csrftoken':csrftoken,
+                        'dob':self.data.dob,
                     }))
                     this.$el.append(this.form_address)
                     this.start()
@@ -660,10 +663,6 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                         if (!valid){
                             return
                         }
-                        if (!getCookie("ac_custom_verified")){
-                            toastr.error("Please refresh page and try again without bypassing age test")
-                            return
-                        }
                         var zip = self.form_address.find('form').find('input#zip')
                         $.ajax({
                             url:'/checkout/get_shipping_rates/',
@@ -683,6 +682,20 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                                     self.model.set({'next':false});
                                     return
                                 }else{
+                                    if (dt.agechecker.response.hasOwnProperty('status')){
+                                       switch(dt.agechecker.response.status){
+                                            case 'accepted':
+                                                setCookie("ac_custom_verified", true);
+                                                break;
+                                            case 'photo_id':
+                                                AgeCheckerAPI.show(dt.agechecker.response.uuid);
+                                                break;
+                                       }
+                                    }else if (dt.agechecker.response.hasOwnProperty('error')){
+                                        self.form_address.find('form').validate().showErrors({'dob':dt.agechecker.response.error.message})
+                                        toastr.error(dt.agechecker.response.error.message);
+                                        return
+                                    }
                                     if (dt.msg){
                                         toastr.success(dt.msg);
                                     }
@@ -693,7 +706,6 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                                     }else{
                                         shipping_total.text("$"+dt.rate);
                                     }
-
                                     self.calculate_total();
                                 }
                             },
@@ -817,6 +829,10 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                     self.$el.find("button#make_payment").on('click',function(event){
                         event.preventDefault();
                         event.stopImmediatePropagation();
+                        if (!getCookie("ac_custom_verified")){
+                            toastr.error("Please refresh page and try again without bypassing age test")
+                            return
+                        }
                         var valid = self.billing_tab.validate_billing()
                         if (!valid){
                             return
