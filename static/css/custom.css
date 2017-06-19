@@ -3,8 +3,14 @@
     height:80px;
 }
 
-@media screen and (max-width: 600px) {
-  .content-section.video-section {
+@media screen and (min-width: 920px) {
+  .max-width-display {
+    visibility: hidden;
+    display: none;
+  }
+}
+@media screen and (min-height: 824px) {
+  .max-height-display {
     visibility: hidden;
     display: none;
   }
