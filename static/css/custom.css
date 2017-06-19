@@ -3,17 +3,25 @@
     height:80px;
 }
 
-@media screen and (min-width: 920px) {
-  .max-width-display {
+@media screen and (max-width: 600px) {
+  .content-section.video-section {
     visibility: hidden;
     display: none;
   }
 }
+
+@media screen and (max-width: 670px) {
+  .max-width-display {
+     visibility: hidden;
+     display: none;
+   }
+ }
+
 @media screen and (min-height: 824px) {
   .max-height-display {
-    visibility: hidden;
-    display: none;
-  }
+     visibility: hidden;
+     display: none;
+   }
 }
 
 .error{
