@@ -104,7 +104,7 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                     <form action="." method = "POST" id = "<%= adr_key %>">\
                         <div class="form-group">\
                             <label for="name">Name <sup>*</sup></label>\
-                            <input type="text" class="form-control dark" name="name" required id="name" value="<%=address.name%>" placeholder="Name">\
+                            <input type="text" class="form-control dark" name="name" autofocus="autofocus" required id="name" value="<%=address.name%>" placeholder="Name">\
                         </div><!-- /.form-group -->   \
                         <% if (adr_key == "billing_address") { %>\
                             <div class="form-group">\
@@ -112,7 +112,7 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                                 <input type="email" class="form-control dark" name="email" required id="email" value="<%=address.email%>" placeholder="Email">\
                             </div><!-- /.form-group -->   \
                             <div class="form-group">\
-                                <label for="name">Contact No. <sup>*</sup></label>\
+                                <label for="name">Contact No.</label>\
                                 <input type="text" class="form-control dark" name="phone"  id="phone" value="<%=address.phone%>" placeholder="Contact Number.">\
                             </div><!-- /.form-group -->   \
                         <% } %>\
@@ -306,6 +306,9 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                 validate_billing:function(country_id){
                     var self = this;
                     var valid = self.form_address.find('form').valid();
+                    if (!valid){
+                        $("div.checkout-wrapper")[0].scrollIntoView(true);
+                    }
                     self.form_address.find('form').validate({
                         rules:{
                             name:{
@@ -400,6 +403,9 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                         data[$(e.target).attr('name')] = $(e.target).val()
                         self.address.set(data)
                     })
+                    self.listenTo(Checkout.Events.Checkout,'go_to_billing',function(){
+                        $("div.checkout-wrapper")[0].scrollIntoView(true);
+                    })
                     self.form_address.find("input[name='shipping_billing_same']").on('click',function(){
                         event.stopImmediatePropagation();
                         var checked = $(this).is(":checked");
@@ -493,6 +499,9 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                     var self = this;
                     var valid = self.form_address.find('form').valid();
                     var is_allowed_shipping=false;
+                    if (!valid){
+                        $("div.checkout-wrapper")[0].scrollIntoView(true);
+                    }
                     self.form_address.find('form').validate({
                         rules:{
                             name:{
@@ -620,6 +629,7 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                     self.form_address.find("button#go_to_billing").on('click',function(){
                         var country_id = self.form_address.find('form').find('select#country')
                         var valid = self.validate_shipping(parseInt(country_id.val()))
+                        Checkout.Events.Checkout.trigger('go_to_billing')
                         self.update_address(false).done(function(done){
                             if (self.model.get('next')){
                                 $("a[href='#shipping']").removeAttr('data-toggle');
