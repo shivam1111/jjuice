@@ -12,6 +12,7 @@
         key: "{{ request.agechecker.key }}",
         name: "{{ request.agechecker.name }}",
         mode:"manual",
+        debug:false,
         onclosed: function() {
             setCookie("ac_custom_verified", true);
         }
