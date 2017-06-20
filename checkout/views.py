@@ -62,6 +62,7 @@ class RunPayments(View):
             next_step = 'step2'
             if not request.user.is_authenticated():
                 shipping_address = params.get('shipping_address',False)
+                dob = shipping_address.get('dob', "0000-00-00")
                 billing_address = params.get('billing_address',False)
                 odoo_adapter = OdooAdapter()
                 partner = odoo_adapter.create('res.partner',{
@@ -73,6 +74,7 @@ class RunPayments(View):
                                                                     'email':billing_address.get('email',False),
                                                                     'phone':billing_address.get('phone',False),
                                                                     'notify_email':'none',
+                                                                    'birth_date':dob,
                                                                 })
                 shipping_partner = odoo_adapter.create('res.partner',{
                                             'name':shipping_address.get('name',"No Name"),
@@ -117,7 +119,6 @@ class RunPayments(View):
     
     def get(self,request):
         token_id  = request.GET.get('token-id',False)
-        response = JsonResponse(data={},status=404,safe=True)
         if (token_id):
             headers = {'Content-Type': 'text/xml'}
             api_key = IrConfigParameters.objects.get_param('nmi_key','No key')
@@ -140,19 +141,23 @@ class RunPayments(View):
                 cart_items = request.CART_DATA['actual_cart_items'].filter(checkedout=True)
                 cart_items.delete()
                 request.CART_DATA = get_cart_data(request)
-                return render(request,'order_acknowledgement.html',locals())
+                response = render(request,'order_acknowledgement.html',locals())
+                if not request.user.is_authenticated():
+                    # Delete the age verification cookie if it is guest user checkout
+                    response.delete_cookie('ac_custom_verified')
+                return response
             elif  result_code == "300":
                 return redirect('/') #if the transaction rerun by refreshing page then take that person out of that page to home page
             else:
                 # Transaction Was UnSuccessfull and now redirect the user to unsuccessfull page
                 order=False
                 display_transaction_status = True
-                return render(request,'order_acknowledgement.html',locals())
-
-        if not request.user.is_authenticated:
-            # Delete the age verification cookie if it is guest user checkout
-            response.delete_cookie('ac_custom_verified')
-        return response
+                response = render(request,'order_acknowledgement.html',locals())
+                if not request.user.is_authenticated():
+                    # Delete the age verification cookie if it is guest user checkout
+                    response.delete_cookie('ac_custom_verified')
+                return response
+        return HttpResponseNotFound()
         
         
 
@@ -162,6 +167,7 @@ class GetShippingRates(View):
     def get(self,request):
         country_id = int(request.GET.get('country_id',False))
         state_id = int(request.GET.get('state_id',False))
+        country = Country.objects.get(pk=country_id)
         address = {
             'country_id':country_id,
             'zip':request.GET.get('zip',False),
@@ -214,7 +220,7 @@ class GetShippingRates(View):
             cart_items = map(lambda x: (x.product_id, x.quantity), cart)
             cart_total = float(request.GET.get('cart_total',0))
             is_business = is_user_business(request.user)
-            if request.user.is_authenticated:
+            if request.user.is_authenticated():
                 Partner.objects.filter(id=request.user.odoo_user.partner_id.id).update(birth_date=dob_parse)
             if is_business:
                 type = None
