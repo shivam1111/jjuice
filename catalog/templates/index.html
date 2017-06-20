@@ -68,29 +68,6 @@
         {% else %}
         <div class="home-products padding-vertical-60">
             <div class="row">
-                <div class="col-md-3 col-sm-4 max-width-display">
-                    <div class="awe-media home-cate-media">
-                        <div class="awe-media-header">
-                            <div class="awe-media-image">
-                                <img src="{% static  'img/shop.jpg' %}" alt="">
-                            </div><!-- /.awe-media-image -->
-                            <div class="awe-media-overlay overlay-dark-50 fullpage">
-                                <div class="content">
-
-                                    <div class="fp-table text-left">
-                                        <div class="fp-table-cell">
-
-                                            <h2 class="upper">SHOP</h2>
-                                            <p class="margin-bottom-50">Size Does Matter</p>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div><!-- /.awe-media-overlay -->
-
-                        </div><!-- /.awe-media-header -->
-                    </div><!-- /.awe-media -->
-                </div>
                 <div class="col-md-9 col-sm-8">
                     <div class="products owl-carousel" data-items="{{ request.volumes_data|length }}">
                         {% for key,value in request.volumes_data.items %}
