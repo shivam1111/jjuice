@@ -6,12 +6,16 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
             Events:{},
         }
         $(document).ready(function(){
+            AgeCheckerAPI.show()
             var order_total = $("td#order_total");
             var shipping_total = $("td#shipping_total");
             var csrftoken = getCookie('csrftoken');
             var payment_box = $("div#payment_box");
             var left_side = $("div#left_side");
-            var ye=document.querySelector("meta[name=viewport]");
+            var ye = document.querySelector("meta[name=viewport]")
+            $(window).resize(function(e){
+                ye.setAttribute("content","width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0");
+            })
             var address_defaults = {
                     'name':'',
                     'street':'',
@@ -700,7 +704,7 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                                                 break;
                                             case 'photo_id':
                                                 AgeCheckerAPI.show(dt.agechecker.response.uuid);
-                                                ye.setAttribute("content","width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0");
+//                                                ye.setAttribute("content","width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0");
                                                 break;
                                        }
                                     }else if (dt.agechecker.response.hasOwnProperty('error')){
