@@ -63,6 +63,8 @@
 					 <div class="col-md-4 col-sm-4 col-xs-12">
 						{% flavor_grid_view request product.flavor_id product.vol_id back_url %}
 					</div>
+				{% empty %}
+					<p>Flavor Not Available</p>
 				{% endfor %} 						
 				
 				</div>
