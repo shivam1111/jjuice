@@ -120,7 +120,7 @@
 <section >
     <div class="container">
         <div class="padding-top-80">
-
+            {% if employees %}
             <div class="row">
                 <div class="col-md-8 col-md-offset-2">
                     <div class="section-header center">
@@ -129,6 +129,7 @@
                     </div><!-- /.section-header -->
                 </div>
             </div><!-- /.row -->
+            {% end %}
 
             <div class="row">
             	{% for emp in employees %}
