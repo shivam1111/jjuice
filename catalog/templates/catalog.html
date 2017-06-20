@@ -312,7 +312,7 @@
                                 <!-- <span>{{ media.caption }}</span>  you can use this also -->
                              <ul class="instagram-widget">
                                 {% instagram_user_recent_media vapejjuice %}
-                                {% for media in recent_media %}
+                                {% for media in recent_media|slice:":6" %}
                                 <li>
                                     <a href="{{ media.display_src }}" class="insta-photo target="_blank" title="{{ media.caption }}">
                                         <img src="data:image/jpg;base64,{% cache_resize_image_url media.thumbnail_src 70 70 %}" />  
