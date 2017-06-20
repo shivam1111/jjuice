@@ -89,10 +89,10 @@
                     require(['toastr','main','modrnizer','underscore','utils','awemenu','owlcarousel','jquery_ui',
                            'hidepwd','parallax','swiper','nanoscroller','jquery_countdown',
                            'easyzoom','masonry','imagesloaded',
-                           'isotope','gmaps','list','doc','validate','awe_horosen','bootstrap',
+                           'isotope','gmaps','list','doc','validate','awe_horosen',
                            ],function(toastr,main){
-                        require(['awe_carousel_branch','awe_carousel_blog','awe_carousel_products','awe_carousel_testimonial','registration'],function(){
-                            // $.widget.bridge('uitooltip', $.ui.tooltip);
+                           $.widget.bridge('uitooltip', $.ui.tooltip);
+                            require(['awe_carousel_branch','awe_carousel_blog','awe_carousel_products','awe_carousel_testimonial','registration','bootstrap'],function(){
                             toastr.options = {"closeButton": true}
                             {% block load_javascript %}
                             {% endblock %}
