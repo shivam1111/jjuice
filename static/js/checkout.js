@@ -6,7 +6,6 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
             Events:{},
         }
         $(document).ready(function(){
-            AgeCheckerAPI.show()
             var order_total = $("td#order_total");
             var shipping_total = $("td#shipping_total");
             var csrftoken = getCookie('csrftoken');
