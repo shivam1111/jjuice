@@ -27,10 +27,6 @@
                         <div class="policy-icon">
                             <img src="{{ x.get_image_url }}" />
                         </div>
-                        <div class="policy-text text-center" style="display:block;text-align:center;">
-                            <h4>{{ x.name }}</h4>
-                            <p>{{ x.description|default_if_none:"" }}</p>
-                        </div>
                     </div>
                 </div>
                 {% endfor %}
