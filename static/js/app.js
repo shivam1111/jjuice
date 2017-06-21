@@ -42,7 +42,8 @@ require.config({
         'awe_horosen':'awe-hosoren',
         'bootstrap':'plugins/bootstrap.min',
         'YTPlayer':'plugins/jquery.mb.YTPlayer',
-        'add_to_cart':"add_to_cart"
+        'add_to_cart':"add_to_cart",
+        'blockui':'jquery.blockUI',
     },
     shim:{
         add_to_cart:{

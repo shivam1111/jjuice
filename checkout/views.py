@@ -147,7 +147,7 @@ class RunPayments(View):
                     response.delete_cookie('ac_custom_verified')
                 return response
             elif  result_code == "300":
-                return redirect('/') #if the transaction rerun by refreshing page then take that person out of that page to home page
+                return redirect(reverse('catalog:catalog_home', args=[])) #if the transaction rerun by refreshing page then take that person out of that page to home page
             else:
                 # Transaction Was UnSuccessfull and now redirect the user to unsuccessfull page
                 order=False

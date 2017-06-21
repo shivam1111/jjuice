@@ -1,4 +1,4 @@
-require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],function(Backbone,_,toastr,X2JS){
+require(['backbone','underscore','toastr','xml2json','payment_ui','stripe','blockui'],function(Backbone,_,toastr,X2JS){
     $(function(){
         Checkout = {
             Models : {},
@@ -55,7 +55,6 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
             var checkout_box =
             _.template('\
             <div class="board" style = "height:100%;">\
-                <!-- <h2>Welcome to IGHALO!<sup>™</sup></h2>-->\
                     <div class="board-inner">\
 	                    <ul class="nav nav-tabs" id="myTab">\
 		                    <div class="liner"></div>\
@@ -186,12 +185,6 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                                 <% }) %>\
                             </select>\
                         </div><!-- /.form-group -->\
-                        <% if (adr_key == "billing_address") { %>\
-                            <div class = "form-group">\
-                                <label for="note">Order Notes</label>\
-                                <textarea class="form-control" name = "note" id = "note"></textarea>\
-                            </div>\
-                        <% } %>\
                         <p class="text-right" >\
                             <% if (adr_key == "billing_address") { %>\
                                 <button type="button" id = "go_to_shipping" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i>    Go Back to Shipping</a></button>\
@@ -879,15 +872,23 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                         data:JSON.stringify({
                             'step':self.model.get('step'),
                             'total':self.model.get('order_total'),
-                            'note':self.billing_tab.address.get('note') || '',
+                            'note':self.$el.find("textarea[name='note']").val() || '',
                             'shipping_cost':parseFloat(self.shipping_tab.model.get('shipping_cost')) || 0.00,
                             'shipping_address':self.shipping_tab.address.attributes,
                             'billing_address':self.billing_tab.address.attributes,
-                            'promotion_code':self.$el.find("input[name='couponCode']").val(),
+                            'promotion_code':self.$el.find("input[name='couponCode']").val() || '',
                         }),
                         type:'POST',
                         headers:{
                             'X-CSRFToken':csrftoken,
+                        },
+                        beforeSend:function(){
+                            $.blockUI({
+                                    centerY: 0,
+                                    message:null,
+                                    css: { top: '10px', left: '', right: '10px' },
+                            });
+                            toastr.info("Please wait while the payment is being processed! Thankyou")
                         },
                         error:function(dt){
                             //error
@@ -911,6 +912,9 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe'],func
                                 return;
                             }
                         },
+                        complete:function(){
+                            $.unblockUI();
+                        }
                     })
                 },
             })
