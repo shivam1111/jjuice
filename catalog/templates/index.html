@@ -170,8 +170,7 @@
                 <div class = "center" >
                     {% if review.partner_id.image %}
                         <img src="data:image/jpg;base64,{{ review.partner_id.image }}" alt="" style="height:80px;width:90px;">
-                        
-                    {% else %}                        
+                    {% else %}
                         <img src="{% static 'img/samples/brands/brand-1.png' %}" style="height:80px;width:90px;" alt="">
                     {% endif %}
                 </div>
@@ -179,41 +178,8 @@
             </div><!-- /.brands-carousel -->
         </div><!-- /.container -->
     </div><!-- /.section-brands -->
-
-</section><!-- /section --> 
-
-<section>
-    <div class="container">
-        <div class="margin-bottom-50 margin-top-50">
-            <div class="subscible-wrapper subscible-inline">
-                <div class="row">
-                    <div class="col-md-2">
-                        <h3 class="subscribe-title">Subscribe newsletter</h3>
-                    </div>
-
-                    <div class="col-md-4">
-                        <div class="subscribe-comment">
-                            <p>Subscripte to our newsletter to get the updated from upcoming flavors</p>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <form method="GET" action="{% url 'misc:newsletter' %}" class="subscible-form">
-                            {% csrf_token %}    
-                            <div class="form-group">
-                                <label class="sr-only" for="subscribe-email">Email</label>
-                                <input type="email" name="email"  required placeholder="Enter your email address" class="form-control" id="subscribe-email">
-                            </div>
-
-                            <div class="form-submit">
-                                <button class="btn btn-lg btn-primary" type="submit">Subscribe email</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div><!-- /.subscible-wrapper -->
-        </div>
-    </div><!-- /.container -->
 </section><!-- /section -->
+
 {% endblock %}
 {% block load_javascript %}
     $(document).ready(function () {
