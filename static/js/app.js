@@ -44,9 +44,13 @@ require.config({
         'YTPlayer':'plugins/jquery.mb.YTPlayer',
         'add_to_cart':"add_to_cart",
         'blockui':'jquery.blockUI',
+        'google_places':"https://cdn.rawgit.com/stevenmonson/googleReviews/6e8f0d79/google-places"
     },
     shim:{
         add_to_cart:{
+            'deps':['jquery'],
+        },
+        google_places:{
             'deps':['jquery'],
         },
         YTPlayer:{

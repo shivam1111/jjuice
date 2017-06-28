@@ -193,8 +193,19 @@
         </div><!-- /.container -->
     </div><!-- /.section-brands -->
 </section><!-- /section -->
-
+<section>
+    <link rel="stylesheet" href="https://cdn.rawgit.com/stevenmonson/googleReviews/6e8f0d79/google-places.css" >
+    <div class="container">
+        <div class="padding-vertical-10 border-bottom">
+            <div class="section-header center">
+                <h2>GOOGLE REVIEWS</h2>
+            </div><!-- /.section-header -->
+        </div>
+        <div id="google-reviews"></div>
+    </div>
+</section>
 {% endblock %}
+
 {% block load_javascript %}
 {% if not website_banner_ids.exists %}
     $(document).ready(function () {
@@ -207,4 +218,15 @@
 {% else %}
     aweMainSlider();
 {% endif %}
+    require(['google_places'],function(){
+        jQuery(document).ready(function( $ ) {
+           $("#google-reviews").googlePlaces({
+                placeId: 'ChIJ8fkQiRuHUocRY5C2NInZEQ0' //Find placeID @: https://developers.google.com/places/place-id
+              , render: ['reviews']
+              , min_rating: 4
+              , max_rows:4
+           });
+        });
+    })
+
 {% endblock %}
