@@ -2,8 +2,8 @@
 {% load static %}
 {% load flavor_grid_view %}
 {% block site_main %}
-{% if not request.is_mobile or request.is_phone or request.is_table %}
 <!--Video Section-->
+{% if not website_banner_ids.exists %}
 <section class="content-section video-section">
     <div class="pattern-overlay">
         <a id="bgndVideo" class="player" data-property="{videoURL:'https://www.youtube.com/watch?v=3LTJXcvz2ro',containment:'.video-section', quality:'large', autoPlay:true, mute:true, opacity:1}">bg</a>
@@ -12,6 +12,20 @@
                 <div class="col-lg-12">
                 </div>
             </div>
+        </div>
+    </div>
+</section>
+{% else %}
+<section>
+    <div class="main-slider-wrapper">
+        <div class="main-slider owl-carousel owl-carousel-inset">
+            {% for banner in website_banner_ids %}
+            <div class="main-slider-item">
+                <div class="main-slider-image">
+                    <img src="{{ banner.get_image_url }}" alt="">
+                </div>
+            </div>
+            {% endfor %}
         </div>
     </div>
 </section>
@@ -182,6 +196,7 @@
 
 {% endblock %}
 {% block load_javascript %}
+{% if not website_banner_ids.exists %}
     $(document).ready(function () {
         require(['YTPlayer'],function(){
             $(document).ready(function () {
@@ -189,4 +204,7 @@
             });
         })
     })
+{% else %}
+    aweMainSlider();
+{% endif %}
 {% endblock %}

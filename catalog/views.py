@@ -38,6 +38,7 @@ class Index(View):
         customerreview_banner_url = os.path.join(settings.STATIC_URL,settings.PLACEHOLDER_BANNER_IMAGE)
         banner_record =  S3Object.objects.filter(customerreview_banner=True)[:1]
         featured_lines = S3Object.objects.filter(is_featured_item=True,attribute_id__in=request.volumes_available_ids)
+        website_banner_ids = WebsiteBanner.objects.filter(active=True)
         if is_user_business(request.user):
 
             promo_ids = eval(IrConfigParameters.objects.get_param('promo_business_ids','[]'))

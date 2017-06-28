@@ -36,6 +36,7 @@ class WebsiteBanner(models.Model):
     id = models.IntegerField(primary_key=True)
     sequence = models.IntegerField(verbose_name = "Sequence")
     file_name = models.CharField(verbose_name = "File Name", max_length=100)
+    active = models.NullBooleanField(verbose_name = "Active")
     
     def get_image_url(self):
         return create_aws_url(self._meta.db_table,str(self.id))
