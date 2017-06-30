@@ -90,6 +90,8 @@
         <script>
             require(['{% static 'js/app.js' %}'],function(){
                 require(['jquery'],function(){
+                    {% block load_javascript_quick %}
+                    {% endblock %}
                     require(['toastr','main','modrnizer','underscore','utils','awemenu','owlcarousel','jquery_ui',
                            'hidepwd','parallax','swiper','nanoscroller','jquery_countdown',
                            'easyzoom','masonry','imagesloaded',

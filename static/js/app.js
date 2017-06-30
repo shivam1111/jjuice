@@ -45,8 +45,12 @@ require.config({
         'add_to_cart':"add_to_cart",
         'blockui':'jquery.blockUI',
         'google_places':"plugins/google_places",
+        'facebook':'facebook',
     },
     shim:{
+        facebook:{
+            'deps':['jquery'],
+        },
         add_to_cart:{
             'deps':['jquery'],
         },

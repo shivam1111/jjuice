@@ -54,6 +54,15 @@ class Index(View):
                     pass
         if banner_record.exists():
             customerreview_banner_url = create_aws_url(banner_record[0]._meta.db_table,str(banner_record[0].id))
+
+        # Facebook
+        payload ={
+            'access_token':settings.FACEBOOK_ACCESSS_TOKEN,
+            'fields':"has_rating,has_review,rating,review_text,reviewer"
+        }
+        res = requests.get('https://graph.facebook.com/v2.9/vapejjuice/ratings',params=payload)
+        facebook = res.json()
+        star_range = range(0,5)
         return render(request,"index.html",locals())        
 
 class Volume(View):

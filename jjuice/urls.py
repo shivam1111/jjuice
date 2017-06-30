@@ -31,6 +31,7 @@ urlpatterns = [
     url(r'^accounts/', include('odoo_auth.urls',namespace="odoo_auth")),
     url(r'^accounts/', include('django.contrib.auth.urls',namespace="auth")),
     url(r'^checkout/', include('checkout.urls',namespace="checkout")),
+    url(r'^facebook/', include('facebook.urls',namespace="facebook")),
     # rpc4django will need to be in your Python path
     url(r'^RPC2$', serve_rpc_request),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
