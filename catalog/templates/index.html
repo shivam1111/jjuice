@@ -152,7 +152,7 @@
         </div><!-- /.padding-vertical-50 -->
     </div><!-- /.container -->
 </section><!-- /section -->
-
+{% if reviews|length > 0 %}
 <section class="background background-color-dark background-image-section-customers-say" style="background-image: url({{ customerreview_banner_url }}) !important;">
     <div class="container" >
         <div class="padding-top-60">
@@ -193,7 +193,7 @@
         </div><!-- /.container -->
     </div><!-- /.section-brands -->
 </section><!-- /section -->
-
+{% endif %}
 <section>
     <div class = "container">
         <div class="padding-top-60">
@@ -204,7 +204,7 @@
                 {% for review in facebook.data %}
                 <div class = "review-item col-md-2 col-xs-6"  style = "height:140px;">
                     <div class = "review-meta" >
-                        <img src="https://graph.facebook.com/{{review.reviewer.id}}/picture" style="border-radius: 25px;" class="padding-bottom" alt="">
+                        <img src="https://graph.facebook.com/{{review.reviewer.id}}/picture" style="border-radius: 50px;" class="padding-bottom" alt="">
                     </div>
                     <div class = "review-meta">
                         <span class="review-author">{{ review.reviewer.name }}</span>
