@@ -153,46 +153,46 @@
     </div><!-- /.container -->
 </section><!-- /section -->
 
-<!--<section class="background background-color-dark background-image-section-customers-say" style="background-image: url({{ customerreview_banner_url }}) !important;">-->
-    <!--<div class="container" >-->
-        <!--<div class="padding-top-60">-->
-            <!--<div class="section-header center">-->
-                <!--<h2>REVIEWS</h2>-->
-            <!--</div>&lt;!&ndash; /.section-header &ndash;&gt;-->
+<section class="background background-color-dark background-image-section-customers-say" style="background-image: url({{ customerreview_banner_url }}) !important;">
+    <div class="container" >
+        <div class="padding-top-60">
+            <div class="section-header center">
+                <h2>REVIEWS</h2>
+            </div><!-- /.section-header -->
 
-            <!--<div class="section-customers">-->
-                <!--<div class="row">-->
-                    <!--<div class="col-md-8 col-md-offset-2">-->
-                        <!--<div class="customers-carousel owl-carousel"  id="customers-carousel" data-toggle="carousel" data-dots="true" data-nav="0">-->
-                            <!--{% for review in reviews %}-->
-                            <!--<div class="center">-->
-                                <!--<h4>{{ review.partner_id.name }}</h4>-->
-                                <!--<p>“{{ review.review }}“</p>-->
-                            <!--</div>&lt;!&ndash; /.center &ndash;&gt;-->
-                            <!--{% endfor %}-->
-                        <!--</div>&lt;!&ndash; /.customers-say-carousel &ndash;&gt;-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>&lt;!&ndash; /.section-content &ndash;&gt;-->
-        <!--</div>-->
-    <!--</div>&lt;!&ndash; /.container &ndash;&gt;-->
+            <div class="section-customers">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2">
+                        <div class="customers-carousel owl-carousel"  id="customers-carousel" data-toggle="carousel" data-dots="true" data-nav="0">
+                            {% for review in reviews %}
+                            <div class="center">
+                                <h4>{{ review.partner_id.name }}</h4>
+                                <p>“{{ review.review }}“</p>
+                            </div><!-- /.center -->
+                            {% endfor %}
+                        </div><!-- /.customers-say-carousel -->
+                    </div>
+                </div>
+            </div><!-- /.section-content -->
+        </div>
+    </div><!-- /.container -->
 
-    <!--<div class="section-brands">-->
-        <!--<div class="container">-->
-            <!--<div class="brands-carousel owl-carousel" data-items="{{ reviews|length }}" id="brands-carousel">-->
-                <!--{% for review in reviews %}-->
-                <!--<div class = "center" >-->
-                    <!--{% if review.partner_id.image %}-->
-                        <!--<img src="data:image/jpg;base64,{{ review.partner_id.image }}" alt="" style="height:80px;width:90px;">-->
-                    <!--{% else %}-->
-                        <!--<img src="{% static 'img/samples/brands/brand-1.png' %}" style="height:80px;width:90px;" alt="">-->
-                    <!--{% endif %}-->
-                <!--</div>-->
-                <!--{% endfor %}-->
-            <!--</div>&lt;!&ndash; /.brands-carousel &ndash;&gt;-->
-        <!--</div>&lt;!&ndash; /.container &ndash;&gt;-->
-    <!--</div>&lt;!&ndash; /.section-brands &ndash;&gt;-->
-<!--</section>&lt;!&ndash; /section &ndash;&gt;-->
+    <div class="section-brands">
+        <div class="container">
+            <div class="brands-carousel owl-carousel" data-items="{{ reviews|length }}" id="brands-carousel">
+                {% for review in reviews %}
+                <div class = "center" >
+                    {% if review.partner_id.image %}
+                        <img src="data:image/jpg;base64,{{ review.partner_id.image }}" alt="" style="height:80px;width:90px;">
+                    {% else %}
+                        <img src="{% static 'img/samples/brands/brand-1.png' %}" style="height:80px;width:90px;" alt="">
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div><!-- /.brands-carousel -->
+        </div><!-- /.container -->
+    </div><!-- /.section-brands -->
+</section><!-- /section -->
 
 <section>
     <div class = "container">
