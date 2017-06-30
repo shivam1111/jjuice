@@ -8,7 +8,7 @@ flex-wrap:wrap;
 }
 
 .review-item {
-border:solid 1px rgba(190,190,190,.35);
+//border:solid 1px rgba(190,190,190,.35);
 margin:0 auto;
 padding:1em;
 flex: 1 1 20%;
