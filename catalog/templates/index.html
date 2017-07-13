@@ -194,15 +194,15 @@
     </div><!-- /.section-brands -->
 </section><!-- /section -->
 {% endif %}
-<section>
+<section class="elements-section overlay-dark-70 background background-image-heading-about-us" style="background-image: url({{ customerreview_banner_url }}) !important;">
     <div class = "container">
-        <div class="padding-top-60">
-            <div class="section-header center">
-                <h2>LATEST FACEBOOK RATINGS</h2>
-            </div><!-- /.section-header -->
-            <div class = "col-md-12">
-                {% for review in facebook.data %}
-                <div class = "review-item col-md-2 col-xs-6"  style = "height:140px;">
+        <div class="margin-bottom-80">
+            <h2 class="light white upper center spacing-5">Latest Facebook Reviews</h2>
+        </div>
+        <div class="owl-carousel white docs-carousel-3" data-toggle="carousel" data-items="3" data-auto-play="true" data-dots="true">
+            {% for review in facebook.data %}
+            <div class="center">
+                <div class="awe-box center">
                     <div class = "review-meta" >
                         <img src="https://graph.facebook.com/{{review.reviewer.id}}/picture" style="border-radius: 50px;" class="padding-bottom" alt="">
                     </div>
@@ -210,7 +210,7 @@
                         <span class="review-author">{{ review.reviewer.name }}</span>
                     </div>
                     {% if review.has_rating %}
-                        <div class = "review-stars" {% if review.has_review %} data-toggle="tooltip" data-original-title="{{ review.review_text }} {% endif %}">
+                        <div class = "review-stars">
                         <ul>
                             {% for star in star_range %}
                                 {% if star <= review.rating %}
@@ -222,12 +222,14 @@
                         </ul>
                     </div>
                     {% endif %}
-                    <!--{% if review.has_review %}-->
-                        <!--<p class = "review-text" >“{{ review.review_text }}“</p>-->
-                    <!--{% endif %}-->
+                    {% if review.has_review %}
+                    <div class="awe-box-content">
+                        <p style = "color: black !important;font-weight: 500;">{{ review.review_text }}</p>
+                    </div><!-- /.awe-box-content -->
+                    {% endif %}
                 </div>
-                {%  endfor %}
             </div>
+            {% endfor %}
         </div>
     </div>
 </section>
@@ -249,11 +251,8 @@
         </div>
     </div>
 </section>
-<section>
 
-</section>
 {% endblock %}
-
 
 {% block load_javascript %}
 {% if not website_banner_ids.exists %}
