@@ -215,7 +215,7 @@
                         </li>      		
                 		{% endfor %}
                 	</ol>
-                    {% if request.user.odoo_user.partner_id.review_ids.count <= 0 %}
+                    {% if review_count <= 0 %}
                     {% if request.user.is_authenticated %}
                 	<h3>Add a review</h3>
                     <form action="{% url 'catalog:flavor_review' %}" method="POST" >
@@ -274,7 +274,7 @@
                     </div>
                     {% endif %}
                     {% endif %}
-                </div>                
+                </div>
             </div>
     	</div>
     </div>
