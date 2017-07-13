@@ -432,7 +432,7 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe','bloc
                             var country_id = $(this).val();
                             return $.ajax({
                                 url:'/checkout/get_data/',
-                                data:{'states_list':$(this).val()}, // Send the country_id for the states_list
+                                data:{'states_list':$(this).val(),'banned':true}, // Send the country_id for the states_list
                                 cache:false,
                                 type:'GET',
                                 headers: {
@@ -739,7 +739,7 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe','bloc
                             var country_id = $(this).val();
                             return $.ajax({
                                 url:'/checkout/get_data/',
-                                data:{'states_list':$(this).val()}, // Send the country_id for the states_list
+                                data:{'states_list':$(this).val(),'banned':false}, // Send the country_id for the states_list | Also for shipping to banned states is not allowed
                                 cache:false,
                                 type:'GET',
                                 headers: {
@@ -888,10 +888,11 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe','bloc
                                     message:null,
                                     css: { top: '10px', left: '', right: '10px' },
                             });
-                            toastr.info("Please wait while the payment is being processed! Thankyou")
+                            toastr.info("Please wait while the payment is being processed!","THANKYOU",{timeOut: 30000})
                         },
                         error:function(dt){
                             //error
+                            $.unblockUI();
                             toastr.error("Sorry we were unable to process the request")
                         },
                         success:function(dt){
@@ -913,7 +914,7 @@ require(['backbone','underscore','toastr','xml2json','payment_ui','stripe','bloc
                             }
                         },
                         complete:function(){
-                            $.unblockUI();
+                            // complete
                         }
                     })
                 },

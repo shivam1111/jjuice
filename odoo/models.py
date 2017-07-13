@@ -205,6 +205,7 @@ class PromotionCodes(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(verbose_name = "Code",blank=False,max_length=30)
     description = models.TextField(verbose_name = "Description")
+    active = models.NullBooleanField("Active")
     _DATABASE = "odoo"
 
     class Meta:

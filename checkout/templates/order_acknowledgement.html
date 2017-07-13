@@ -25,6 +25,11 @@
 	       			{% if display_transaction_status %} 
 						<h4>Thank you very much for your purchase!</h4>
 					{% endif %}
+					{% if promotion_id %}
+						<h4 style="color:green;">Hurray! Promotion code was accepted successfully!</h4>
+					{% elif promotion_code %}
+						<h4 style="color:red;">Sorry! Promotion code - "{{ promotion_code }}"  rejected!</h4>
+					{% endif %}
 				{% else %}
 					{% if display_transaction_status %}
 						<i class="fa fa-times-circle fa-5x" aria-hidden="true" style="color:red"></i>

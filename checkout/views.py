@@ -141,6 +141,8 @@ class RunPayments(View):
                 cart_items = request.CART_DATA['actual_cart_items'].filter(checkedout=True)
                 cart_items.delete()
                 request.CART_DATA = get_cart_data(request)
+                promotion_id = order.get('promotion_id',False)
+                promotion_code = order.get('promotion_code', False)
                 response = render(request,'order_acknowledgement.html',locals())
                 if not request.user.is_authenticated():
                     # Delete the age verification cookie if it is guest user checkout
@@ -319,7 +321,10 @@ class GetData(View):
     def get(self,request):
         name = self._name
         if request.GET.get('states_list',False):
-            states_list = Country.objects.get(pk=request.GET.get('states_list',False)).country_state_ids.filter(Q(is_banned__isnull=True) | Q(is_banned = False))
+            if not request.GET.get('banned',True) or request.GET.get('banned',True) == "false":
+                states_list = Country.objects.get(pk=request.GET.get('states_list',False)).country_state_ids.filter(Q(is_banned__isnull=True) | Q(is_banned = False))
+            else:
+                states_list = Country.objects.get(pk=request.GET.get('states_list', False)).country_state_ids.all()
             states_list =  dict(map(lambda x: (x.id,x.name),states_list))
             return JsonResponse(data={request.GET.get('states_list',False):states_list},status=200,safe=True)
         response = {

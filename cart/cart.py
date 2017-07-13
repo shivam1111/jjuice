@@ -137,7 +137,7 @@ def create_sale_order_from_cart(request,prtnr=False,**kwargs):
         promotion_id = False
         if note:
             try:
-                promotion_object = PromotionCodes.objects.get(name=note.promotion_code)
+                promotion_object = PromotionCodes.objects.get(name=note.promotion_code,active=True)
                 promotion_id  = promotion_object.id
             except PromotionCodes.DoesNotExist:
                 pass
@@ -158,7 +158,8 @@ def create_sale_order_from_cart(request,prtnr=False,**kwargs):
             'origin':transaction_id and  "Transaction ID - %s"%(transaction_id) or '',
             'note':note and note.note or '',
             'shipping_cost':note and note.shipping_cost or 0.00,
-            'promotion_id':promotion_id
+            'promotion_id':promotion_id,
+            'promotion_code':note.promotion_code or False,
         }
         order = odoo_adapter.execute_method('sale.order','create_sale_order_from_cart',[vals])
     return order
