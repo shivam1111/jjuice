@@ -125,7 +125,8 @@ class Flavor(View):
         products = get_product_variants(flavor,volume_id)
         price = flavor.get_price(request.user,current_volume) 
         old_price = current_volume.old_price or 0
-        review_count = request.user.odoo_user.partner_id.review_ids.filter(flavor_id=flavor.id).count()
+        if request.user.is_authenticated:
+            review_count = request.user.odoo_user.partner_id.review_ids.filter(flavor_id=flavor.id).count()
         return render(request,template_name,locals())
     
 class FlavorQuickView(View):

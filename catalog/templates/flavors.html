@@ -215,8 +215,8 @@
                         </li>      		
                 		{% endfor %}
                 	</ol>
-                    {% if review_count <= 0 %}
                     {% if request.user.is_authenticated %}
+                    {% if review_count <= 0 %}
                 	<h3>Add a review</h3>
                     <form action="{% url 'catalog:flavor_review' %}" method="POST" >
                         {% csrf_token %}

@@ -78,6 +78,24 @@
                                 {% else %}
                                 <li>
                                     <div class="container-fluid">
+                                        <div class="menu-cart-action">
+                                            <a href="{% url 'cart:show_cart' %}" title="" class="btn btn-lg btn-dark btn-outline btn-block">View cart</a>
+                                            {% if request.user.is_authenticated %}
+                                                <a href="{% url 'checkout:checkout' %}" id = "proceed_to_checkout" title="Proceed to Checkout" class="btn btn-lg btn-primary btn-block">Proceed To Checkout</a>
+                                            {% endif %}
+                                        </div>
+                                        <div class="menu-cart-total" style = "border-bottom:none;">
+                                            <span>Gross Total</span>
+                                            <span class="price">{{ request.CART_DATA.cart_total|currency }}</span>
+                                        </div>
+                                        <div class="menu-cart-total" style = "border-bottom:none;">
+                                            <span >Discount (%) <i data-toggle="tooltip" data-original-title="3+1=4" class="fa fa-question-circle" aria-hidden="true"></i></span>
+                                            <span class="price">{{ request.CART_DATA.discount_percentage}}</span>
+                                        </div>
+                                        <div class="menu-cart-total">
+                                            <span data-toggle="tooltip" data-original-title="3+1=4" >Grand Total </span>
+                                            <span class="price">{{ request.CART_DATA.net_total|currency }}</span>
+                                        </div>
                                         <ul class="whishlist">
                                             {%  for key,value in request.CART_DATA.cart_items.items %}
                                             <li>
@@ -118,25 +136,6 @@
                                             </li>                                                
                                             {% endfor %}
                                         </ul>
-                                        <div class="menu-cart-total" style = "border-bottom:none;">
-                                            <span>Gross Total</span>
-                                            <span class="price">{{ request.CART_DATA.cart_total|currency }}</span>
-                                        </div>
-                                        <div class="menu-cart-total" style = "border-bottom:none;">
-                                            <span >Discount (%) <i data-toggle="tooltip" data-original-title="3+1=4" class="fa fa-question-circle" aria-hidden="true"></i></span>
-                                            <span class="price">{{ request.CART_DATA.discount_percentage}}</span>
-                                        </div>
-                                        <div class="menu-cart-total">
-                                            <span data-toggle="tooltip" data-original-title="3+1=4" >Grand Total </span>
-                                            <span class="price">{{ request.CART_DATA.net_total|currency }}</span>
-                                        </div>
-
-                                        <div class="cart-action">
-                                            <a href="{% url 'cart:show_cart' %}" title="" class="btn btn-lg btn-dark btn-outline btn-block">View cart</a>
-                                            {% if request.user.is_authenticated %}
-                                                <a href="{% url 'checkout:checkout' %}" id = "proceed_to_checkout" title="Proceed to Checkout" class="btn btn-lg btn-primary btn-block">Proceed To Checkout</a>
-                                            {% endif %}
-                                        </div>
                                     </div>
                                 </li>                                    
                                 {% endif %}                                
