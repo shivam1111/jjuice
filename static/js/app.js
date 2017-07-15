@@ -1,3 +1,4 @@
+var version = "1.0"
 // contents of main.js:
 require.config({
     baseUrl: '/static/js',
@@ -47,6 +48,7 @@ require.config({
         'google_places':"plugins/google_places",
         'facebook':'facebook',
     },
+    urlArgs: "v=" +  version,
     shim:{
         facebook:{
             'deps':['jquery'],
