@@ -40,10 +40,22 @@
     <div class="main-slider-wrapper">
         <div class="main-slider owl-carousel owl-carousel-inset">
             {% for banner in website_banner_ids %}
-            <div class="main-slider-item">
+            <div class="main-slider-item" onclick="window.location='{{banner.url_link|default_if_none:'#'}}'" style="cursor:pointer!important;">
                 <div class="main-slider-image">
                     <img src="{{ banner.get_image_url }}" alt="">
                 </div>
+                {% if banner.url_link %}
+                <div class="main-slider-text">
+                    <div class="fp-table">
+                        <div class="fp-table-cell center">
+                            <div class="container">
+                                <!--<h3>The Shoes For Summer</h3>-->
+                                <!--<h2>Shoes Vans<br>$160.00</h2>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
             </div>
             {% endfor %}
         </div>
