@@ -32,7 +32,7 @@ _SORT_BY = [
 
 class Index(View):
     def get(self,request,template_name="index.html"):
-        from misc.models import PartnerReviews
+        from misc.models import PartnerReviews,WebsiteNotifications
         promo_ids = policies = []
         reviews = PartnerReviews.objects.all().order_by('sequence')
         customerreview_banner_url = os.path.join(settings.STATIC_URL,settings.PLACEHOLDER_BANNER_IMAGE)
@@ -63,6 +63,7 @@ class Index(View):
         res = requests.get('https://graph.facebook.com/v2.9/vapejjuice/ratings',params=payload)
         facebook = res.json()
         star_range = range(0,5)
+        website_notifications = WebsiteNotifications.objects.filter(active=True)
         return render(request,"index.html",locals())        
 
 class Volume(View):

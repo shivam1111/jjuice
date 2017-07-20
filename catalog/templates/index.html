@@ -2,6 +2,26 @@
 {% load static %}
 {% load flavor_grid_view %}
 {% block site_main %}
+{% if website_notifications.exists %}
+<section>
+    <link rel="stylesheet" href="{% static 'css/marquee.css' %}">
+    <link rel="stylesheet" href="{% static 'css/notification_slider.css' %}">
+    <div class="content">
+        <div class="simple-marquee-container">
+            <div class="marquee-sibling">
+                Important Notifications
+            </div>
+            <div class="marquee">
+                <ul class="marquee-content-items">
+                    {% for x in website_notifications %}
+                        <li>{{x.name }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
 <!--Video Section-->
 {% if not website_banner_ids.exists %}
 <section class="content-section video-section">
@@ -30,7 +50,6 @@
     </div>
 </section>
 {% endif %}
-
 <section>
     <div class="container">
         <div class="policy-wrapper border-bottom">
@@ -276,5 +295,9 @@
            });
         });
     })
-
+{% if website_notifications.exists %}
+    require(['marquee'],function(){
+        $('.simple-marquee-container').SimpleMarquee();
+    })
+{% endif %}
 {% endblock %}

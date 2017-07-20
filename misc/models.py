@@ -93,7 +93,21 @@ class WebsiteContactUs(models.Model):
     _DATABASE = "odoo"
     class Meta:
         managed=False
-        db_table = "website_contactus"         
+        db_table = "website_contactus"
+
+class WebsiteNotifications(models.Model):
+    id = models.AutoField(primary_key=True)
+    sequence = models.IntegerField(verbose_name = "Sequence")
+    name = models.TextField(verbose_name = "Notification")
+    active = models.NullBooleanField(verbose_name = "Active")
+
+
+    _DATABASE = "odoo"
+
+    class Meta:
+        managed = False
+        db_table = "website_notifications"
+
     
         
     

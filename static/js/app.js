@@ -47,10 +47,14 @@ require.config({
         'blockui':'jquery.blockUI',
         'google_places':"plugins/google_places",
         'facebook':'facebook',
+        'marquee':'plugins/marquee',
     },
     urlArgs: "v=" +  version,
     shim:{
         facebook:{
+            'deps':['jquery'],
+        },
+        marquee:{
             'deps':['jquery'],
         },
         add_to_cart:{
