@@ -1,4 +1,4 @@
-var version = "2.0"
+var version = "3.0"
 // contents of main.js:
 require.config({
     baseUrl: '/static/js',
