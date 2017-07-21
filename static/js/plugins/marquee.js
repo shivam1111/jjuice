@@ -305,6 +305,7 @@
 
     $.fn.SimpleMarquee = function (options) {
         this.each(function() {
+            console.log($.data)
             if ( !$.data( this, "plugin_" + pluginName ) ) {
                 $.data( this, "plugin_" + pluginName, new Plugin( this, options ) );
             }
@@ -314,12 +315,12 @@
     $.fn.SimpleMarquee.defaults = {
             property: 'value',
             onComplete: null,
-            duration: 200000,
+            duration: 20000,
             padding: 10,
             marquee_class: '.marquee',
             container_class: '.simple-marquee-container',
             sibling_class: 0,
-            hover: true
+            hover: false,
     };
 
 })( jQuery, window, document );
