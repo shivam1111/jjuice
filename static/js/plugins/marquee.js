@@ -320,7 +320,7 @@
             marquee_class: '.marquee',
             container_class: '.simple-marquee-container',
             sibling_class: 0,
-            hover: false,
+            hover: true,
     };
 
 })( jQuery, window, document );
