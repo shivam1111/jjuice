@@ -76,7 +76,6 @@
     // ===
     function aweMainSlider() {
         var $slider = $('.main-slider');
-
         $slider.owlCarousel({
             items: 1,
             nav: true,
