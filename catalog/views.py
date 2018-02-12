@@ -60,7 +60,7 @@ class Index(View):
             'access_token':settings.FACEBOOK_ACCESSS_TOKEN,
             'fields':"has_rating,has_review,rating,review_text,reviewer"
         }
-        res = requests.get('https://graph.facebook.com/v2.9/vapejjuice/ratings',params=payload)
+        res = requests.get('https://graph.facebook.com/v2.9/vapeUjuice/ratings',params=payload)
         facebook = res.json()
         star_range = range(0,5)
         website_notifications = WebsiteNotifications.objects.filter(active=True)
