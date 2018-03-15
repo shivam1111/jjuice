@@ -147,7 +147,7 @@ class FlavorQuickView(View):
         return render(request,template_name,locals())         
 
 class Search(View):
-    
+
     def get(self,request,template_name = "search.html"):
         lines_list = []
         search = request.GET.get('search',False)
