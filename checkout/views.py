@@ -66,15 +66,16 @@ class RunPayments(View):
                 billing_address = params.get('billing_address',False)
                 odoo_adapter = OdooAdapter()
                 partner = odoo_adapter.create('res.partner',{
-                                                                    'name':shipping_address.get('name',"No Name"),
-                                                                    'website_customer':True,
-                                                                    'classify_finance':'website',
-                                                                    'acccount_type':'website',
-                                                                    'type':'contact',
-                                                                    'email':billing_address.get('email',False),
-                                                                    'phone':billing_address.get('phone',False),
-                                                                    'notify_email':'none',
-                                                                    'birth_date':dob,
+                                                            'name':shipping_address.get('name',"No Name"),
+                                                            'website_customer':True,
+                                                            'classify_finance':'website',
+                                                            'acccount_type':'website',
+                                                            'type':'contact',
+                                                            'email':billing_address.get('email',False),
+                                                            'phone':billing_address.get('phone',False),
+                                                            'notify_email':'none',
+                                                            'birth_date':dob,
+                                                            'is_company':False,
                                                                 })
                 shipping_partner = odoo_adapter.create('res.partner',{
                                             'name':shipping_address.get('name',"No Name"),
@@ -89,7 +90,8 @@ class RunPayments(View):
                                             'website_customer':True,
                                             'notify_email': 'none',
                                             'active':True,
-                                            'parent_id':partner
+                                            'parent_id':partner,
+                                            'is_company':False,
                                         })
                 billing_partner = odoo_adapter.create('res.partner',{
                                             'name':billing_address.get('name',"No Name"),
@@ -107,6 +109,7 @@ class RunPayments(View):
                                             'email':billing_address.get('email',False),
                                             'phone':billing_address.get('phone',False),
                                             'parent_id':partner,
+                                            'is_company':False,
                                         })
                 cart_items = get_cart_items(request)
                 for i in cart_items:

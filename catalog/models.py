@@ -107,6 +107,7 @@ class S3Object(models.Model):
     create_date = models.DateTimeField(verbose_name = "Create Date")
     shipping_returns_policy_banner = models.NullBooleanField(verbose_name = "Is Shipping & Returns Policy Page Banner?")
     contactus_banner_500340 = models.NullBooleanField(verbose_name = "Is contact us page 500x340 image ?")
+    company_logo = models.NullBooleanField(verbose_name = "Is Company Logo?")
 
     _DATABASE = "odoo"
     class Meta:
