@@ -2,6 +2,7 @@ var version = "6.0"
 // contents of main.js:
 require.config({
     baseUrl: '/static/js',
+    waitSeconds: 0,
     paths: {
         'jquery': 'vendor/jquery-1.11.3.min',
         'modrnizer':'vendor/modernizr-2.8.3.min',
